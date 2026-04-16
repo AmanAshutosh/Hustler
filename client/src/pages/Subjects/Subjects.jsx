@@ -36,6 +36,8 @@ const SUBJECTS = [
     name: 'React',
     color: '#61dafb',
     timerSubject: 'React',
+    courseUrl: 'https://namastedev.com/learn/namaste-react',
+    courseLabel: 'NamasteDev',
     beginner: [
       'JSX Syntax', 'Functional Components', 'Props & PropTypes',
       'useState Hook', 'Event Handling', 'Conditional Rendering',
@@ -57,6 +59,8 @@ const SUBJECTS = [
     name: 'Node.js',
     color: '#68a063',
     timerSubject: 'Node.js',
+    courseUrl: 'https://www.youtube.com/playlist?list=PL78RhpUUKSwfeSOOwfE9x6l5jTjn5LbY3',
+    courseLabel: 'YouTube',
     beginner: [
       'Node.js Architecture & Event Loop', 'CommonJS Modules', 'npm & package.json',
       'File System (fs module)', 'Path module', 'HTTP module basics',
@@ -77,6 +81,8 @@ const SUBJECTS = [
     name: 'System Design',
     color: '#3b82f6',
     timerSubject: 'System Design',
+    courseUrl: 'https://www.youtube.com/watch?v=SqcXvc3ZmRU&list=PLMCXHnjXnTnvo6alSjVkgxV-VH6EPyvoX',
+    courseLabel: 'YouTube',
     beginner: [
       'Client-Server Architecture', 'HTTP & HTTPS', 'DNS & How Browsers Work',
       'REST vs GraphQL', 'Databases: SQL vs NoSQL', 'Basic Scalability Concepts',
@@ -97,6 +103,8 @@ const SUBJECTS = [
     name: 'SQL',
     color: '#f59e0b',
     timerSubject: 'DBMS / SQL',
+    courseUrl: 'https://www.geeksforgeeks.org/batch/cip-1?tab=Resources',
+    courseLabel: 'GFG',
     beginner: [
       'SELECT, FROM, WHERE', 'INSERT, UPDATE, DELETE', 'ORDER BY & LIMIT',
       'Data Types', 'Primary Key & Foreign Key', 'Basic Joins (INNER JOIN)',
@@ -117,6 +125,8 @@ const SUBJECTS = [
     name: 'DBMS',
     color: '#ec4899',
     timerSubject: 'DBMS / SQL',
+    courseUrl: 'https://www.geeksforgeeks.org/batch/cip-1?tab=Resources',
+    courseLabel: 'GFG',
     beginner: [
       'What is DBMS?', 'DBMS vs File System', 'Types of Databases',
       'ER Diagrams', 'Relational Model', 'Keys (Primary, Foreign, Candidate)',
@@ -203,6 +213,8 @@ const SUBJECTS = [
     name: 'DSA',
     color: '#a855f7',
     timerSubject: 'DSA',
+    courseUrl: 'https://namastedev.com/learn/namaste-dsa',
+    courseLabel: 'NamasteDev',
     beginner: [
       'Arrays & Strings', 'Linked Lists', 'Stacks & Queues',
       'Hashing & HashMaps', 'Binary Search', 'Recursion Basics',
@@ -321,9 +333,9 @@ export default function Subjects() {
                     rel="noreferrer"
                     className="course-link-badge"
                     onClick={e => e.stopPropagation()}
-                    title="Open Udemy course"
+                    title={`Open ${subject.courseLabel || 'course'}`}
                   >
-                    <ExternalLink size={10} /> Udemy
+                    <ExternalLink size={10} /> {subject.courseLabel || 'Course'}
                   </a>
                 )}
                 <span className="subject-stats">{done}/{total} topics</span>

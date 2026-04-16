@@ -13,7 +13,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-center">
-        Stay consistent. Every session counts.
+        Made by <span className="footer-author">Ashutosh</span> · Stay consistent. Every session counts.
       </div>
 
       <div className="footer-right">

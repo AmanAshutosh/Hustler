@@ -1,8 +1,10 @@
 // src/pages/Profile/Profile.jsx
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api.js';
 import { useAuth } from '../../store/auth.js';
 import toast from 'react-hot-toast';
+import { Play } from 'lucide-react';
 import './Profile.css';
 
 const STACK = [
@@ -22,7 +24,61 @@ const SOCIAL_LINKS = [
   { label: 'LinkedIn', key: 'linkedin_url' },
 ];
 
+const DAILY_SCHEDULE = [
+  { time: '11:00 – 11:15', label: 'Warm-up',  desc: 'Review yesterday\'s notes + plan today', type: 'prep' },
+  { time: '11:15 – 13:00', label: 'Block 1',  desc: 'Main topic — deep focused study',        type: 'study', duration: '1h 45m' },
+  { time: '13:00 – 13:45', label: 'Lunch',    desc: 'Meal + rest, no screens',                type: 'break' },
+  { time: '13:45 – 15:30', label: 'Block 2',  desc: 'Continue topic / next topic',            type: 'study', duration: '1h 45m' },
+  { time: '15:30 – 15:45', label: 'Break',    desc: 'Stretch, water, walk',                   type: 'break' },
+  { time: '15:45 – 17:00', label: 'Block 3',  desc: 'Coding practice / exercises',            type: 'study', duration: '1h 15m' },
+  { time: '17:00 – 19:00', label: 'Free',     desc: 'Dinner + personal time',                 type: 'off' },
+  { time: '19:00 – 19:15', label: 'Review',   desc: 'Check notes, plan evening',              type: 'prep' },
+  { time: '19:15 – 20:45', label: 'Block 4',  desc: 'LeetCode / Projects / Revision',         type: 'study', duration: '1h 30m' },
+  { time: '20:45 – 21:00', label: 'Break',    desc: 'Short break',                            type: 'break' },
+  { time: '21:00 – 22:00', label: 'Block 5',  desc: 'Revision / English / Next day prep',     type: 'study', duration: '1h' },
+];
+
+const MONTHLY_PLAN = [
+  {
+    month: 1, title: 'JavaScript + React', color: '#D1FF05',
+    weeks: [
+      { week: 1, subject: 'JavaScript (ES6+)', topic: 'Variables, Functions, Arrays, DOM, Events' },
+      { week: 2, subject: 'JavaScript (ES6+)', topic: 'Closures, Promises, Async/Await, Event Loop' },
+      { week: 3, subject: 'React',             topic: 'JSX, Components, Props, useState, useEffect' },
+      { week: 4, subject: 'React',             topic: 'React Router, Custom Hooks, Zustand, Mini project' },
+    ],
+  },
+  {
+    month: 2, title: 'Node.js + DSA Fundamentals', color: '#f59e0b',
+    weeks: [
+      { week: 5, subject: 'Node.js', topic: 'Express, Middleware, REST APIs, JWT Auth' },
+      { week: 6, subject: 'Node.js', topic: 'Streams, WebSockets, Rate Limiting, Deploy' },
+      { week: 7, subject: 'DSA',     topic: 'Arrays, Strings, Linked Lists, Stacks, Queues' },
+      { week: 8, subject: 'DSA',     topic: 'Trees (BFS/DFS), Binary Search, Two Pointers' },
+    ],
+  },
+  {
+    month: 3, title: 'CS Fundamentals + System Design', color: '#a855f7',
+    weeks: [
+      { week: 9,  subject: 'DBMS / SQL',    topic: 'Joins, Transactions, Normalization, Indexes' },
+      { week: 10, subject: 'OS / CN',       topic: 'Processes, Scheduling, TCP/IP, OSI, HTTP' },
+      { week: 11, subject: 'System Design', topic: 'Scalability, Load Balancing, Caching, CAP Theorem' },
+      { week: 12, subject: 'System Design', topic: 'Design Twitter, Netflix, WhatsApp, URL Shortener' },
+    ],
+  },
+  {
+    month: 4, title: 'Advanced DSA + Mock + Apply', color: '#22c55e',
+    weeks: [
+      { week: 13, subject: 'DSA',      topic: 'Dynamic Programming, Backtracking, Tries' },
+      { week: 14, subject: 'DSA',      topic: 'Graphs (Dijkstra, BFS/DFS), Union-Find, Segment Trees' },
+      { week: 15, subject: 'DSA',      topic: 'Neetcode 150 full revision + mock interview rounds' },
+      { week: 16, subject: 'Projects', topic: 'Build FAANG-worthy projects, apply, LeetCode daily' },
+    ],
+  },
+];
+
 export default function Profile() {
+  const navigate = useNavigate();
   const { user, setUser }   = useAuth();
   const [summary, setSummary]   = useState(null);
   const [userData, setUserData] = useState(null);
@@ -166,6 +222,53 @@ export default function Profile() {
       <div className="card">
         <div className="sec-title">Share preview</div>
         <pre className="share-preview">{shareText}</pre>
+      </div>
+
+      {/* Daily timetable */}
+      <div className="card">
+        <div className="sec-title">Daily Schedule — 11am to 10pm</div>
+        <div className="tt-subtitle">Wake up 6am · Gym + breakfast · Free from 11am · ~7h study/day</div>
+        <div className="tt-daily">
+          {DAILY_SCHEDULE.map((slot, i) => (
+            <div key={i} className={`tt-slot tt-slot-${slot.type}`}>
+              <div className="tt-time">{slot.time}</div>
+              <div className="tt-info">
+                <span className="tt-label">{slot.label}</span>
+                <span className="tt-desc">{slot.desc}</span>
+              </div>
+              {slot.duration && <span className="tt-dur">{slot.duration}</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4-Month Plan */}
+      <div className="card">
+        <div className="sec-title">4-Month Roadmap — Week by Week</div>
+        <div className="tt-subtitle">Sat = projects + revision · Sun = rest + English · Click Study to start a session</div>
+        {MONTHLY_PLAN.map(month => (
+          <div key={month.month} className="tt-month">
+            <div className="tt-month-header" style={{ borderColor: month.color }}>
+              <span className="tt-month-num" style={{ color: month.color }}>Month {month.month}</span>
+              <span className="tt-month-title">{month.title}</span>
+            </div>
+            {month.weeks.map(w => (
+              <div key={w.week} className="tt-week-row">
+                <div className="tt-week-meta">
+                  <span className="tt-week-badge">Week {w.week}</span>
+                  <span className="tt-week-subj" style={{ color: month.color }}>{w.subject}</span>
+                </div>
+                <div className="tt-week-topic">{w.topic}</div>
+                <button
+                  className="tt-study-btn"
+                  onClick={() => navigate('/timer', { state: { subject: w.subject, topic: w.topic } })}
+                >
+                  <Play size={10} /> Study
+                </button>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
 
       {/* Stack progress */}
