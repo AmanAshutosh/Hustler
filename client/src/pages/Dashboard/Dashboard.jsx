@@ -133,6 +133,15 @@ export default function Dashboard() {
         <p>Your full-stack grind at a glance</p>
       </div>
 
+      <div className="quote-card">
+        <div className="quote-header">
+          <span className="quote-badge"><Sparkles size={10} /> Daily Fuel</span>
+          <span className="quote-company-tag">{dailyQuote.tag}</span>
+        </div>
+        <div className="quote-text">{dailyQuote.text}</div>
+        <div className="quote-author">— {dailyQuote.author}</div>
+      </div>
+
       <div className="metric-grid">
         {METRICS.map(({ key, label, suffix, Icon, color }) => (
           <div className="metric-card" key={key}>
@@ -207,14 +216,6 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="quote-card">
-        <div className="quote-header">
-          <span className="quote-badge"><Sparkles size={10} /> Daily Fuel</span>
-          <span className="quote-company-tag">{dailyQuote.tag}</span>
-        </div>
-        <div className="quote-text">{dailyQuote.text}</div>
-        <div className="quote-author">— {dailyQuote.author}</div>
-      </div>
     </div>
   );
 }
