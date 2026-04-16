@@ -8,7 +8,8 @@ import './Timer.css';
 
 const SUBJECTS = [
   'JavaScript (ES6+)', 'React', 'Node.js', 'DSA',
-  'System Design', 'DBMS / SQL', 'OS / CN', 'English', 'Projects', 'Other',
+  'System Design', 'SQL', 'DBMS', 'Operating System', 'Computer Networks',
+  'English', 'Projects', 'Other',
 ];
 
 function fmt(s) {

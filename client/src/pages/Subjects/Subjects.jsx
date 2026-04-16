@@ -102,7 +102,7 @@ const SUBJECTS = [
     id: 'sql',
     name: 'SQL',
     color: '#f59e0b',
-    timerSubject: 'DBMS / SQL',
+    timerSubject: 'SQL',
     courseUrl: 'https://www.geeksforgeeks.org/batch/cip-1?tab=Resources',
     courseLabel: 'GFG',
     beginner: [
@@ -124,7 +124,7 @@ const SUBJECTS = [
     id: 'dbms',
     name: 'DBMS',
     color: '#ec4899',
-    timerSubject: 'DBMS / SQL',
+    timerSubject: 'DBMS',
     courseUrl: 'https://www.geeksforgeeks.org/batch/cip-1?tab=Resources',
     courseLabel: 'GFG',
     beginner: [
@@ -146,7 +146,7 @@ const SUBJECTS = [
     id: 'os',
     name: 'Operating System',
     color: '#06b6d4',
-    timerSubject: 'OS / CN',
+    timerSubject: 'Operating System',
     beginner: [
       'What is an OS?', 'Process vs Thread', 'Types of OS',
       'System Calls', 'Memory Layout of a Process', 'File System Basics',
@@ -167,7 +167,7 @@ const SUBJECTS = [
     id: 'cn',
     name: 'Computer Networks',
     color: '#a855f7',
-    timerSubject: 'OS / CN',
+    timerSubject: 'Computer Networks',
     beginner: [
       'OSI Model (7 Layers)', 'TCP/IP Model', 'IP Addressing & Subnetting',
       'DNS & DHCP', 'HTTP vs HTTPS', 'MAC Address & ARP',

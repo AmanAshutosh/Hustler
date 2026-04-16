@@ -8,12 +8,15 @@ import { Play } from 'lucide-react';
 import './Profile.css';
 
 const STACK = [
-  { label: 'JavaScript ES6+', key: 'JavaScript (ES6+)', target: 40 },
-  { label: 'React',           key: 'React',             target: 35 },
-  { label: 'Node.js',         key: 'Node.js',           target: 30 },
-  { label: 'System Design',   key: 'System Design',     target: 20 },
-  { label: 'DBMS / SQL',      key: 'DBMS / SQL',        target: 15 },
-  { label: 'OS / CN',         key: 'OS / CN',           target: 15 },
+  { label: 'JavaScript ES6+',  key: 'JavaScript (ES6+)', target: 40 },
+  { label: 'React',            key: 'React',             target: 35 },
+  { label: 'Node.js',          key: 'Node.js',           target: 30 },
+  { label: 'System Design',    key: 'System Design',     target: 20 },
+  { label: 'SQL',              key: 'SQL',               target: 10 },
+  { label: 'DBMS',             key: 'DBMS',              target: 10 },
+  { label: 'Operating System', key: 'Operating System',  target: 10 },
+  { label: 'Computer Networks',key: 'Computer Networks', target: 10 },
+  { label: 'English',          key: 'English',           target: 20 },
 ];
 
 const SOCIAL_LINKS = [
@@ -60,19 +63,21 @@ const MONTHLY_PLAN = [
   {
     month: 3, title: 'CS Fundamentals + System Design', color: '#a855f7',
     weeks: [
-      { week: 9,  subject: 'DBMS / SQL',    topic: 'Joins, Transactions, Normalization, Indexes' },
-      { week: 10, subject: 'OS / CN',       topic: 'Processes, Scheduling, TCP/IP, OSI, HTTP' },
-      { week: 11, subject: 'System Design', topic: 'Scalability, Load Balancing, Caching, CAP Theorem' },
-      { week: 12, subject: 'System Design', topic: 'Design Twitter, Netflix, WhatsApp, URL Shortener' },
+      { week: 9,  subject: 'SQL',              topic: 'Joins, Transactions, Normalization, Indexes, Window Functions' },
+      { week: 10, subject: 'DBMS',             topic: 'ER Diagrams, ACID, Concurrency, B-Tree Indexes, Recovery' },
+      { week: 11, subject: 'Operating System', topic: 'Processes, Scheduling, Virtual Memory, Deadlocks, IPC' },
+      { week: 12, subject: 'Computer Networks',topic: 'TCP/IP, OSI Model, HTTP/HTTPS, DNS, SSL/TLS' },
+      { week: 13, subject: 'System Design',    topic: 'Scalability, Load Balancing, Caching, CAP Theorem' },
+      { week: 14, subject: 'System Design',    topic: 'Design Twitter, Netflix, WhatsApp, URL Shortener' },
     ],
   },
   {
     month: 4, title: 'Advanced DSA + Mock + Apply', color: '#22c55e',
     weeks: [
-      { week: 13, subject: 'DSA',      topic: 'Dynamic Programming, Backtracking, Tries' },
-      { week: 14, subject: 'DSA',      topic: 'Graphs (Dijkstra, BFS/DFS), Union-Find, Segment Trees' },
-      { week: 15, subject: 'DSA',      topic: 'Neetcode 150 full revision + mock interview rounds' },
-      { week: 16, subject: 'Projects', topic: 'Build FAANG-worthy projects, apply, LeetCode daily' },
+      { week: 15, subject: 'DSA',      topic: 'Dynamic Programming, Backtracking, Tries' },
+      { week: 16, subject: 'DSA',      topic: 'Graphs (Dijkstra, BFS/DFS), Union-Find, Segment Trees' },
+      { week: 17, subject: 'DSA',      topic: 'Neetcode 150 full revision + mock interview rounds' },
+      { week: 18, subject: 'Projects', topic: 'Build FAANG-worthy projects, apply, LeetCode daily' },
     ],
   },
 ];

@@ -70,8 +70,11 @@ const SUBJECTS = [
   { name: 'Node.js',           target: 30, color: '#68a063' },
   { name: 'DSA',               target: 50, color: '#a855f7' },
   { name: 'System Design',     target: 20, color: '#3b82f6' },
-  { name: 'DBMS / SQL',        target: 15, color: '#ec4899' },
-  { name: 'OS / CN',           target: 15, color: '#06b6d4' },
+  { name: 'SQL',               target: 10, color: '#f59e0b' },
+  { name: 'DBMS',              target: 10, color: '#ec4899' },
+  { name: 'Operating System',  target: 10, color: '#06b6d4' },
+  { name: 'Computer Networks', target: 10, color: '#a855f7' },
+  { name: 'English',           target: 20, color: '#10b981' },
 ];
 
 const ROADMAP = [
