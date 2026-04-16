@@ -1,50 +1,38 @@
-// server/index.js
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const { authenticate } = require("./middleware/auth");
 
-// Initialize DB (creates tables if not exist)
+// Initialize DB
 require("./db/database");
 
 const app = express();
 
-// FIXED: Added check for environment variable or allow local dev
-const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
-
-app.use(
-  cors({
-    origin: allowedOrigin,
-    credentials: true,
-  }),
-);
-
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-// Public routes
+// API Routes
 app.use("/api/auth", require("./routes/auth"));
-
-// Protected routes
 app.use("/api/sessions", authenticate, require("./routes/sessions"));
 app.use("/api/dsa", authenticate, require("./routes/dsa"));
 app.use("/api/projects", authenticate, require("./routes/projects"));
 app.use("/api/stats", authenticate, require("./routes/stats"));
 app.use("/api/user", authenticate, require("./routes/user"));
 
-app.get("/api/health", (_, res) =>
-  res.json({ ok: true, time: new Date().toISOString() }),
-);
+app.get("/api/health", (_, res) => res.json({ ok: true }));
 
-// 404 handler
-app.use((req, res) => res.status(404).json({ error: "Route not found" }));
+// --- SERVE FRONTEND ---
+// This serves the 'dist' folder created by 'npm run build' in the client directory
+const distPath = path.join(__dirname, "../client/dist");
+app.use(express.static(distPath));
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong" });
+// Catch-all: Send index.html for any non-API routes (handles React Router)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
-// FIXED: Ensure Render's dynamic port is used
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`✅ DevTrack server running at port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
