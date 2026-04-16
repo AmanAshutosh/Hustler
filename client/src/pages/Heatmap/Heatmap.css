@@ -1,0 +1,98 @@
+/* src/pages/Heatmap/Heatmap.css */
+.heatmap-page { padding: 28px; max-width: 960px; }
+.page-header { margin-bottom: 24px; }
+.page-header h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.page-header p  { font-size: 13px; color: var(--text3); margin-top: 3px; }
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: center;
+}
+
+.metric-val { font-size: 26px; font-weight: 700; line-height: 1.1; }
+.metric-lbl { font-size: 11px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: .4px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.heatmap-wrap { overflow-x: auto; }
+
+.month-labels {
+  display: flex;
+  margin-left: 30px;
+  margin-bottom: 4px;
+}
+
+.month-label-cell {
+  width: 14px;
+  min-width: 14px;
+  margin-right: 2px;
+  font-size: 9px;
+  color: var(--text3);
+}
+
+.heatmap-body { display: flex; gap: 0; }
+
+.dow-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: 4px;
+  width: 26px;
+}
+
+.dow-label {
+  height: 12px;
+  line-height: 12px;
+  font-size: 9px;
+  color: var(--text3);
+  text-align: right;
+}
+
+.heatmap-grid { display: flex; gap: 2px; }
+
+.hm-col { display: flex; flex-direction: column; gap: 2px; }
+
+.hm-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  cursor: default;
+  transition: opacity .1s;
+}
+
+.hm-cell:hover { opacity: .7; }
+
+.hm-0 { background: var(--border); }
+.hm-1 { background: #fca9a4; }
+.hm-2 { background: #f97066; }
+.hm-3 { background: #e8471a; }
+.hm-4 { background: #7a1e07; }
+
+.hm-today { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.heatmap-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.hm-tooltip { font-size: 11px; color: var(--text3); min-height: 16px; }
+
+.hm-legend { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text3); }
+.hm-sq { width: 10px; height: 10px; border-radius: 2px; }

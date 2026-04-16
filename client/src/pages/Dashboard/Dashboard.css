@@ -1,0 +1,293 @@
+/* src/pages/Dashboard/Dashboard.css */
+.dashboard {
+  padding: 24px;
+  max-width: 960px;
+  animation: fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+
+.page-header p {
+  font-size: 13px;
+  color: var(--text3);
+  margin-top: 3px;
+}
+
+/* ── Metric Cards ── */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.3);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  cursor: default;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(0,0,0,.55), 0 0 12px rgba(209,255,5,.08);
+  border-color: var(--border2);
+}
+
+.metric-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+  opacity: .8;
+}
+
+.metric-val {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-lbl {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+/* ── Two-column grid ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.3);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: 0 4px 24px rgba(0,0,0,.55), 0 0 14px rgba(209,255,5,.07);
+}
+
+.sec-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom: 14px;
+}
+
+/* ── Progress bars ── */
+.bar-row { margin-bottom: 12px; }
+
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 5px;
+}
+
+.bar-label span:last-child { color: var(--text3); font-size: 11px; }
+
+.bar-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .7s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* ── Session table ── */
+.session-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.session-table td {
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.session-table tr:last-child td { border-bottom: none; }
+.session-table tr:hover td { background: var(--surface2); }
+
+.subj-name { font-weight: 500; font-size: 13px; color: var(--text); }
+.subj-topic { color: var(--text3); }
+.subj-dur { font-family: 'SF Mono', monospace; text-align: right; font-weight: 500; color: var(--accent); }
+
+.empty-msg { font-size: 12px; color: var(--text3); padding: 8px 0; }
+
+/* ── Skeleton loader ── */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 24px;
+}
+
+.skeleton-card {
+  height: 90px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { opacity: .5; }
+  50%  { opacity: 1; }
+  100% { opacity: .5; }
+}
+
+/* ── Motivation Quote Card ── */
+.quote-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid rgba(209,255,5,.25);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.45), 0 0 20px rgba(209,255,5,.06);
+}
+
+.quote-card::before {
+  content: '';
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #D1FF05;
+  filter: blur(60px);
+  opacity: .06;
+  top: -60px;
+  right: -40px;
+  pointer-events: none;
+}
+
+.quote-card::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #D1FF05;
+  filter: blur(40px);
+  opacity: .05;
+  bottom: -30px;
+  left: 20px;
+  pointer-events: none;
+}
+
+.quote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.quote-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(209,255,5,.2);
+}
+
+.quote-company-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  background: var(--surface2);
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+.quote-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.quote-text::before {
+  content: '"';
+  color: var(--accent);
+  font-size: 28px;
+  line-height: 0;
+  vertical-align: -8px;
+  margin-right: 3px;
+}
+
+.quote-author {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .dashboard { padding: 16px; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .skeleton-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 420px) {
+  .metric-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .metric-val { font-size: 20px; }
+}

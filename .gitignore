@@ -1,0 +1,6 @@
+node_modules/
+.env
+dist/
+server/devtrack.json
+client/dist
+.DS_Store
