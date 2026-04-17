@@ -109,12 +109,15 @@ select:disabled, input:disabled { opacity: .45; cursor: not-allowed; }
 
 /* Session log table */
 .sec-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
   font-weight: 600;
   color: var(--text3);
   text-transform: uppercase;
   letter-spacing: .6px;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
 .log-table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -161,8 +164,51 @@ select:disabled, input:disabled { opacity: .45; cursor: not-allowed; }
   .timer-clock { font-size: 52px; letter-spacing: 4px; }
 }
 
-.sec-title {
+.session-log-header {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.btn-clear-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: color .12s, border-color .12s, background .12s;
+}
+.btn-clear-all:hover {
+  color: var(--red);
+  border-color: var(--red);
+  background: rgba(239,68,68,.06);
+}
+
+.td-del { width: 32px; text-align: center; }
+
+.btn-del {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: opacity .15s, color .12s, background .12s;
+}
+.log-table tr:hover .btn-del { opacity: 1; }
+.btn-del:hover {
+  color: var(--red);
+  background: rgba(239,68,68,.1);
 }

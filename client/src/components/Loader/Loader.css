@@ -1,0 +1,268 @@
+/* src/components/Loader/Loader.css */
+
+/* ── Full-screen overlay ── */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: lo-in .18s ease both;
+}
+.loader-overlay.loader-exit {
+  animation: lo-out .38s ease forwards;
+}
+
+@keyframes lo-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lo-out { from { opacity: 1; transform: scale(1); }
+                    to   { opacity: 0; transform: scale(1.04); } }
+
+/* Dot-grid background */
+.loader-bg-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: .45;
+  pointer-events: none;
+}
+
+/* ── Center content ── */
+.loader-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Scene (runner + floating things) ── */
+.loader-scene {
+  position: relative;
+  width: 160px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ── Speed lines ── */
+.speed-lines {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-55%);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.sp-line {
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right, transparent, var(--accent));
+  animation: sp-flash .45s ease-out infinite;
+}
+.sp-1 { width: 32px; animation-delay: 0s; }
+.sp-2 { width: 20px; animation-delay: .15s; }
+.sp-3 { width: 26px; animation-delay: .07s; }
+
+@keyframes sp-flash {
+  0%   { opacity: .65; transform: scaleX(1); }
+  100% { opacity: 0;   transform: scaleX(.1); }
+}
+
+/* ── Stick-figure runner ── */
+.hustler {
+  position: relative;
+  width: 80px;
+  height: 100px;
+  animation: run-bounce .34s ease-in-out infinite alternate;
+}
+
+/* Head — glowing accent circle */
+.h-head {
+  position: absolute;
+  top: 0; left: 28px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 0  3px rgba(209,255,5,.15),
+    0 0 18px var(--accent),
+    0 0 36px rgba(209,255,5,.3);
+}
+
+/* Body */
+.h-body {
+  position: absolute;
+  top: 26px; left: 38px;
+  width: 4px; height: 26px;
+  background: var(--accent);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* Arms — both pivot from same shoulder point */
+.h-arm {
+  position: absolute;
+  top: 30px; left: 38px;
+  width: 3px; height: 20px;
+  background: var(--accent);
+  border-radius: 0 0 3px 3px;
+  transform-origin: 1.5px 0;
+  box-shadow: 0 0 5px var(--accent);
+}
+.h-arm-l { animation: arm-swing .34s ease-in-out infinite alternate; }
+.h-arm-r { animation: arm-swing .34s ease-in-out infinite alternate-reverse; }
+
+/* Upper legs */
+.h-leg {
+  position: absolute;
+  top: 52px; left: 38px;
+  width: 3px; height: 22px;
+  background: var(--accent);
+  transform-origin: 1.5px 0;
+  box-shadow: 0 0 5px var(--accent);
+}
+.h-leg-l { animation: leg-swing .34s ease-in-out infinite alternate; }
+.h-leg-r { animation: leg-swing .34s ease-in-out infinite alternate-reverse; }
+
+/* Shins */
+.h-shin {
+  position: absolute;
+  top: 20px; left: 0;
+  width: 3px; height: 18px;
+  background: var(--accent);
+  border-radius: 0 0 3px 3px;
+  transform-origin: 1.5px 0;
+}
+.h-shin-l { animation: shin-fold .34s ease-in-out infinite alternate; }
+.h-shin-r { animation: shin-fold .34s ease-in-out infinite alternate-reverse; }
+
+/* Ground shadow */
+.runner-shadow {
+  position: absolute;
+  bottom: 6px; left: 50%;
+  width: 44px; height: 7px;
+  border-radius: 50%;
+  background: rgba(209,255,5,.12);
+  transform: translateX(-50%);
+  animation: shadow-scale .34s ease-in-out infinite alternate;
+}
+
+/* ── Runner keyframes ── */
+@keyframes run-bounce {
+  from { transform: translateY(-5px); }
+  to   { transform: translateY(5px);  }
+}
+@keyframes arm-swing {
+  from { transform: rotate(-58deg); }
+  to   { transform: rotate(48deg);  }
+}
+@keyframes leg-swing {
+  from { transform: rotate(-48deg); }
+  to   { transform: rotate(58deg);  }
+}
+@keyframes shin-fold {
+  from { transform: rotate(8deg);  }
+  to   { transform: rotate(88deg); }
+}
+@keyframes shadow-scale {
+  from { transform: translateX(-50%) scaleX(1.2); opacity: .18; }
+  to   { transform: translateX(-50%) scaleX(.7);  opacity: .08; }
+}
+
+/* ── Floating emojis ── */
+.fi {
+  position: absolute;
+  font-size: 17px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+.fi-1 { top:  8px; right: 10px; animation: fl-1 2.6s ease-in-out infinite; }
+.fi-2 { bottom: 22px; right:  6px; animation: fl-2 3.1s ease-in-out infinite .5s; }
+.fi-3 { top: 22px; left:  8px; animation: fl-3 2.3s ease-in-out infinite .9s; }
+.fi-4 { bottom: 16px; left: 14px; animation: fl-1 2.8s ease-in-out infinite 1.3s; }
+
+@keyframes fl-1 {
+  0%,100% { transform: translateY(0) rotate(-6deg) scale(1); }
+  50%      { transform: translateY(-11px) rotate(6deg) scale(1.1); }
+}
+@keyframes fl-2 {
+  0%,100% { transform: translateY(0) rotate(4deg) scale(1); }
+  50%      { transform: translateY(-9px) rotate(-4deg) scale(1.08); }
+}
+@keyframes fl-3 {
+  0%,100% { transform: translateY(0) rotate(-10deg) scale(1); }
+  50%      { transform: translateY(-13px) rotate(10deg) scale(1.12); }
+}
+
+/* ── Text ── */
+.loader-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+
+/* Big % counter */
+.loader-pct {
+  font-size: 80px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 40px rgba(209,255,5,.35), 0 0 80px rgba(209,255,5,.15);
+  letter-spacing: -2px;
+}
+.loader-pct-sym {
+  font-size: 30px;
+  font-weight: 400;
+  opacity: .55;
+  letter-spacing: 0;
+}
+
+/* Thin progress bar */
+.loader-bar-track {
+  position: relative;
+  width: 240px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: visible;
+  margin-top: 12px;
+}
+.loader-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width .06s linear;
+  box-shadow: 0 0 10px var(--accent);
+}
+/* Moving glow dot at the tip */
+.loader-bar-glow {
+  position: absolute;
+  top: 50%;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 14px 4px var(--accent);
+  transition: left .06s linear;
+  pointer-events: none;
+}
+
+/* Motivational line */
+.loader-msg {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 14px;
+  font-style: italic;
+  letter-spacing: .3px;
+}

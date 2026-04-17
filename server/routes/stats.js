@@ -49,11 +49,20 @@ router.get('/heatmap', (req, res) => {
     .filter(s => s.user_id === req.userId && s.date >= fromStr)
     .orderBy(['date'], ['asc']).value();
 
-  const heatmap = stats.map(s => ({
-    date: s.date,
-    hours: Math.round(s.total_hours * 10) / 10,
-    level: s.total_hours === 0 ? 0 : s.total_hours < 2 ? 1 : s.total_hours < 4 ? 2 : s.total_hours < 7 ? 3 : 4,
-  }));
+  const heatmap = stats.map(s => {
+    const sessions = s.session_count || 0;
+    const level = sessions === 0 ? 0
+      : sessions === 1 ? 1
+      : sessions <= 3 ? 2
+      : sessions <= 5 ? 3
+      : 4;
+    return {
+      date: s.date,
+      hours: Math.round(s.total_hours * 10) / 10,
+      sessions,
+      level,
+    };
+  });
   res.json(heatmap);
 });
 

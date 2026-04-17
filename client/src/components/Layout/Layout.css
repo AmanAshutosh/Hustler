@@ -198,19 +198,39 @@
 /* ── Mobile breakpoint ── */
 @media (max-width: 768px) {
   .mobile-topbar { display: flex; }
-  .sidebar-overlay { display: block; }
 
+  /* Overlay starts below topbar so topbar stays accessible */
+  .sidebar-overlay {
+    display: block;
+    top: calc(52px + env(safe-area-inset-top, 0px));
+  }
+
+  /* Sidebar slides in from left, starting right below the topbar */
   .sidebar {
     position: fixed;
-    top: 0; left: 0;
-    height: 100dvh;
+    top: calc(52px + env(safe-area-inset-top, 0px));
+    left: 0;
+    height: calc(100dvh - 52px - env(safe-area-inset-top, 0px));
+    width: 260px;
+    min-width: 260px;
     transform: translateX(-100%);
     z-index: 99;
+    border-radius: 0 12px 12px 0;
   }
 
   .sidebar.sidebar-open {
     transform: translateX(0);
-    box-shadow: 4px 0 32px rgba(0,0,0,.6);
+    box-shadow: 4px 0 40px rgba(0,0,0,.7);
+  }
+
+  /* Hide branding (already shown in topbar) to give nav items more room */
+  .sidebar-logo { display: none; }
+
+  .sidebar-nav { padding: 12px 0; }
+
+  .nav-link {
+    padding: 13px 20px;
+    font-size: 14px;
   }
 
   .main-area {

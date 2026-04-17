@@ -1,7 +1,7 @@
 // src/pages/Timer/Timer.jsx
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Play, Pause, Square, Clock, Bell } from 'lucide-react';
+import { Play, Pause, Square, Clock, Bell, Trash2 } from 'lucide-react';
 import api from '../../lib/api.js';
 import toast from 'react-hot-toast';
 import './Timer.css';
@@ -52,18 +52,44 @@ export default function Timer() {
   const [alarm, setAlarm]         = useState(null);
 
   const intervalRef   = useRef(null);
-  const pausedAccRef  = useRef(0);
-  const pauseStartRef = useRef(null);
+  const pausedAccRef  = useRef(0);   // total accumulated paused seconds
+  const pauseStartRef = useRef(null); // when the current pause started (ms)
 
   useEffect(() => {
     api.get('/sessions?limit=25').then(({ data }) => setSessions(data.sessions));
     api.get('/sessions/active').then(({ data }) => {
       if (!data) return;
-      const elapsedSince = Math.floor((Date.now() - new Date(data.started_at)) / 1000) - (data.paused_secs || 0);
-      setSessionId(data.id); setSubject(data.subject); setTopic(data.topic);
+
+      const isPaused = !!data.paused_at;
+
+      let elapsedSince;
+      if (isPaused) {
+        // Show elapsed up to the moment it was paused — don't advance the clock
+        elapsedSince = Math.floor(
+          (new Date(data.paused_at) - new Date(data.started_at)) / 1000
+        ) - (data.paused_secs || 0);
+      } else {
+        // Session is live — calculate how much time has passed
+        elapsedSince = Math.floor(
+          (Date.now() - new Date(data.started_at)) / 1000
+        ) - (data.paused_secs || 0);
+      }
+
+      setSessionId(data.id);
+      setSubject(data.subject);
+      setTopic(data.topic);
       setElapsed(Math.max(0, elapsedSince));
       pausedAccRef.current = data.paused_secs || 0;
-      setRunning(true); tick();
+
+      setRunning(true);
+
+      if (isPaused) {
+        // Restore paused state — record when the pause started so handlePause works correctly
+        setPaused(true);
+        pauseStartRef.current = new Date(data.paused_at).getTime();
+      } else {
+        tick();
+      }
     }).catch(() => {});
     return () => clearInterval(intervalRef.current);
   }, []);
@@ -76,20 +102,27 @@ export default function Timer() {
   async function handleStart() {
     try {
       const { data } = await api.post('/sessions/start', { subject, topic: topic || 'General' });
-      setSessionId(data.id); setElapsed(0); pausedAccRef.current = 0;
+      setSessionId(data.id); setElapsed(0); pausedAccRef.current = 0; pauseStartRef.current = null;
       setRunning(true); setPaused(false); tick();
       toast.success('Session started!');
     } catch { toast.error('Failed to start'); }
   }
 
-  function handlePause() {
+  async function handlePause() {
     if (!paused) {
+      // Pause
       clearInterval(intervalRef.current);
       pauseStartRef.current = Date.now();
       setPaused(true);
+      // Persist pause to server so tab-close / navigation restores correctly
+      api.patch(`/sessions/${sessionId}/pause`).catch(() => {});
     } else {
+      // Resume
       pausedAccRef.current += Math.floor((Date.now() - pauseStartRef.current) / 1000);
-      setPaused(false); tick();
+      setPaused(false);
+      tick();
+      // Sync accumulated pause to server
+      api.patch(`/sessions/${sessionId}/resume`).catch(() => {});
     }
   }
 
@@ -105,10 +138,27 @@ export default function Timer() {
       setSessions(prev => [data, ...prev.filter(s => s.id !== data.id)]);
     } catch { toast.error('Failed to end session'); }
     setRunning(false); setPaused(false); setElapsed(0);
-    setSessionId(null); pausedAccRef.current = 0;
+    setSessionId(null); pausedAccRef.current = 0; pauseStartRef.current = null;
+  }
+
+  async function handleDeleteSession(id) {
+    try {
+      await api.delete(`/sessions/${id}`);
+      setSessions(prev => prev.filter(s => s.id !== id));
+    } catch { toast.error('Failed to delete session'); }
+  }
+
+  async function handleDeleteAll() {
+    if (!window.confirm('Delete all completed sessions? This cannot be undone.')) return;
+    try {
+      await api.delete('/sessions/all');
+      setSessions(prev => prev.filter(s => s.is_active));
+      toast.success('All sessions cleared');
+    } catch { toast.error('Failed to delete sessions'); }
   }
 
   const clockClass = !running ? 'inactive' : paused ? 'paused' : 'running';
+  const completedSessions = sessions.filter(s => !s.is_active);
 
   return (
     <div className="timer-page">
@@ -164,8 +214,15 @@ export default function Timer() {
       </div>
 
       <div className="card">
-        <div className="sec-title"><Clock size={12} /> Session Log</div>
-        {sessions.filter(s => !s.is_active).length === 0
+        <div className="session-log-header">
+          <div className="sec-title"><Clock size={12} /> Session Log</div>
+          {completedSessions.length > 0 && (
+            <button className="btn btn-clear-all" onClick={handleDeleteAll}>
+              <Trash2 size={12} /> Clear all
+            </button>
+          )}
+        </div>
+        {completedSessions.length === 0
           ? <p className="empty-msg">No sessions yet.</p>
           : (
             <table className="log-table">
@@ -173,10 +230,11 @@ export default function Timer() {
                 <tr>
                   <th>Subject</th><th>Topic</th><th>Started</th>
                   <th style={{ textAlign: 'right' }}>Duration</th>
+                  <th style={{ width: 32 }}></th>
                 </tr>
               </thead>
               <tbody>
-                {sessions.filter(s => !s.is_active).map(s => (
+                {completedSessions.map(s => (
                   <tr key={s.id}>
                     <td className="td-subj">{s.subject}</td>
                     <td className="td-topic">{s.topic}</td>
@@ -184,6 +242,15 @@ export default function Timer() {
                       {new Date(s.started_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                     <td className="td-dur">{fmtDur(s.duration_secs)}</td>
+                    <td className="td-del">
+                      <button
+                        className="btn-del"
+                        onClick={() => handleDeleteSession(s.id)}
+                        title="Delete session"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

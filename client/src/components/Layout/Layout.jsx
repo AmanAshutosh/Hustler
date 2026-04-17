@@ -1,5 +1,5 @@
 // src/components/Layout/Layout.jsx
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Timer, Flame, BookOpen,
@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../store/auth.js';
 import Footer from '../Footer/Footer.jsx';
+import Loader from '../Loader/Loader.jsx';
 import api from '../../lib/api.js';
 import './Layout.css';
 
@@ -23,8 +24,17 @@ const NAV = [
 export default function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [todayHours, setTodayHours] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // true on first render = cold start
+
+  // Show loader on every route change (and on initial mount)
+  useEffect(() => {
+    setLoading(true);
+    setMenuOpen(false); // close mobile menu on navigate
+  }, [location.pathname]);
 
   useEffect(() => {
     api.get('/stats/weekly').then(({ data }) => {
@@ -39,6 +49,9 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
+      {/* Route transition / initial load */}
+      {loading && <Loader onDone={() => setLoading(false)} />}
+
       {/* Mobile top bar */}
       <header className="mobile-topbar">
         <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">

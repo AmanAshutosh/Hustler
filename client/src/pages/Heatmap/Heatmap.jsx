@@ -1,12 +1,7 @@
 // src/pages/Heatmap/Heatmap.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import api from '../../lib/api.js';
 import './Heatmap.css';
-
-function getLevel(h) {
-  if (!h || h === 0) return 0;
-  if (h < 2) return 1; if (h < 4) return 2; if (h < 7) return 3; return 4;
-}
 
 function buildDays() {
   const days = [], today = new Date();
@@ -21,16 +16,22 @@ function buildDays() {
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DOW = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
 export default function Heatmap() {
   const [dataMap, setDataMap] = useState({});
   const [summary, setSummary] = useState(null);
-  const [tooltip, setTooltip] = useState('');
+  const [tooltip, setTooltip] = useState(null); // { text, x, y }
   const [loading, setLoading] = useState(true);
+  const gridRef = useRef(null);
 
   useEffect(() => {
     Promise.all([api.get('/stats/heatmap'), api.get('/stats/summary')]).then(([hm, sum]) => {
       const map = {};
-      hm.data.forEach(d => { map[d.date] = d.hours; });
+      hm.data.forEach(d => { map[d.date] = { hours: d.hours, sessions: d.sessions, level: d.level }; });
       setDataMap(map); setSummary(sum.data);
     }).finally(() => setLoading(false));
   }, []);
@@ -51,7 +52,28 @@ export default function Heatmap() {
       monthLabels.push({ wi, month: m, label: MONTHS[m] });
   });
 
-  const totalStudied = Object.values(dataMap).filter(h => h > 0).length;
+  const totalStudied = Object.values(dataMap).filter(d => d.sessions > 0).length;
+
+  function handleMouseEnter(e, day) {
+    const info = dataMap[day];
+    const sessions = info?.sessions || 0;
+    const hours = info?.hours || 0;
+
+    let text;
+    if (sessions === 0) {
+      text = `${formatDate(day)} · No study`;
+    } else {
+      text = `${formatDate(day)} · ${sessions} session${sessions !== 1 ? 's' : ''} · ${hours.toFixed(1)}h`;
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const gridRect = gridRef.current?.getBoundingClientRect();
+    setTooltip({
+      text,
+      x: rect.left - (gridRect?.left || 0) + rect.width / 2,
+      y: rect.top - (gridRect?.top || 0) - 6,
+    });
+  }
 
   if (loading) return <div className="heatmap-page"><p>Loading...</p></div>;
 
@@ -82,7 +104,7 @@ export default function Heatmap() {
       </div>
 
       <div className="card">
-        <div className="heatmap-wrap">
+        <div className="heatmap-wrap" ref={gridRef}>
           <div className="month-labels">
             {weeks.map((_, wi) => {
               const ml = monthLabels.find(m => m.wi === wi);
@@ -94,34 +116,50 @@ export default function Heatmap() {
             <div className="dow-labels">
               {DOW.map((d, i) => <div key={i} className="dow-label">{d}</div>)}
             </div>
-            <div className="heatmap-grid">
+            <div className="heatmap-grid" style={{ position: 'relative' }}>
               {weeks.map((week, wi) => (
                 <div className="hm-col" key={wi}>
                   {week.map((day, di) => {
-                    if (!day) return <div key={di} style={{ width: 12, height: 12 }} />;
-                    const hours = dataMap[day] || 0;
-                    const level = getLevel(hours);
+                    if (!day) return <div key={di} style={{ width: 13, height: 13 }} />;
+                    const info = dataMap[day];
+                    const level = info?.level ?? 0;
                     return (
                       <div
                         key={di}
                         className={`hm-cell hm-${level}${day === today ? ' hm-today' : ''}`}
-                        onMouseEnter={() => setTooltip(`${day}: ${hours > 0 ? hours.toFixed(1) + 'h' : 'no study'}`)}
-                        onMouseLeave={() => setTooltip('')}
+                        onMouseEnter={e => handleMouseEnter(e, day)}
+                        onMouseLeave={() => setTooltip(null)}
                       />
                     );
                   })}
                 </div>
               ))}
+
+              {tooltip && (
+                <div
+                  className="hm-tooltip-bubble"
+                  style={{ left: tooltip.x, top: tooltip.y }}
+                >
+                  {tooltip.text}
+                </div>
+              )}
             </div>
           </div>
 
           <div className="heatmap-footer">
-            <span className="hm-tooltip">{tooltip || 'Hover a cell to see details'}</span>
+            <span className="hm-legend-label">Less</span>
             <div className="hm-legend">
-              <span>Less</span>
-              {[0,1,2,3,4].map(l => <div key={l} className={`hm-sq hm-${l}`} />)}
-              <span>More</span>
+              {[0,1,2,3,4].map(l => (
+                <div key={l} className={`hm-sq hm-${l}`} title={
+                  l === 0 ? 'No sessions'
+                  : l === 1 ? '1 session'
+                  : l === 2 ? '2–3 sessions'
+                  : l === 3 ? '4–5 sessions'
+                  : '6+ sessions'
+                } />
+              ))}
             </div>
+            <span className="hm-legend-label">More</span>
           </div>
         </div>
       </div>
