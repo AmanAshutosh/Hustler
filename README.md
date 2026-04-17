@@ -1,147 +1,71 @@
-# DevTrack — Full-Stack Study & Job Hunt Tracker
+# Hustler 2.0 — Full-Stack Study & Job Hunt Tracker
 
-React + Node.js + lowdb (JSON file). No Docker. No Prisma. Just run it.
+[![Live Demo](https://img.shields.io/badge/Demo-Live%20Now-success?style=for-the-badge&logo=render&logoColor=white)](https://hustler-km31.onrender.com/)
+[![React](https://img.shields.io/badge/Frontend-React%2018-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![Node](https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 
-## Stack
+**DevTrack** is a lightweight, all-in-one productivity suite designed for developers. It helps you manage the "Hustle" by tracking deep-work sessions, DSA progress, and project lifecycles in one unified dashboard.
 
-- **Frontend**: React 18 + Vite + Zustand + React Router + Axios + lucide-react + react-hot-toast
-- **Backend**: Node.js + Express + lowdb v1 (JSON file DB)
-- **Auth**: JWT (bcryptjs for hashing)
-- **No external DB needed** — `devtrack.json` is created automatically in `/server` on first run
+---
 
-## Setup
+## ✨ Features
 
-```bash
-# 1. Install all dependencies (client + server)
-npm run install:all
+- **⏱️ Deep Work Timer:** Integrated session tracker with pause/resume and audible alerts. Persists across browser refreshes.
+- **📊 GitHub-Style Heatmap:** Visualize your consistency with a 52-week activity grid.
+- **🧠 DSA Tracker:** Log problems (Neetcode 150 style) with category-wise progress bars.
+- **🏗️ Project Manager:** CRUD for personal projects including tech stack tags and live/GitHub links.
+- **📱 Social Ready:** Profile cards with auto-generated text for quick sharing to X (Twitter) and LinkedIn.
+- **🔒 Local Database:** Uses `lowdb`—no external database setup required. Your data lives in a simple JSON file.
 
-# 2. Start both servers concurrently
-npm run dev
-```
+---
 
-- Frontend → http://localhost:5173
-- Backend  → http://localhost:3001
+## 🛠️ Tech Stack
 
-The database file `server/devtrack.json` is created automatically on first run. No setup needed.
+| Layer        | Technologies                                        |
+| :----------- | :-------------------------------------------------- |
+| **Frontend** | React 18, Vite, Zustand, React Router, Tailwind/CSS |
+| **Backend**  | Node.js, Express                                    |
+| **Database** | lowdb (JSON-based)                                  |
+| **Auth**     | JWT, bcryptjs                                       |
+| **Icons**    | Lucide-React, React Hot Toast                       |
 
-## Scripts
+---
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start both client and server |
-| `npm run dev:client` | Start frontend only |
-| `npm run dev:server` | Start backend only |
-| `npm run install:all` | Install dependencies for both client and server |
+## 🚀 Getting Started
 
-## Project Structure
+### Prerequisites
 
-```
+- Node.js installed on your machine.
+
+### Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone [https://github.com/your-username/DevTrack.git](https://github.com/AmanAshutosh/DevTrack.git)
+   cd DevTrack
+   ```
+
+📂 Project Structure
 Hustler_2.0/
-├── client/                         ← React frontend (Vite)
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── Dashboard/
-│   │   │   │   ├── Dashboard.jsx   ← Stats, subject bars, roadmap
-│   │   │   │   └── Dashboard.css
-│   │   │   ├── Timer/
-│   │   │   │   ├── Timer.jsx       ← Session timer with alarm + pause/resume
-│   │   │   │   └── Timer.css
-│   │   │   ├── Heatmap/
-│   │   │   │   ├── Heatmap.jsx     ← GitHub-style 52-week heatmap
-│   │   │   │   └── Heatmap.css
-│   │   │   ├── DSATracker/
-│   │   │   │   ├── DSATracker.jsx  ← Neetcode 150 tracker with category progress
-│   │   │   │   └── DSATracker.css
-│   │   │   ├── Projects/
-│   │   │   │   ├── Projects.jsx    ← Projects CRUD
-│   │   │   │   └── Projects.css
-│   │   │   ├── Profile/
-│   │   │   │   ├── Profile.jsx     ← Portfolio card + social share
-│   │   │   │   └── Profile.css
-│   │   │   ├── Login/
-│   │   │   │   ├── Login.jsx
-│   │   │   │   └── Login.css
-│   │   │   ├── Register/
-│   │   │   │   ├── Register.jsx
-│   │   │   │   └── Register.css
-│   │   │   └── Subjects/
-│   │   │       ├── Subjects.jsx
-│   │   │       └── Subjects.css
-│   │   ├── components/
-│   │   │   ├── Layout/
-│   │   │   │   ├── Layout.jsx      ← Sidebar + nav wrapper
-│   │   │   │   └── Layout.css
-│   │   │   └── Footer/
-│   │   │       ├── Footer.jsx
-│   │   │       └── Footer.css
-│   │   ├── store/
-│   │   │   └── auth.js             ← Zustand auth store
-│   │   ├── lib/
-│   │   │   └── api.js              ← Axios instance with auth header
-│   │   ├── App.jsx                 ← Routes + auth guard
-│   │   ├── main.jsx
-│   │   └── index.css
-│   ├── public/
-│   │   └── manifest.json
-│   ├── index.html
-│   ├── vite.config.js              ← Dev proxy → server:3001
-│   └── package.json
-│
-├── server/                         ← Node.js backend (Express)
-│   ├── db/
-│   │   └── database.js             ← lowdb setup (JSON collections auto-created)
-│   ├── middleware/
-│   │   └── auth.js                 ← JWT verify middleware
-│   ├── routes/
-│   │   ├── auth.js                 ← POST /register, /login
-│   │   ├── sessions.js             ← Timer sessions CRUD
-│   │   ├── dsa.js                  ← DSA problem log
-│   │   ├── projects.js             ← Projects CRUD
-│   │   ├── stats.js                ← Summary, heatmap, weekly
-│   │   └── user.js                 ← Profile get/update
-│   ├── index.js                    ← Express entry point
-│   ├── devtrack.json               ← Auto-generated JSON database file
-│   └── package.json
-│
-├── package.json                    ← Root scripts (install:all, dev)
-└── README.md
-```
+├── client/ # React Frontend (Vite)
+│ ├── src/
+│ │ ├── pages/ # Dashboard, Timer, Heatmap, DSA, Projects
+│ │ ├── store/ # Zustand Auth Store
+│ │ └── lib/ # Axios Instance
+├── server/ # Node.js Backend
+│ ├── db/ # lowdb setup
+│ ├── routes/ # Auth, Sessions, DSA, Stats, User
+│ └── index.js # Entry Point
+└── package.json # Root scripts for "one-command" startup
 
-## API Endpoints
+📡 API Endpoints Summary
+Method,Path,Description
+POST,/api/auth/login,Secure JWT Authentication
+GET,/api/stats/summary,Dashboard metrics
+POST,/api/sessions/start,Start focus timer
+GET,/api/dsa,Retrieve logged problems
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | /api/auth/register | Register new user |
-| POST | /api/auth/login | Login → returns JWT |
-| GET  | /api/health | Server health check |
-| POST | /api/sessions/start | Start timer session |
-| POST | /api/sessions/:id/end | End session, log duration |
-| GET  | /api/sessions/active | Get current active session |
-| GET  | /api/sessions | List past sessions |
-| POST | /api/dsa | Log solved DSA problem |
-| GET  | /api/dsa | List all DSA problems |
-| DELETE | /api/dsa/:id | Remove problem |
-| GET  | /api/projects | List projects |
-| POST | /api/projects | Add project |
-| PATCH | /api/projects/:id | Update project |
-| DELETE | /api/projects/:id | Remove project |
-| GET  | /api/stats/summary | Dashboard numbers |
-| GET  | /api/stats/heatmap | 365-day heatmap data |
-| GET  | /api/stats/weekly | Last 7 days hours |
-| GET  | /api/user/me | Get profile |
-| PATCH | /api/user/me | Update profile + social links |
+📝 License
+This project is open-source. Feel free to fork and build your own version of the Hustle.
 
-## Features
-
-- **Session Timer** — Start/pause/resume/end. Alarm sound on finish. Persists across page refresh.
-- **Session log** — Every session logged with subject, topic, duration.
-- **GitHub-style heatmap** — 52-week grid of daily study hours.
-- **DSA Tracker** — Log Neetcode 150 problems by category. Progress bars per category.
-- **Projects** — Track status (planned/in-progress/completed), tech stack, GitHub + live links.
-- **Subjects** — Track and manage subjects.
-- **Profile + Share** — Portfolio card with auto-generated share text for X and LinkedIn.
-- **Dashboard** — Total hours, streak, DSA count, subject bars, roadmap progress.
-
-## Customise
-
-Change the JWT secret in `server/middleware/auth.js` (or set a `JWT_SECRET` env variable) before deploying.
+Developed to help developers stay consistent By Ashutosh Aman.
