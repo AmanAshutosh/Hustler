@@ -1,67 +1,192 @@
-/* src/index.css — global variables and base resets only */
+/* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── Design tokens ── */
 :root {
-  --bg:           #080d1a;
-  --surface:      #0f1629;
-  --surface2:     #162035;
-  --border:       #1e2d4a;
-  --border2:      #253555;
-  --text:         #f0f4ff;
-  --text2:        #8896b3;
-  --text3:        #4d6080;
+  --bg:            #070810;
+  --surface-solid: #0d0f1e;
+
+  /* Glass surfaces */
+  --surface:  rgba(255, 255, 255, 0.045);
+  --surface2: rgba(255, 255, 255, 0.075);
+
+  /* Borders */
+  --border:  rgba(255, 255, 255, 0.08);
+  --border2: rgba(255, 255, 255, 0.15);
+
+  /* Text */
+  --text:  rgba(255, 255, 255, 0.92);
+  --text2: rgba(255, 255, 255, 0.55);
+  --text3: rgba(255, 255, 255, 0.30);
+
+  /* Brand accent */
   --accent:       #D1FF05;
   --accent-hover: #b8e000;
-  --accent-light: #0d1a00;
+  --accent-light: rgba(209, 255, 5, 0.10);
   --accent-dark:  #8aaa00;
-  --green:        #22c55e;
-  --green-light:  #052e16;
-  --amber:        #f59e0b;
-  --amber-light:  #1c0e00;
-  --red:          #ef4444;
-  --red-light:    #2d0000;
-  --blue:         #3b82f6;
-  --blue-light:   #0c1a3d;
-  --purple:       #a855f7;
-  --purple-light: #1a0a2e;
-  --cyan:         #06b6d4;
-  --radius:       10px;
-  --radius-lg:    16px;
-  --shadow:       0 1px 3px rgba(0,0,0,.3);
-  --shadow-md:    0 4px 24px rgba(0,0,0,.4);
+  --accent-glow:  rgba(209, 255, 5, 0.22);
+
+  /* Apple system colours */
+  --green:        #30d158;
+  --green-light:  rgba(48,  209, 88,  0.12);
+  --amber:        #ffd60a;
+  --amber-light:  rgba(255, 214, 10,  0.12);
+  --red:          #ff453a;
+  --red-light:    rgba(255, 69,  58,  0.12);
+  --blue:         #0a84ff;
+  --blue-light:   rgba(10,  132, 255, 0.12);
+  --purple:       #bf5af2;
+  --purple-light: rgba(191, 90,  242, 0.12);
+  --cyan:         #5ac8fa;
+
+  /* Geometry */
+  --radius:    12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  /* Shadows */
+  --shadow:    0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255,255,255,0.06);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.70), 0 4px 16px rgba(0, 0, 0, 0.40);
+
+  /* Glass */
+  --glass-blur: blur(24px) saturate(180%);
 }
 
+/* ── Base ── */
 html, body, #root {
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
   color: var(--text);
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  /* Rich gradient backdrop — makes glass panels look great */
+  background:
+    radial-gradient(ellipse 80% 60% at 10%  5%,  rgba(120, 60, 220, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 80% at 92% 92%,  rgba(0,  80, 255, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 50% 20%,  rgba(209,255,  5, 0.05) 0%, transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  min-height: 100%;
 }
 
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font-family: inherit; }
 img { display: block; max-width: 100%; }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
 
-/* Global form inputs */
+/* ── Global form controls ── */
 input, select, textarea {
-  background: var(--surface2);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   color: var(--text);
   border-radius: var(--radius);
-  padding: 8px 12px;
+  padding: 9px 12px;
   font-size: 13px;
   outline: none;
-  transition: border-color .15s;
+  transition: border-color .18s, box-shadow .18s, background .18s;
 }
+
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(209, 255, 5, 0.12);
 }
+
 input::placeholder, textarea::placeholder { color: var(--text3); }
-select option { background: var(--surface2); color: var(--text); }
+input:disabled, select:disabled, textarea:disabled { opacity: .40; cursor: not-allowed; }
+select option { background: #0d0f1e; color: var(--text); }
+
+/* ── Shared layout utilities ── */
+.page-header              { margin-bottom: 24px; }
+.page-header h2           { font-size: 22px; font-weight: 700; letter-spacing: -.4px; color: var(--text); }
+.page-header p            { font-size: 13px; color: var(--text3); margin-top: 4px; }
+
+.sec-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  margin-bottom: 14px;
+}
+
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 5px;
+}
+
+.empty-msg { font-size: 12px; color: var(--text3); padding: 8px 0; }
+
+/* ── Global glass card ── */
+.card {
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+  transition: border-color .2s, box-shadow .2s;
+}
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* ── Global buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  transition: background .15s, transform .12s, box-shadow .15s;
+}
+.btn:hover   { background: rgba(255,255,255,0.10); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.30); }
+.btn:active  { transform: translateY(0); }
+.btn:disabled { opacity: .40; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+.btn-primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); box-shadow: 0 4px 20px rgba(209,255,5,0.30); }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+
+/* ── Global progress bars ── */
+.bar-row { margin-bottom: 11px; }
+.bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 5px; }
+.bar-label span:last-child { color: var(--text3); font-size: 11px; }
+.bar-track { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.4,0,.2,1); }
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { opacity: .4; }
+  50%  { opacity: .8; }
+  100% { opacity: .4; }
+}
