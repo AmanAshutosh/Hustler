@@ -14,17 +14,25 @@ router.get('/summary', (req, res) => {
   const dsaTotal      = db.get('dsa_problems').filter({ user_id: uid }).size().value();
   const projectsTotal = db.get('projects').filter({ user_id: uid }).size().value();
 
-  // Streak: consecutive days with total_hours > 0 going back from today
-  const dailyStats = db.get('daily_stats').filter({ user_id: uid })
-    .orderBy(['date'], ['desc']).value();
-  const statMap = {};
-  dailyStats.forEach(s => { statMap[s.date] = s.total_hours; });
+  // Build date set directly from sessions (no dependency on daily_stats)
+  const sessionDates = new Set(
+    sessions
+      .filter(s => s.ended_at)
+      .map(s => s.ended_at.split('T')[0])
+  );
+
+  // Streak: consecutive days from today backwards
   let streak = 0;
   const cursor = new Date();
+  cursor.setHours(0, 0, 0, 0);
   while (true) {
     const key = cursor.toISOString().split('T')[0];
-    if (statMap[key] && statMap[key] > 0) { streak++; cursor.setDate(cursor.getDate() - 1); }
-    else break;
+    if (sessionDates.has(key)) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    } else {
+      break;
+    }
   }
 
   // Subject breakdown
@@ -45,24 +53,32 @@ router.get('/heatmap', (req, res) => {
   from.setDate(from.getDate() - 364);
   const fromStr = from.toISOString().split('T')[0];
 
-  const stats = db.get('daily_stats')
-    .filter(s => s.user_id === req.userId && s.date >= fromStr)
-    .orderBy(['date'], ['asc']).value();
+  // Compute directly from sessions — works even if daily_stats is empty
+  const sessions = db.get('sessions')
+    .filter(s => s.user_id === req.userId && !s.is_active && s.ended_at)
+    .value();
 
-  const heatmap = stats.map(s => {
-    const sessions = s.session_count || 0;
-    const level = sessions === 0 ? 0
-      : sessions === 1 ? 1
-      : sessions <= 3 ? 2
-      : sessions <= 5 ? 3
-      : 4;
-    return {
-      date: s.date,
-      hours: Math.round(s.total_hours * 10) / 10,
-      sessions,
-      level,
-    };
+  const dateMap = {};
+  sessions.forEach(s => {
+    const date = s.ended_at.split('T')[0];
+    if (date < fromStr) return;
+    if (!dateMap[date]) dateMap[date] = { hours: 0, sessions: 0 };
+    dateMap[date].hours += (s.duration_secs || 0) / 3600;
+    dateMap[date].sessions += 1;
   });
+
+  const heatmap = Object.entries(dateMap)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, data]) => {
+      const { sessions, hours } = data;
+      const level = sessions === 0 ? 0
+        : sessions === 1 ? 1
+        : sessions <= 3 ? 2
+        : sessions <= 5 ? 3
+        : 4;
+      return { date, hours: Math.round(hours * 10) / 10, sessions, level };
+    });
+
   res.json(heatmap);
 });
 

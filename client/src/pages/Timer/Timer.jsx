@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Play, Pause, Square, Clock, Bell, Trash2 } from 'lucide-react';
+import { Play, Pause, Square, Clock, Bell, Trash2, CalendarPlus } from 'lucide-react';
 import api from '../../lib/api.js';
 import toast from 'react-hot-toast';
 import './Timer.css';
@@ -36,6 +36,40 @@ function playAlarm() {
   } catch {}
 }
 
+function exportToCalendar(session) {
+  const start = new Date(session.started_at);
+  const end   = session.ended_at
+    ? new Date(session.ended_at)
+    : new Date(start.getTime() + (session.duration_secs || 0) * 1000);
+
+  const fmtICS = d => d.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
+
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Hustler 2.0//Study Tracker//EN',
+    'BEGIN:VEVENT',
+    `DTSTART:${fmtICS(start)}`,
+    `DTEND:${fmtICS(end)}`,
+    `SUMMARY:Study: ${session.subject}`,
+    `DESCRIPTION:Topic: ${session.topic || 'General'}\\nDuration: ${fmtDur(session.duration_secs)}`,
+    `UID:${session.id}@hustler2`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `study-${session.subject.replace(/\s+/g, '-')}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast.success('Calendar file downloaded — open it to add to your calendar');
+}
+
 export default function Timer() {
   const location  = useLocation();
   const preSubject = location.state?.subject;
@@ -54,16 +88,13 @@ export default function Timer() {
   const intervalRef    = useRef(null);
   const pausedAccRef   = useRef(0);
   const pauseStartRef  = useRef(null);
-  // Refs mirror state so poll closure always reads fresh values without stale captures
   const runningRef     = useRef(false);
   const sessionIdRef   = useRef(null);
-  // Consecutive poll misses — must see N misses before resetting (prevents false resets)
   const missCountRef   = useRef(0);
 
   useEffect(() => { runningRef.current  = running;   }, [running]);
   useEffect(() => { sessionIdRef.current = sessionId; }, [sessionId]);
 
-  // ── Helper: apply an active session received from the server ──
   function applyActiveSession(data) {
     const isPaused = !!data.paused_at;
     const base     = isPaused ? new Date(data.paused_at) : new Date();
@@ -93,7 +124,35 @@ export default function Timer() {
     intervalRef.current = setInterval(() => setElapsed(e => e + 1), 1000);
   }
 
-  // ── Mount: load history + restore any active session ──
+  // ── Immediate poll helper — used by mount, visibility change, and interval ──
+  function pollActive() {
+    api.get('/sessions/active').then(({ data }) => {
+      const isRunning = runningRef.current;
+      const currentId = sessionIdRef.current;
+
+      if (!data && isRunning) {
+        missCountRef.current += 1;
+        if (missCountRef.current >= 3) {
+          missCountRef.current = 0;
+          clearInterval(intervalRef.current);
+          setRunning(false); setPaused(false); setElapsed(0);
+          setSessionId(null); pausedAccRef.current = 0; pauseStartRef.current = null;
+          toast('Session ended on another device');
+          api.get('/sessions?limit=25').then(({ data: d }) => setSessions(d.sessions)).catch(() => {});
+        }
+      } else {
+        missCountRef.current = 0;
+        if (data && !isRunning) {
+          applyActiveSession(data);
+        } else if (data && isRunning && data.id !== currentId) {
+          clearInterval(intervalRef.current);
+          applyActiveSession(data);
+        }
+      }
+    }).catch(() => {});
+  }
+
+  // ── Mount: load history + restore active session ──
   useEffect(() => {
     api.get('/sessions?limit=25').then(({ data }) => setSessions(data.sessions)).catch(() => {});
     api.get('/sessions/active').then(({ data }) => {
@@ -102,43 +161,19 @@ export default function Timer() {
     return () => clearInterval(intervalRef.current);
   }, []);
 
-  // ── Cross-device sync: poll every 10 s ──
-  // Uses missCountRef to require 3 consecutive null responses before resetting
-  // (prevents false resets from single network blips over long sessions)
+  // ── Cross-device sync: poll every 5 s ──
   useEffect(() => {
-    const poll = setInterval(() => {
-      api.get('/sessions/active').then(({ data }) => {
-        const isRunning  = runningRef.current;
-        const currentId  = sessionIdRef.current;
-
-        if (!data && isRunning) {
-          // Possible end from another device — wait for 3 consecutive misses
-          missCountRef.current += 1;
-          if (missCountRef.current >= 3) {
-            missCountRef.current = 0;
-            clearInterval(intervalRef.current);
-            setRunning(false); setPaused(false); setElapsed(0);
-            setSessionId(null); pausedAccRef.current = 0; pauseStartRef.current = null;
-            toast('Session ended on another device');
-            api.get('/sessions?limit=25').then(({ data: d }) => setSessions(d.sessions)).catch(() => {});
-          }
-        } else {
-          missCountRef.current = 0; // reset on any successful response
-
-          if (data && !isRunning) {
-            // Session started on another device
-            applyActiveSession(data);
-          } else if (data && isRunning && data.id !== currentId) {
-            // New session replaced the current one (e.g. auto-restart from another tab)
-            clearInterval(intervalRef.current);
-            applyActiveSession(data);
-          }
-        }
-      }).catch(() => {
-        // Network error — do NOT count as a miss; leave session state untouched
-      });
-    }, 10000);
+    const poll = setInterval(pollActive, 5000);
     return () => clearInterval(poll);
+  }, []);
+
+  // ── Instant sync when tab/app becomes visible ──
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') pollActive();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
   }, []);
 
   // ── Start ──
@@ -182,7 +217,6 @@ export default function Timer() {
     clearInterval(intervalRef.current);
     setStopping(true);
 
-    // If paused when stopped, accumulate the current pause duration
     if (paused && pauseStartRef.current) {
       pausedAccRef.current += Math.floor((Date.now() - pauseStartRef.current) / 1000);
     }
@@ -197,7 +231,6 @@ export default function Timer() {
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to end session');
     } finally {
-      // Always clean up local state regardless of API success/failure
       setStopping(false);
       setRunning(false); setPaused(false); setElapsed(0);
       setSessionId(null); pausedAccRef.current = 0; pauseStartRef.current = null;
@@ -221,8 +254,8 @@ export default function Timer() {
     } catch { toast.error('Failed to delete sessions'); }
   }
 
-  const clockClass         = !running ? 'inactive' : paused ? 'paused' : 'running';
-  const completedSessions  = sessions.filter(s => !s.is_active);
+  const clockClass        = !running ? 'inactive' : paused ? 'paused' : 'running';
+  const completedSessions = sessions.filter(s => !s.is_active);
 
   return (
     <div className="timer-page">
@@ -302,7 +335,7 @@ export default function Timer() {
                 <tr>
                   <th>Subject</th><th>Topic</th><th>Started</th>
                   <th style={{ textAlign: 'right' }}>Duration</th>
-                  <th style={{ width: 32 }}></th>
+                  <th style={{ width: 64 }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -314,7 +347,14 @@ export default function Timer() {
                       {new Date(s.started_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                     <td className="td-dur">{fmtDur(s.duration_secs)}</td>
-                    <td className="td-del">
+                    <td className="td-actions">
+                      <button
+                        className="btn-cal"
+                        onClick={() => exportToCalendar(s)}
+                        title="Add to calendar"
+                      >
+                        <CalendarPlus size={12} />
+                      </button>
                       <button
                         className="btn-del"
                         onClick={() => handleDeleteSession(s.id)}
@@ -337,7 +377,9 @@ export default function Timer() {
             <div className="alarm-icon"><Bell size={32} /></div>
             <div className="alarm-title">Session complete!</div>
             <div className="alarm-sub">{alarm.subject} · {fmtDur(alarm.duration)} logged</div>
-            <button className="btn btn-start" onClick={() => setAlarm(null)}>Close</button>
+            <div className="alarm-actions">
+              <button className="btn btn-start" onClick={() => setAlarm(null)}>Close</button>
+            </div>
           </div>
         </div>
       )}

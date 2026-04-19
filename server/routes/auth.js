@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       return res.status(400).json({ error: 'Please enter a valid email address.' });
 
-    const existing = db.get('users').find({ email }).value();
+    const existing = db.get('users').find(u => u.email && u.email.trim().toLowerCase() === email).value();
     if (existing)
       return res.status(409).json({ error: 'An account with this email already exists.' });
 
@@ -58,7 +58,7 @@ router.post('/login', async (req, res) => {
     if (!email || !password)
       return res.status(400).json({ error: 'Email and password are required.' });
 
-    const user = db.get('users').find({ email }).value();
+    const user = db.get('users').find(u => u.email && u.email.trim().toLowerCase() === email).value();
     if (!user)
       return res.status(401).json({ error: 'No account found with this email.' });
 
