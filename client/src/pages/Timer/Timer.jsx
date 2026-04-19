@@ -52,46 +52,70 @@ export default function Timer() {
   const [alarm, setAlarm]         = useState(null);
 
   const intervalRef   = useRef(null);
-  const pausedAccRef  = useRef(0);   // total accumulated paused seconds
-  const pauseStartRef = useRef(null); // when the current pause started (ms)
+  const pausedAccRef  = useRef(0);
+  const pauseStartRef = useRef(null);
+  const runningRef    = useRef(false);
+  const sessionIdRef  = useRef(null);
+
+  // Keep refs in sync so polling closure always reads fresh values
+  useEffect(() => { runningRef.current = running; },   [running]);
+  useEffect(() => { sessionIdRef.current = sessionId; }, [sessionId]);
+
+  function applyActiveSession(data) {
+    const isPaused = !!data.paused_at;
+    const elapsedSince = isPaused
+      ? Math.floor((new Date(data.paused_at) - new Date(data.started_at)) / 1000) - (data.paused_secs || 0)
+      : Math.floor((Date.now() - new Date(data.started_at)) / 1000) - (data.paused_secs || 0);
+
+    setSessionId(data.id);
+    setSubject(data.subject);
+    setTopic(data.topic);
+    setElapsed(Math.max(0, elapsedSince));
+    pausedAccRef.current = data.paused_secs || 0;
+    setRunning(true);
+
+    if (isPaused) {
+      setPaused(true);
+      pauseStartRef.current = new Date(data.paused_at).getTime();
+    } else {
+      setPaused(false);
+      tick();
+    }
+  }
 
   useEffect(() => {
     api.get('/sessions?limit=25').then(({ data }) => setSessions(data.sessions));
     api.get('/sessions/active').then(({ data }) => {
-      if (!data) return;
-
-      const isPaused = !!data.paused_at;
-
-      let elapsedSince;
-      if (isPaused) {
-        // Show elapsed up to the moment it was paused — don't advance the clock
-        elapsedSince = Math.floor(
-          (new Date(data.paused_at) - new Date(data.started_at)) / 1000
-        ) - (data.paused_secs || 0);
-      } else {
-        // Session is live — calculate how much time has passed
-        elapsedSince = Math.floor(
-          (Date.now() - new Date(data.started_at)) / 1000
-        ) - (data.paused_secs || 0);
-      }
-
-      setSessionId(data.id);
-      setSubject(data.subject);
-      setTopic(data.topic);
-      setElapsed(Math.max(0, elapsedSince));
-      pausedAccRef.current = data.paused_secs || 0;
-
-      setRunning(true);
-
-      if (isPaused) {
-        // Restore paused state — record when the pause started so handlePause works correctly
-        setPaused(true);
-        pauseStartRef.current = new Date(data.paused_at).getTime();
-      } else {
-        tick();
-      }
+      if (data) applyActiveSession(data);
     }).catch(() => {});
     return () => clearInterval(intervalRef.current);
+  }, []);
+
+  // Poll every 10 s to sync state across devices / tabs
+  useEffect(() => {
+    const poll = setInterval(() => {
+      api.get('/sessions/active').then(({ data }) => {
+        const isRunning  = runningRef.current;
+        const currentId  = sessionIdRef.current;
+
+        if (!data && isRunning) {
+          // Session was ended from another device
+          clearInterval(intervalRef.current);
+          setRunning(false); setPaused(false); setElapsed(0);
+          setSessionId(null); pausedAccRef.current = 0; pauseStartRef.current = null;
+          toast('Session ended on another device');
+          api.get('/sessions?limit=25').then(({ data: d }) => setSessions(d.sessions));
+        } else if (data && !isRunning) {
+          // Session started on another device
+          applyActiveSession(data);
+        } else if (data && isRunning && data.id !== currentId) {
+          // Different session now active (e.g. previous one was auto-closed)
+          clearInterval(intervalRef.current);
+          applyActiveSession(data);
+        }
+      }).catch(() => {});
+    }, 10000);
+    return () => clearInterval(poll);
   }, []);
 
   function tick() {
@@ -136,7 +160,10 @@ export default function Timer() {
       playAlarm();
       setAlarm({ subject: data.subject, duration: data.duration_secs });
       setSessions(prev => [data, ...prev.filter(s => s.id !== data.id)]);
-    } catch { toast.error('Failed to end session'); }
+    } catch (err) {
+      const msg = err.response?.data?.error || 'Failed to end session';
+      toast.error(msg);
+    }
     setRunning(false); setPaused(false); setElapsed(0);
     setSessionId(null); pausedAccRef.current = 0; pauseStartRef.current = null;
   }

@@ -93,8 +93,11 @@ router.patch('/:id/resume', (req, res) => {
 // POST /api/sessions/:id/end
 router.post('/:id/end', (req, res) => {
   const { pausedSecs = 0 } = req.body;
-  const session = db.get('sessions').find({ id: req.params.id, user_id: req.userId }).value();
+  const session = db.get('sessions').find({ id: req.params.id }).value();
   if (!session) return res.status(404).json({ error: 'Session not found' });
+  if (session.user_id !== req.userId) return res.status(403).json({ error: 'Forbidden' });
+  // Already ended — return stored data idempotently instead of re-finalizing
+  if (!session.is_active) return res.json(session);
   const updated = finalizeSession(session, new Date(), pausedSecs);
   res.json(updated);
 });
