@@ -2,37 +2,35 @@
 .heatmap-page { padding: 24px; max-width: 960px; animation: fadeIn .35s cubic-bezier(.4,0,.2,1); }
 
 .metric-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 16px;
 }
 
 .metric-card {
-  background: rgba(255,255,255,0.045);
+  background: rgba(52,103,57,0.16);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  text-align: center;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.06);
+  border: 1px solid rgba(121,174,111,0.20);
+  border-radius: var(--radius-lg); padding: 16px; text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(159,203,152,0.06);
   transition: transform .2s, border-color .2s;
 }
-.metric-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(159,203,152,0.32);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.50), 0 0 18px rgba(159,203,152,0.08);
+}
 
 .metric-val { font-size: 26px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .metric-lbl { font-size: 11px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: .4px; }
 
 .card {
-  background: rgba(255,255,255,0.045);
+  background: rgba(52,103,57,0.14);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.06);
+  border: 1px solid rgba(121,174,111,0.18);
+  border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(159,203,152,0.05);
 }
 
 .heatmap-wrap { overflow-x: auto; }
@@ -43,9 +41,8 @@
 .heatmap-body { display: flex; align-items: flex-start; }
 
 .dow-labels {
-  display: flex; flex-direction: column;
-  gap: 2px; margin-right: 4px;
-  width: 26px; flex-shrink: 0;
+  display: flex; flex-direction: column; gap: 2px;
+  margin-right: 4px; width: 26px; flex-shrink: 0;
 }
 .dow-label { height: 13px; line-height: 13px; font-size: 9px; color: var(--text3); text-align: right; }
 
@@ -56,33 +53,30 @@
   width: 13px; height: 13px; border-radius: 3px;
   cursor: default; transition: filter .1s, transform .1s; flex-shrink: 0;
 }
-.hm-cell:hover { filter: brightness(1.3); transform: scale(1.2); z-index: 1; }
+.hm-cell:hover { filter: brightness(1.25); transform: scale(1.2); z-index: 1; }
 
-/* Custom green scale: #F2EDC2 → #9FCB98 → #79AE6F → #346739 */
-.hm-0 { background: rgba(255,255,255,0.07); }
+/* Palette: #F2EDC2 → #9FCB98 → #79AE6F → #346739 */
+.hm-0 { background: rgba(52,103,57,0.22); }
 .hm-1 { background: #F2EDC2; }
 .hm-2 { background: #9FCB98; }
 .hm-3 { background: #79AE6F; }
 .hm-4 { background: #346739; }
 
-.hm-today { outline: 2px solid var(--accent); outline-offset: 1px; }
+.hm-today { outline: 2px solid var(--col-cream); outline-offset: 1px; }
 
 .hm-tooltip-bubble {
-  position: absolute;
-  transform: translate(-50%, -100%);
-  background: rgba(14,16,28,0.95);
-  backdrop-filter: blur(12px);
-  color: rgba(255,255,255,0.88);
-  font-size: 11px; font-weight: 500;
+  position: absolute; transform: translate(-50%, -100%);
+  background: rgba(9,20,9,0.96); backdrop-filter: blur(12px);
+  color: rgba(242,237,194,0.90); font-size: 11px; font-weight: 500;
   padding: 5px 9px; border-radius: 8px;
   white-space: nowrap; pointer-events: none; z-index: 10;
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.40);
+  border: 1px solid rgba(121,174,111,0.25);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.50);
 }
 .hm-tooltip-bubble::after {
   content: ''; position: absolute; top: 100%; left: 50%;
   transform: translateX(-50%); border: 5px solid transparent;
-  border-top-color: rgba(14,16,28,0.95);
+  border-top-color: rgba(9,20,9,0.96);
 }
 
 .heatmap-footer {
