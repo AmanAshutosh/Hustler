@@ -6,57 +6,58 @@
 .btn {
   padding: 9px 18px; border-radius: var(--radius);
   font-size: 13px; font-weight: 500; cursor: pointer;
-  border: 1px solid rgba(121,174,111,0.28);
-  background: rgba(52,103,57,0.22); color: var(--text);
+  border: 1px solid rgba(99,148,255,0.28);
+  background: rgba(15,25,50,0.70); color: var(--text);
   transition: background .15s, transform .12s, box-shadow .15s;
   display: inline-flex; align-items: center; gap: 6px;
 }
-.btn:hover    { background: rgba(52,103,57,0.38); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+.btn:hover    { background: rgba(30,58,138,0.55); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
 .btn:disabled { opacity: .40; cursor: not-allowed; transform: none; }
-.btn-primary  { background: var(--accent); color: #091409; border-color: var(--accent); font-weight: 700; }
-.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 4px 20px rgba(159,203,152,0.35), 0 0 28px rgba(159,203,152,0.15); }
+.btn-primary  { background: var(--accent); color: #ffffff; border-color: var(--accent); font-weight: 700; }
+.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 4px 20px rgba(59,130,246,0.40), var(--glow-md); }
 .btn-sm { padding: 6px 14px; font-size: 12px; }
 
+/* Dark card → lighter border */
 .card {
-  background: rgba(52,103,57,0.14);
+  background: rgba(15,25,50,0.58);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(121,174,111,0.18);
+  border: 1px solid rgba(99,148,255,0.20);
   border-radius: var(--radius-lg); padding: 20px; margin-bottom: 14px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(159,203,152,0.05);
-  transition: border-color .2s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(147,197,253,0.05);
+  transition: border-color .2s, box-shadow .2s;
 }
-.card:hover      { border-color: rgba(159,203,152,0.30); box-shadow: 0 12px 40px rgba(0,0,0,0.50), 0 0 20px rgba(159,203,152,0.07); }
-.card.accent-border { border-color: rgba(121,174,111,0.45); }
+.card:hover      { border-color: rgba(99,148,255,0.45); box-shadow: 0 12px 40px rgba(0,0,0,0.55), var(--glow-sm); }
+.card.accent-border { border-color: rgba(99,148,255,0.50); }
 
 input, select, textarea {
   width: 100%; padding: 10px 12px; font-size: 13px;
-  border: 1px solid rgba(121,174,111,0.22); border-radius: var(--radius);
-  background: rgba(52,103,57,0.20);
+  border: 1px solid rgba(99,148,255,0.22); border-radius: var(--radius);
+  background: rgba(15,25,50,0.70);
   color: var(--text); outline: none;
   transition: border-color .18s, box-shadow .18s; font-family: inherit;
 }
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(159,203,152,0.16), 0 0 16px rgba(159,203,152,0.10);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.18), 0 0 16px rgba(59,130,246,0.12);
 }
 
 .form-field   { margin-bottom: 12px; }
 .form-row     { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .form-actions { display: flex; gap: 8px; margin-top: 4px; }
 
-/* Project card */
+/* Dark project-card → lighter border */
 .project-card {
-  background: rgba(52,103,57,0.12);
+  background: rgba(15,25,50,0.55);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(121,174,111,0.14);
+  border: 1px solid rgba(99,148,255,0.16);
   border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 12px;
   transition: border-color .18s, box-shadow .18s, transform .18s;
 }
 .project-card:hover {
-  border-color: rgba(159,203,152,0.28);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 18px rgba(159,203,152,0.06);
+  border-color: rgba(99,148,255,0.42);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45), var(--glow-sm);
   transform: translateY(-1px);
 }
 
@@ -66,22 +67,22 @@ input:focus, select:focus, textarea:focus {
 .project-right { display: flex; align-items: center; gap: 8px; }
 
 .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
-.badge-planned     { background: rgba(52,103,57,0.30); color: var(--text3); border: 1px solid rgba(121,174,111,0.18); }
-.badge-in-progress { background: rgba(159,203,152,0.14); color: #9FCB98; }
-.badge-completed   { background: rgba(121,174,111,0.20); color: #79AE6F; }
+.badge-planned     { background: rgba(15,25,50,0.70); color: var(--text3); border: 1px solid rgba(99,148,255,0.18); }
+.badge-in-progress { background: rgba(59,130,246,0.18); color: #93c5fd; }
+.badge-completed   { background: rgba(30,58,138,0.45); color: #93c5fd; border: 1px solid rgba(99,148,255,0.28); }
 
 .del-btn {
   background: none; border: none; cursor: pointer;
   color: var(--text3); font-size: 13px; padding: 3px 5px;
   transition: color .15s; border-radius: 6px;
 }
-.del-btn:hover { color: var(--col-cream); background: rgba(52,103,57,0.35); }
+.del-btn:hover { color: #f0f6ff; background: rgba(30,58,138,0.45); }
 
 .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
 .chip {
   font-size: 10px; padding: 3px 9px;
-  background: rgba(52,103,57,0.28);
-  border: 1px solid rgba(121,174,111,0.18);
+  background: rgba(30,58,138,0.35);
+  border: 1px solid rgba(99,148,255,0.18);
   border-radius: 20px; color: var(--text2);
 }
 
@@ -89,7 +90,7 @@ input:focus, select:focus, textarea:focus {
 .project-link  { font-size: 12px; font-weight: 500; transition: opacity .15s; }
 .project-link:hover { opacity: .7; }
 .project-link.github { color: var(--text); }
-.project-link.live   { color: #9FCB98; }
+.project-link.live   { color: #93c5fd; }
 
 .status-select { margin-left: auto; width: auto !important; font-size: 12px; padding: 5px 10px; }
 
@@ -98,13 +99,14 @@ input:focus, select:focus, textarea:focus {
 
 .suggested-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+/* Lighter accent surface → darker border */
 .suggested-card {
-  background: rgba(52,103,57,0.10);
-  border: 1px dashed rgba(121,174,111,0.20);
+  background: rgba(59,130,246,0.06);
+  border: 1px dashed rgba(30,58,138,0.50);
   border-radius: var(--radius-lg); padding: 16px;
   transition: border-color .15s, background .15s;
 }
-.suggested-card:hover { border-color: rgba(159,203,152,0.32); background: rgba(52,103,57,0.22); }
+.suggested-card:hover { border-color: rgba(59,130,246,0.50); background: rgba(59,130,246,0.12); }
 
 .suggested-name { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
 .suggested-desc { font-size: 11px; color: var(--text3); margin-bottom: 12px; line-height: 1.5; }

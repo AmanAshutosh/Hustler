@@ -1,7 +1,7 @@
 /* ── Overlay ── */
 .loader-overlay {
   position: fixed; inset: 0; z-index: 9999;
-  background: #091409;
+  background: #060d1f;
   display: flex; align-items: center; justify-content: center;
   animation: lo-in .18s ease both;
 }
@@ -28,7 +28,7 @@
 
 /* ── Traces ── */
 .trace-bg {
-  stroke: rgba(52,103,57,0.45);
+  stroke: rgba(30,58,138,0.45);
   stroke-width: 1.8; fill: none;
 }
 
@@ -39,20 +39,20 @@
   animation: flow 3s cubic-bezier(0.5, 0, 0.9, 1) infinite;
 }
 
-/* All 5 trace colours from the 4-color palette */
-.yellow { stroke: #F2EDC2; color: #F2EDC2; }
-.blue   { stroke: #79AE6F; color: #79AE6F; }
-.green  { stroke: #9FCB98; color: #9FCB98; }
-.purple { stroke: #346739; color: #346739; }
-.red    { stroke: #79AE6F; color: #79AE6F; }
+/* Navy/blue trace colours */
+.yellow { stroke: #f0f6ff;  color: #f0f6ff; }
+.blue   { stroke: #93c5fd;  color: #93c5fd; }
+.green  { stroke: #3b82f6;  color: #3b82f6; }
+.purple { stroke: #1e3a8a;  color: #1e3a8a; }
+.red    { stroke: #93c5fd;  color: #93c5fd; }
 
 @keyframes flow { to { stroke-dashoffset: 0; } }
 
 /* ── Big % counter ── */
 .loader-pct {
   font-size: clamp(48px, 12vw, 80px); font-weight: 800; line-height: 1;
-  color: #9FCB98; font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 40px rgba(159,203,152,0.40), 0 0 80px rgba(159,203,152,0.18);
+  color: #93c5fd; font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 40px rgba(147,197,253,0.40), 0 0 80px rgba(59,130,246,0.20);
   letter-spacing: -2px; margin-top: 4px;
 }
 .loader-pct-sym { font-size: .38em; font-weight: 400; opacity: .55; letter-spacing: 0; }
@@ -60,17 +60,17 @@
 /* ── Thin progress bar ── */
 .loader-bar-track {
   position: relative; width: min(240px, 80vw); height: 3px;
-  background: rgba(52,103,57,0.45); border-radius: 2px;
+  background: rgba(30,58,138,0.45); border-radius: 2px;
   overflow: visible; margin-top: 14px;
 }
 .loader-bar-fill {
-  height: 100%; background: #9FCB98; border-radius: 2px;
+  height: 100%; background: #3b82f6; border-radius: 2px;
   transition: width .06s linear;
-  box-shadow: 0 0 10px #9FCB98;
+  box-shadow: 0 0 10px #3b82f6;
 }
 .loader-bar-glow {
   position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%;
-  background: #9FCB98; transform: translate(-50%, -50%);
-  box-shadow: 0 0 14px 4px rgba(159,203,152,0.60);
+  background: #93c5fd; transform: translate(-50%, -50%);
+  box-shadow: 0 0 14px 4px rgba(147,197,253,0.60);
   transition: left .06s linear; pointer-events: none;
 }

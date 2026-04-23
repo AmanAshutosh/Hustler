@@ -86,19 +86,19 @@ export default function Heatmap() {
 
       <div className="metric-grid">
         <div className="metric-card">
-          <div className="metric-val" style={{ color: '#9FCB98' }}>{summary?.totalHours || 0}h</div>
+          <div className="metric-val" style={{ color: '#93c5fd' }}>{summary?.totalHours || 0}h</div>
           <div className="metric-lbl">Total hours</div>
         </div>
         <div className="metric-card">
-          <div className="metric-val" style={{ color: '#F2EDC2' }}>{summary?.streak || 0} 🔥</div>
+          <div className="metric-val" style={{ color: '#f0f6ff' }}>{summary?.streak || 0} 🔥</div>
           <div className="metric-lbl">Current streak</div>
         </div>
         <div className="metric-card">
-          <div className="metric-val" style={{ color: '#79AE6F' }}>{totalStudied}</div>
+          <div className="metric-val" style={{ color: '#3b82f6' }}>{totalStudied}</div>
           <div className="metric-lbl">Days studied</div>
         </div>
         <div className="metric-card">
-          <div className="metric-val" style={{ color: '#9FCB98' }}>{summary?.totalSessions || 0}</div>
+          <div className="metric-val" style={{ color: '#93c5fd' }}>{summary?.totalSessions || 0}</div>
           <div className="metric-lbl">Sessions</div>
         </div>
       </div>
