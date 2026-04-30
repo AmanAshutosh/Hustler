@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Timer, Flame, BookOpen,
-  Zap, FolderKanban, User, LogOut, Menu, X
+  Zap, FolderKanban, Layers, User, LogOut, Menu, X
 } from 'lucide-react';
 import { useAuth } from '../../store/auth.js';
 import Footer from '../Footer/Footer.jsx';
@@ -18,6 +18,7 @@ const NAV = [
   { to: '/subjects', label: 'Subjects',   Icon: BookOpen },
   { to: '/dsa',      label: 'DSA',        Icon: Zap },
   { to: '/projects', label: 'Projects',   Icon: FolderKanban },
+  { to: '/practice', label: 'Practice',   Icon: Layers },
   { to: '/profile',  label: 'Profile',    Icon: User },
 ];
 

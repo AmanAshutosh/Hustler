@@ -9,6 +9,7 @@ import Heatmap    from './pages/Heatmap/Heatmap.jsx';
 import Subjects   from './pages/Subjects/Subjects.jsx';
 import DSATracker from './pages/DSATracker/DSATracker.jsx';
 import Projects   from './pages/Projects/Projects.jsx';
+import Practice   from './pages/Practice/Practice.jsx';
 import Profile    from './pages/Profile/Profile.jsx';
 import Login      from './pages/Login/Login.jsx';
 import Register   from './pages/Register/Register.jsx';
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="subjects"    element={<Subjects />} />
           <Route path="dsa"         element={<DSATracker />} />
           <Route path="projects"    element={<Projects />} />
+          <Route path="practice"    element={<Practice />} />
           <Route path="profile"     element={<Profile />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
