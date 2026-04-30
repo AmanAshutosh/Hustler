@@ -30,12 +30,20 @@ export default function Layout() {
   const [todayHours, setTodayHours] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true); // true on first render = cold start
+  const [offline, setOffline] = useState(false);
 
   // Show loader on every route change (and on initial mount)
   useEffect(() => {
     setLoading(true);
     setMenuOpen(false); // close mobile menu on navigate
   }, [location.pathname]);
+
+  useEffect(() => {
+    // Health check — shows offline banner if backend is unreachable
+    api.get('/health')
+      .then(() => setOffline(false))
+      .catch(() => setOffline(true));
+  }, []);
 
   useEffect(() => {
     api.get('/stats/weekly').then(({ data }) => {
@@ -103,6 +111,11 @@ export default function Layout() {
 
       {/* Main area */}
       <div className="main-area">
+        {offline && (
+          <div className="offline-banner">
+            ⚠ Backend server is offline — data cannot be saved. Run <code>npm run dev</code> from the project root.
+          </div>
+        )}
         <main className="main-content">
           <Outlet />
         </main>

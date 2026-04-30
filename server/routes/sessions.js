@@ -5,10 +5,11 @@ const router = express.Router();
 function makeId() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
 
 // Helper: finalize a session and update daily_stats
-function finalizeSession(session, endedAt, pausedSecs) {
+// Pause accounting is done entirely from server-side fields (paused_secs + paused_at)
+// to avoid double-counting when the client also sends accumulated pause time.
+function finalizeSession(session, endedAt) {
   const startedAt = new Date(session.started_at);
-  // If still paused when force-ended, count that pause time too
-  let totalPaused = pausedSecs;
+  let totalPaused = session.paused_secs || 0;
   if (session.paused_at) {
     totalPaused += Math.floor((endedAt - new Date(session.paused_at)) / 1000);
   }
@@ -50,7 +51,7 @@ router.post('/start', (req, res) => {
   const activeSessions = db.get('sessions')
     .filter({ user_id: req.userId, is_active: true }).value();
   activeSessions.forEach(s => {
-    finalizeSession(s, new Date(), s.paused_secs || 0);
+    finalizeSession(s, new Date());
   });
 
   const session = {
@@ -98,7 +99,7 @@ router.post('/:id/end', (req, res) => {
   if (session.user_id !== req.userId) return res.status(403).json({ error: 'Forbidden' });
   // Already ended — return stored data idempotently instead of re-finalizing
   if (!session.is_active) return res.json(session);
-  const updated = finalizeSession(session, new Date(), pausedSecs);
+  const updated = finalizeSession(session, new Date());
   res.json(updated);
 });
 

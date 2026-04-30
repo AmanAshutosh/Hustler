@@ -83,11 +83,24 @@ router.get('/heatmap', (req, res) => {
 });
 
 // GET /api/stats/weekly
+// Compute directly from sessions so it stays consistent with heatmap/summary
+// even if daily_stats is stale or empty.
 router.get('/weekly', (req, res) => {
-  const stats = db.get('daily_stats').filter({ user_id: req.userId })
-    .orderBy(['date'], ['desc']).take(7).value();
+  const from = new Date();
+  from.setDate(from.getDate() - 6);
+  const fromStr = from.toISOString().split('T')[0];
+
+  const sessions = db.get('sessions')
+    .filter(s => s.user_id === req.userId && !s.is_active && s.ended_at)
+    .value();
+
   const result = {};
-  stats.forEach(s => { result[s.date] = Math.round(s.total_hours * 10) / 10; });
+  sessions.forEach(s => {
+    const date = s.ended_at.split('T')[0];
+    if (date < fromStr) return;
+    result[date] = Math.round(((result[date] || 0) + (s.duration_secs || 0) / 3600) * 10) / 10;
+  });
+
   res.json(result);
 });
 

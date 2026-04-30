@@ -167,6 +167,18 @@ export default function Timer() {
     return () => clearInterval(poll);
   }, []);
 
+  // ── Warn before tab close/refresh with active session ──
+  useEffect(() => {
+    const handler = (e) => {
+      if (runningRef.current) {
+        e.preventDefault();
+        e.returnValue = 'You have an active study session. End it before leaving so your time is saved.';
+      }
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, []);
+
   // ── Instant sync when tab/app becomes visible ──
   useEffect(() => {
     const onVisible = () => {
@@ -189,7 +201,9 @@ export default function Timer() {
       tick();
       toast.success('Session started!');
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Failed to start session');
+      const msg = err.response?.data?.error
+        || (err.request ? 'Server unreachable — is the backend running?' : 'Failed to start session');
+      toast.error(msg, { duration: 6000 });
     }
   }
 
@@ -229,7 +243,9 @@ export default function Timer() {
       setAlarm({ subject: data.subject, duration: data.duration_secs });
       setSessions(prev => [data, ...prev.filter(s => s.id !== data.id)]);
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Failed to end session');
+      const msg = err.response?.data?.error
+        || (err.request ? 'Server unreachable — session not saved. Is the backend running?' : 'Failed to end session');
+      toast.error(msg, { duration: 6000 });
     } finally {
       setStopping(false);
       setRunning(false); setPaused(false); setElapsed(0);

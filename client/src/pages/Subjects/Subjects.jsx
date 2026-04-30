@@ -1,6 +1,7 @@
 // src/pages/Subjects/Subjects.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../lib/api.js';
 import {
   ChevronDown, ChevronRight, CheckCircle2, Circle,
   Play, ExternalLink
@@ -235,23 +236,46 @@ const SUBJECTS = [
 
 const STORAGE_KEY = 'hustler_subject_progress';
 
-function loadProgress() {
+function loadLocal() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
   catch { return {}; }
 }
 
-function saveProgress(data) {
+function saveLocal(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function Subjects() {
   const navigate = useNavigate();
-  const [progress, setProgress] = useState(loadProgress);
-  const [expanded, setExpanded] = useState({});
+  const [progress, setProgress]   = useState({});
+  const [progressLoaded, setProgressLoaded] = useState(false);
+  const [expanded, setExpanded]   = useState({});
   const [levelOpen, setLevelOpen] = useState({});
+  const saveTimerRef = useRef(null);
 
-  useEffect(() => { saveProgress(progress); }, [progress]);
+  // Load from backend on mount; fallback to localStorage if offline
+  useEffect(() => {
+    api.get('/subjects/progress')
+      .then(({ data }) => {
+        const merged = { ...loadLocal(), ...data.progress };
+        setProgress(merged);
+        saveLocal(merged);
+      })
+      .catch(() => setProgress(loadLocal()))
+      .finally(() => setProgressLoaded(true));
+  }, []);
+
+  // Sync to backend (debounced 600 ms) and always mirror to localStorage
+  useEffect(() => {
+    if (!progressLoaded) return;
+    saveLocal(progress);
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      api.put('/subjects/progress', { progress }).catch(() => {});
+    }, 600);
+    return () => clearTimeout(saveTimerRef.current);
+  }, [progress, progressLoaded]);
 
   function toggleTopic(subjectId, level, topic) {
     const key = `${subjectId}.${level}.${topic}`;

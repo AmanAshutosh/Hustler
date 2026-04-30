@@ -18,8 +18,9 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/sessions", authenticate, require("./routes/sessions"));
 app.use("/api/dsa", authenticate, require("./routes/dsa"));
 app.use("/api/projects", authenticate, require("./routes/projects"));
-app.use("/api/stats", authenticate, require("./routes/stats"));
-app.use("/api/user", authenticate, require("./routes/user"));
+app.use("/api/stats",    authenticate, require("./routes/stats"));
+app.use("/api/subjects", authenticate, require("./routes/subjects"));
+app.use("/api/user",     authenticate, require("./routes/user"));
 
 app.get("/api/health", (_, res) => res.json({ ok: true }));
 
