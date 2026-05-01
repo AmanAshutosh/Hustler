@@ -1,0 +1,81 @@
+.dclock {
+  background: rgba(15, 25, 50, 0.65);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(99, 148, 255, 0.20);
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(147, 197, 253, 0.05);
+  text-align: right;
+  min-width: 200px;
+  flex-shrink: 0;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.dclock:hover {
+  border-color: rgba(99, 148, 255, 0.38);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(209, 255, 5, 0.06), inset 0 1px 0 rgba(147, 197, 253, 0.07);
+}
+
+.dclock-time {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.dclock-digits {
+  font-family: 'Courier New', 'SF Mono', 'Fira Mono', 'Consolas', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #D1FF05;
+  text-shadow: 0 0 14px rgba(209, 255, 5, 0.30), 0 0 28px rgba(209, 255, 5, 0.12);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dclock-ampm {
+  font-family: 'Courier New', 'SF Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(209, 255, 5, 0.60);
+  text-transform: uppercase;
+  padding-bottom: 2px;
+}
+
+.dclock-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.dclock-date,
+.dclock-day {
+  font-family: 'Courier New', 'SF Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: .4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dclock-sep {
+  color: var(--text3);
+  opacity: .35;
+  font-size: 10px;
+}
+
+@media (max-width: 640px) {
+  .dclock {
+    min-width: unset;
+    text-align: center;
+    padding: 10px 14px;
+    width: 100%;
+  }
+  .dclock-time { justify-content: center; }
+  .dclock-meta { justify-content: center; }
+  .dclock-digits { font-size: 22px; }
+}

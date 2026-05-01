@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Clock, Flame, Zap, FolderKanban, TrendingUp, Sparkles } from 'lucide-react';
 import api from '../../lib/api.js';
+import DigitalClock from '../../components/DigitalClock/DigitalClock.jsx';
 import './Dashboard.css';
 
 const QUOTES = [
@@ -131,9 +132,12 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="page-header">
-        <h2>Dashboard</h2>
-        <p>Your full-stack grind at a glance</p>
+      <div className="page-header dash-header">
+        <div>
+          <h2>Dashboard</h2>
+          <p>Your full-stack grind at a glance</p>
+        </div>
+        <DigitalClock />
       </div>
 
       <div className="quote-card">

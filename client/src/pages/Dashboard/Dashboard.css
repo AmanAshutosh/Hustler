@@ -1,6 +1,8 @@
 /* src/pages/Dashboard/Dashboard.css */
 .dashboard { padding: 24px; max-width: 960px; animation: fadeIn .35s cubic-bezier(.4,0,.2,1); }
 
+.dash-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
 .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
 
 /* Dark card → lighter border */
