@@ -1,50 +1,49 @@
 /* src/pages/Practice/Practice.css */
-.practice-page { padding: 24px; max-width: 900px; animation: fadeIn .35s cubic-bezier(.4,0,.2,1); }
+.practice-page { padding: 28px; max-width: 920px; animation: fadeIn .35s cubic-bezier(.4, 0, .2, 1); }
 
-/* ── Header ── */
+/* Header */
 .practice-header {
   display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; margin-bottom: 18px; flex-wrap: wrap;
+  gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
 }
-.practice-header h2 { font-size: 22px; font-weight: 700; color: var(--text); }
-.practice-header p  { font-size: 13px; color: var(--text3); margin-top: 3px; }
+.practice-header h2 { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -.4px; }
+.practice-header p  { font-size: 13px; color: var(--text3); margin-top: 4px; }
 
+/* Brutalism overall number */
 .practice-overall { text-align: right; min-width: 130px; }
 .practice-overall-num { display: flex; align-items: baseline; justify-content: flex-end; gap: 2px; }
-.practice-done-big  { font-size: 28px; font-weight: 700; color: var(--accent); line-height: 1; }
+.practice-done-big  { font-size: 32px; font-weight: 900; color: var(--accent); line-height: 1; }
 .practice-total-big { font-size: 16px; color: var(--text3); }
 .practice-bar-wrap  {
-  height: 5px; background: rgba(99,148,255,0.12);
-  border-radius: 99px; margin: 8px 0 4px; overflow: hidden;
+  height: 5px; background: var(--border);
+  border-radius: 99px; margin: 9px 0 5px; overflow: hidden;
 }
-.practice-bar {
-  height: 100%; background: var(--accent);
-  border-radius: 99px; transition: width .4s ease;
-}
+.practice-bar { height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s ease; }
 .practice-pct { font-size: 11px; color: var(--text3); }
 
-/* ── How to Practice ── */
+/* How to Practice card */
 .how-to-card {
-  background: rgba(15,25,50,0.55);
-  border: 1px solid rgba(99,148,255,0.18);
-  border-radius: var(--radius-lg); margin-bottom: 16px;
-  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg); margin-bottom: 18px; overflow: hidden;
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow);
 }
 .how-to-toggle {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; background: none; border: none; cursor: pointer;
+  padding: 13px 18px; background: none; border: none; cursor: pointer;
   color: var(--text); font-family: inherit; font-size: 13px; font-weight: 600;
+  transition: background .12s;
 }
-.how-to-toggle:hover { background: rgba(59,130,246,0.06); }
+.how-to-toggle:hover { background: var(--surface-2); }
 .how-to-label  { color: var(--text2); }
 .how-to-chevron { font-size: 10px; color: var(--text3); }
 
-.how-to-list { padding: 4px 16px 14px; list-style: none; }
+.how-to-list { padding: 4px 18px 16px; list-style: none; }
 .how-to-item {
-  display: flex; align-items: flex-start; gap: 8px;
+  display: flex; align-items: flex-start; gap: 9px;
   font-size: 12px; color: var(--text2); padding: 5px 0;
-  border-bottom: 1px solid rgba(99,148,255,0.07);
-  line-height: 1.5;
+  border-bottom: 1px solid var(--border); line-height: 1.55;
 }
 .how-to-item:last-child { border-bottom: none; }
 .how-to-dot {
@@ -52,128 +51,122 @@
   background: var(--accent); margin-top: 6px;
 }
 
-/* ── Tabs ── */
-.practice-tabs {
-  display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
-}
+/* Tabs */
+.practice-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
 .practice-tab {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 8px 16px; border-radius: var(--radius);
-  background: rgba(15,25,50,0.55);
-  border: 1px solid rgba(99,148,255,0.16);
+  padding: 9px 16px; border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
   cursor: pointer; font-family: inherit;
   transition: border-color .15s, background .15s, transform .12s;
 }
-.practice-tab:hover { background: rgba(15,25,50,0.75); border-color: rgba(99,148,255,0.35); transform: translateY(-1px); }
+.practice-tab:hover { background: var(--surface-2); border-color: var(--border-2); transform: translateY(-1px); }
 .practice-tab.active {
-  background: rgba(59,130,246,0.10);
+  background: var(--accent-light);
   border-color: var(--tab-color, var(--accent));
-  box-shadow: 0 0 12px rgba(59,130,246,0.15);
+  box-shadow: 0 0 14px var(--accent-glow);
 }
-.tab-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.tab-label { font-size: 12px; font-weight: 700; color: var(--text); }
 .tab-count { font-size: 11px; font-weight: 600; }
 
-/* ── Set Panel ── */
+/* Set panel */
 .set-panel {
-  background: rgba(15,25,50,0.55);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(99,148,255,0.18);
-  border-radius: var(--radius-lg);
-  margin-bottom: 18px; overflow: hidden;
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg); margin-bottom: 20px; overflow: hidden;
+  box-shadow: var(--shadow-md);
 }
 .set-panel-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px 12px; border-bottom: 1px solid rgba(99,148,255,0.10);
+  padding: 18px 22px 14px; border-bottom: 1px solid var(--border);
 }
-.set-panel-title { font-size: 15px; font-weight: 700; }
+.set-panel-title { font-size: 15px; font-weight: 800; }
 .set-panel-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
 
 .set-progress-pill {
   display: flex; align-items: center; gap: 2px;
   padding: 4px 12px; border-radius: 20px;
-  border: 1px solid; background: rgba(15,25,50,0.60);
+  border: 1px solid var(--border-2); background: var(--surface-2);
   font-size: 13px; font-weight: 700; color: var(--text2);
 }
 .set-progress-sep { color: var(--text3); font-weight: 400; margin: 0 1px; }
 
-/* ── Project List ── */
+/* Project list */
 .project-list { list-style: none; }
 .project-item {
   display: flex; align-items: flex-start; gap: 10px;
-  padding: 12px 20px; cursor: pointer;
-  border-bottom: 1px solid rgba(99,148,255,0.07);
+  padding: 13px 22px; cursor: pointer;
+  border-bottom: 1px solid var(--border);
   transition: background .12s;
 }
 .project-item:last-child { border-bottom: none; }
-.project-item:hover { background: rgba(59,130,246,0.05); }
-.project-item.done { opacity: 0.50; }
+.project-item:hover { background: var(--surface-2); }
+.project-item.done { opacity: 0.45; }
 
 .project-check {
   flex-shrink: 0; width: 18px; height: 18px;
-  border-radius: 5px; border: 1.5px solid rgba(99,148,255,0.35);
-  background: rgba(15,25,50,0.60);
+  border-radius: 5px; border: 1.5px solid var(--border-2);
+  background: var(--surface-2);
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 700; color: var(--accent);
-  transition: background .15s, border-color .15s;
-  margin-top: 1px;
+  transition: background .15s, border-color .15s; margin-top: 1px;
 }
-.project-item.done .project-check {
-  background: rgba(59,130,246,0.22);
-  border-color: var(--accent);
-}
+.project-item.done .project-check { background: var(--accent-light); border-color: var(--accent); }
 
 .project-num  { flex-shrink: 0; font-size: 11px; font-weight: 600; color: var(--text3); min-width: 22px; margin-top: 2px; }
-.project-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+.project-text { font-size: 13px; color: var(--text); line-height: 1.55; }
 .project-item.done .project-text { text-decoration: line-through; color: var(--text3); }
 
-/* ── Bottom Grid ── */
-.bottom-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-}
+/* Bottom grid */
+.bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
 .bottom-card {
-  background: rgba(15,25,50,0.55);
-  border: 1px solid rgba(99,148,255,0.16);
-  border-radius: var(--radius-lg); padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px 22px;
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow);
 }
 .bottom-card-title {
-  font-size: 11px; font-weight: 600; color: var(--text3);
-  text-transform: uppercase; letter-spacing: .6px; margin-bottom: 14px;
+  font-size: 11px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .7px; margin-bottom: 16px;
 }
 
 /* Resources */
 .res-list { list-style: none; }
 .res-item {
   display: flex; align-items: flex-start; gap: 8px;
-  padding: 7px 0; border-bottom: 1px solid rgba(99,148,255,0.07);
-  font-size: 12px; line-height: 1.5;
+  padding: 7px 0; border-bottom: 1px solid var(--border);
+  font-size: 12px; line-height: 1.55;
 }
 .res-item:last-child { border-bottom: none; }
 .res-bullet { color: var(--accent); flex-shrink: 0; font-size: 11px; margin-top: 2px; }
-.res-label  { color: var(--text); font-weight: 500; }
+.res-label  { color: var(--text); font-weight: 600; }
 .res-note   { color: var(--text3); }
 
 /* Pro Tips */
 .tip-list { list-style: none; }
 .tip-item {
   display: flex; align-items: flex-start; gap: 10px;
-  padding: 7px 0; border-bottom: 1px solid rgba(99,148,255,0.07);
-  font-size: 12px; color: var(--text2); line-height: 1.5;
+  padding: 7px 0; border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--text2); line-height: 1.55;
 }
 .tip-item:last-child { border-bottom: none; }
 .tip-num {
   flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
-  background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.28);
+  background: var(--accent-light); border: 1px solid var(--border-2);
   display: flex; align-items: center; justify-content: center;
   font-size: 10px; font-weight: 700; color: var(--accent); margin-top: 1px;
 }
 
-/* ── Responsive ── */
+/* Responsive */
 @media (max-width: 768px) {
-  .practice-page   { padding: 16px; }
+  .practice-page   { padding: 18px; }
   .practice-header { flex-direction: column; }
   .practice-overall { text-align: left; }
   .practice-tabs   { gap: 5px; }
-  .practice-tab    { padding: 7px 12px; }
+  .practice-tab    { padding: 8px 12px; }
   .bottom-grid     { grid-template-columns: 1fr; }
 }

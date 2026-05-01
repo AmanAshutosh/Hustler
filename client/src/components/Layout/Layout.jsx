@@ -3,9 +3,10 @@ import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Timer, Flame, BookOpen,
-  Zap, FolderKanban, Layers, User, LogOut, Menu, X
+  Zap, FolderKanban, Layers, User, LogOut, Menu, X, Sun, Moon
 } from 'lucide-react';
 import { useAuth } from '../../store/auth.js';
+import { useTheme } from '../../context/ThemeContext.jsx';
 import Footer from '../Footer/Footer.jsx';
 import Loader from '../Loader/Loader.jsx';
 import api from '../../lib/api.js';
@@ -24,25 +25,22 @@ const NAV = [
 
 export default function Layout() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { theme, toggle } = useTheme();
+  const navigate  = useNavigate();
+  const location  = useLocation();
 
   const [todayHours, setTodayHours] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [loading, setLoading] = useState(true); // true on first render = cold start
-  const [offline, setOffline] = useState(false);
+  const [menuOpen, setMenuOpen]     = useState(false);
+  const [loading, setLoading]       = useState(true);
+  const [offline, setOffline]       = useState(false);
 
-  // Show loader on every route change (and on initial mount)
   useEffect(() => {
     setLoading(true);
-    setMenuOpen(false); // close mobile menu on navigate
+    setMenuOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
-    // Health check — shows offline banner if backend is unreachable
-    api.get('/health')
-      .then(() => setOffline(false))
-      .catch(() => setOffline(true));
+    api.get('/health').then(() => setOffline(false)).catch(() => setOffline(true));
   }, []);
 
   useEffect(() => {
@@ -58,7 +56,6 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      {/* Route transition / initial load */}
       {loading && <Loader onDone={() => setLoading(false)} />}
 
       {/* Mobile top bar */}
@@ -67,17 +64,24 @@ export default function Layout() {
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
         <span className="mobile-brand">Hustler 2.0</span>
-        <span className="mobile-hours">{todayHours.toFixed(1)}h</span>
+        <div className="mobile-right">
+          <button className="theme-toggle-mobile" onClick={toggle} aria-label="Toggle theme">
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+          <span className="mobile-hours">{todayHours.toFixed(1)}h</span>
+        </div>
       </header>
 
-      {/* Sidebar overlay (mobile) */}
       {menuOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 
       {/* Sidebar */}
       <aside className={`sidebar${menuOpen ? ' sidebar-open' : ''}`}>
         <div className="sidebar-logo">
-          <div className="sidebar-logo-name">Hustler 2.0</div>
-          <div className="sidebar-logo-sub">Job Hunt Tracker</div>
+          <div className="sidebar-logo-mark">H</div>
+          <div>
+            <div className="sidebar-logo-name">Hustler 2.0</div>
+            <div className="sidebar-logo-sub">Job Hunt Tracker</div>
+          </div>
         </div>
 
         <nav className="sidebar-nav">
@@ -90,7 +94,7 @@ export default function Layout() {
               onClick={closeSidebar}
             >
               <Icon size={16} className="nav-icon" />
-              {label}
+              <span>{label}</span>
             </NavLink>
           ))}
         </nav>
@@ -98,14 +102,23 @@ export default function Layout() {
         <div className="sidebar-footer">
           <div className="daily-row">
             <span>Today — {user?.name?.split(' ')[0]}</span>
-            <span>{todayHours.toFixed(1)}h / 8h</span>
+            <span className="daily-hours-val">{todayHours.toFixed(1)}h / 8h</span>
           </div>
           <div className="progress-track">
             <div className="progress-fill" style={{ width: `${pct}%` }} />
           </div>
-          <button className="sign-out-btn" onClick={handleLogout}>
-            <LogOut size={12} /> Sign out
-          </button>
+
+          <div className="sidebar-footer-actions">
+            <button className="theme-toggle-btn" onClick={toggle} aria-label="Toggle theme">
+              {theme === 'dark'
+                ? <><Sun size={13} /><span>Light</span></>
+                : <><Moon size={13} /><span>Dark</span></>
+              }
+            </button>
+            <button className="sign-out-btn" onClick={handleLogout}>
+              <LogOut size={13} /> Sign out
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -113,7 +126,7 @@ export default function Layout() {
       <div className="main-area">
         {offline && (
           <div className="offline-banner">
-            ⚠ Backend server is offline — data cannot be saved. Run <code>npm run dev</code> from the project root.
+            ⚠ Backend offline — run <code>npm run dev</code> to save data.
           </div>
         )}
         <main className="main-content">

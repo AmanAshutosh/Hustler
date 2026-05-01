@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from './store/auth.js';
+import { useTheme } from './context/ThemeContext.jsx';
 
 import Layout     from './components/Layout/Layout.jsx';
 import Dashboard  from './pages/Dashboard/Dashboard.jsx';
@@ -26,24 +27,34 @@ function Guard({ children }) {
   return user ? children : <Navigate to="/login" replace />;
 }
 
+function ToasterThemed() {
+  const { theme } = useTheme();
+  const dark = theme === 'dark';
+  return (
+    <Toaster
+      position="top-right"
+      toastOptions={{
+        style: {
+          fontSize: '13px',
+          borderRadius: '14px',
+          fontFamily: 'inherit',
+          background: dark ? 'rgba(13,13,28,0.96)' : 'rgba(255,255,255,0.96)',
+          color: dark ? 'rgba(255,255,255,0.92)' : '#1c1c1e',
+          border: dark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(0,0,0,0.09)',
+          backdropFilter: 'blur(24px)',
+          boxShadow: dark
+            ? '0 8px 40px rgba(0,0,0,0.60)'
+            : '0 8px 32px rgba(0,0,0,0.10)',
+        },
+      }}
+    />
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            fontSize: '13px',
-            borderRadius: '12px',
-            fontFamily: 'inherit',
-            background: 'rgba(14,16,28,0.95)',
-            color: 'rgba(255,255,255,0.92)',
-            border: '1px solid rgba(255,255,255,0.10)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-          },
-        }}
-      />
+      <ToasterThemed />
       <Routes>
         <Route path="/login"    element={<AuthRoute><Login /></AuthRoute>} />
         <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
