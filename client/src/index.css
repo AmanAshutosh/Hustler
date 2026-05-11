@@ -1,6 +1,6 @@
 /* ════════════════════════════════════════════════════════
    HUSTLER 2.0 — Neobrutalism Design System
-   Raw. Bold. No glass. No mercy.
+   Electric. Brutal. No mercy. No glass.
    ════════════════════════════════════════════════════════ */
 
 /* ── Reset ── */
@@ -24,26 +24,26 @@ html.theme-ready [style*="transform"],
 html.theme-ready .hm-cell { transition: none !important; }
 
 /* ══════════════════════════════════════════════════════════
-   DARK MODE — neobrutalism: black + electric yellow
+   DARK MODE — neobrutalism: black + electric lime
    ══════════════════════════════════════════════════════════ */
 :root,
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Backgrounds — pure dark, no gradients */
-  --bg:   #0F0F0F;
-  --bg-2: #1A1A1A;
+  /* Backgrounds — pure matte black */
+  --bg:   #0A0A0A;
+  --bg-2: #141414;
 
-  /* Surfaces — solid, flat, no transparency */
-  --surface:       #1A1A1A;
-  --surface-2:     #252525;
-  --surface-3:     #303030;
-  --surface-solid: #0F0F0F;
+  /* Surfaces — solid, flat */
+  --surface:       #141414;
+  --surface-2:     #1F1F1F;
+  --surface-3:     #2A2A2A;
+  --surface-solid: #0A0A0A;
 
-  /* Borders — visible on dark */
-  --border:      rgba(255, 255, 255, 0.18);
-  --border-2:    rgba(255, 255, 255, 0.38);
-  --border-3:    rgba(255, 255, 255, 0.65);
+  /* Borders — crisp white on black = max contrast */
+  --border:      rgba(255, 255, 255, 0.16);
+  --border-2:    rgba(255, 255, 255, 0.42);
+  --border-3:    rgba(255, 255, 255, 0.80);
   --border-hard: #FFFFFF;
 
   /* Text */
@@ -51,36 +51,36 @@ html.theme-ready .hm-cell { transition: none !important; }
   --text2: #CCCCCC;
   --text3: #888888;
 
-  /* Accent — electric yellow (neobrutalism signature) */
-  --accent:        #FFE14D;
-  --accent-hover:  #FFCC00;
-  --accent-light:  rgba(255, 225, 77, 0.12);
-  --accent-glow:   rgba(255, 225, 77, 0.20);
-  --accent-dark:   #CC9900;
+  /* Accent — electric lime (radioactive, aggressive, real brutalism) */
+  --accent:        #C8FF00;
+  --accent-hover:  #AADD00;
+  --accent-light:  rgba(200, 255, 0, 0.10);
+  --accent-glow:   rgba(200, 255, 0, 0.18);
+  --accent-dark:   #88BB00;
 
-  /* Neobrutalism hard shadows — offset, zero blur, yellow tint */
-  --shadow:    4px 4px 0px rgba(255, 225, 77, 0.70);
-  --shadow-md: 6px 6px 0px rgba(255, 225, 77, 0.70);
-  --shadow-lg: 8px 8px 0px rgba(255, 225, 77, 0.70);
+  /* Neobrutalism hard shadows — PURE WHITE, zero blur, maximum contrast */
+  --shadow:    4px 4px 0px #FFFFFF;
+  --shadow-md: 6px 6px 0px #FFFFFF;
+  --shadow-lg: 8px 8px 0px #FFFFFF;
   --glow-sm:   none;
   --glow-md:   none;
 
-  /* Semantic palette — vivid flat colors */
+  /* Semantic palette */
   --green:        #00FF80;
   --green-light:  rgba(0, 255, 128, 0.12);
-  --amber:        #FFB74D;
-  --amber-light:  rgba(255, 183, 77, 0.14);
-  --red:          #FF5252;
-  --red-light:    rgba(255, 82, 82, 0.12);
-  --purple:       #CC77FF;
-  --purple-light: rgba(204, 119, 255, 0.12);
+  --amber:        #FFB800;
+  --amber-light:  rgba(255, 184, 0, 0.14);
+  --red:          #FF3333;
+  --red-light:    rgba(255, 51, 51, 0.12);
+  --purple:       #AA5BFF;
+  --purple-light: rgba(170, 91, 255, 0.12);
   --cyan:         #00E5FF;
   --blue:         #4DA6FF;
   --blue-light:   rgba(77, 166, 255, 0.12);
 
-  /* Clock */
-  --clock-color: #FFE14D;
-  --clock-glow:  rgba(255, 225, 77, 0.20);
+  /* Clock — lime to match accent */
+  --clock-color: #C8FF00;
+  --clock-glow:  rgba(200, 255, 0, 0.18);
 
   /* Geometry — neobrutalism: near-zero radius */
   --radius:    3px;
@@ -92,25 +92,25 @@ html.theme-ready .hm-cell { transition: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════════
-   LIGHT MODE — neobrutalism: cream + electric blue + black
+   LIGHT MODE — neobrutalism: stark white + electric lime + black
    ══════════════════════════════════════════════════════════ */
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Backgrounds — cream/off-white */
-  --bg:   #FFFEF0;
+  /* Backgrounds — stark white, zero warmth */
+  --bg:   #F5F5F5;
   --bg-2: #FFFFFF;
 
-  /* Surfaces — flat solid whites */
+  /* Surfaces — pure flat */
   --surface:       #FFFFFF;
-  --surface-2:     #F5F0E8;
-  --surface-3:     #EDE8D5;
-  --surface-solid: #FFFEF0;
+  --surface-2:     #F0F0F0;
+  --surface-3:     #E5E5E5;
+  --surface-solid: #F5F5F5;
 
-  /* Borders — thick black for neobrutalism */
-  --border:      rgba(0, 0, 0, 0.20);
-  --border-2:    rgba(0, 0, 0, 0.55);
-  --border-3:    rgba(0, 0, 0, 0.85);
+  /* Borders — hard black for maximum punch */
+  --border:      rgba(0, 0, 0, 0.18);
+  --border-2:    rgba(0, 0, 0, 0.60);
+  --border-3:    rgba(0, 0, 0, 0.90);
   --border-hard: #0A0A0A;
 
   /* Text */
@@ -118,17 +118,17 @@ html.theme-ready .hm-cell { transition: none !important; }
   --text2: #333333;
   --text3: #666666;
 
-  /* Accent — electric blue */
-  --accent:        #0055FF;
-  --accent-hover:  #0044CC;
-  --accent-light:  rgba(0, 85, 255, 0.08);
-  --accent-glow:   rgba(0, 85, 255, 0.15);
-  --accent-dark:   #003399;
+  /* Accent — same electric lime, now on white = screams */
+  --accent:        #8AC900;
+  --accent-hover:  #72AA00;
+  --accent-light:  rgba(138, 201, 0, 0.10);
+  --accent-glow:   rgba(138, 201, 0, 0.15);
+  --accent-dark:   #557A00;
 
-  /* Neobrutalism hard shadows — offset, zero blur, black */
-  --shadow:    4px 4px 0px rgba(0, 0, 0, 0.88);
-  --shadow-md: 6px 6px 0px rgba(0, 0, 0, 0.88);
-  --shadow-lg: 8px 8px 0px rgba(0, 0, 0, 0.88);
+  /* Neobrutalism hard shadows — PURE BLACK, zero blur */
+  --shadow:    4px 4px 0px #0A0A0A;
+  --shadow-md: 6px 6px 0px #0A0A0A;
+  --shadow-lg: 8px 8px 0px #0A0A0A;
   --glow-sm:   none;
   --glow-md:   none;
 
@@ -137,10 +137,10 @@ html.theme-ready .hm-cell { transition: none !important; }
   --green-light:  rgba(0, 168, 84, 0.10);
   --amber:        #FF8C00;
   --amber-light:  rgba(255, 140, 0, 0.10);
-  --red:          #DD2020;
-  --red-light:    rgba(221, 32, 32, 0.08);
-  --purple:       #8800CC;
-  --purple-light: rgba(136, 0, 204, 0.08);
+  --red:          #E01010;
+  --red-light:    rgba(224, 16, 16, 0.08);
+  --purple:       #7C3AED;
+  --purple-light: rgba(124, 58, 237, 0.08);
   --cyan:         #0099BB;
   --blue:         #0055FF;
   --blue-light:   rgba(0, 85, 255, 0.08);

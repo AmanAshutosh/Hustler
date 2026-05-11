@@ -1,7 +1,7 @@
 /* ── Loader overlay — neobrutalism boot screen ── */
 .loader-overlay {
   position: fixed; inset: 0; z-index: 9999;
-  background: #0F0F0F;
+  background: #0A0A0A;
   display: flex; align-items: center; justify-content: center;
   animation: lo-in .18s ease both;
 }
@@ -26,42 +26,42 @@
 @media (min-width: 480px) { .chip-wrapper { max-width: 460px; } }
 @media (min-width: 768px) { .chip-wrapper { max-width: 580px; } }
 
-/* Traces — neobrutalism: yellow accent */
-.trace-bg   { stroke: rgba(255, 225, 77, 0.20); stroke-width: 1.8; fill: none; }
+/* Traces — electric lime on black */
+.trace-bg   { stroke: rgba(200, 255, 0, 0.18); stroke-width: 1.8; fill: none; }
 .trace-flow {
   stroke-width: 1.8; fill: none;
   stroke-dasharray: 40 400; stroke-dashoffset: 438;
   animation: flow 3s cubic-bezier(0.5, 0, 0.9, 1) infinite;
 }
-.yellow { stroke: #FFE14D; color: #FFE14D; }
+.yellow { stroke: #C8FF00; color: #C8FF00; }
 .blue   { stroke: #4DA6FF; color: #4DA6FF; }
 .green  { stroke: #00FF80; color: #00FF80; }
-.purple { stroke: #CC77FF; color: #CC77FF; }
-.red    { stroke: #FF5252; color: #FF5252; }
+.purple { stroke: #AA5BFF; color: #AA5BFF; }
+.red    { stroke: #FF3333; color: #FF3333; }
 
-/* Percentage counter — raw monospace, oversized */
+/* Percentage counter — monospace, electric lime */
 .loader-pct {
   font-size: clamp(56px, 12vw, 90px); font-weight: 900; line-height: 1;
-  color: #FFE14D; font-variant-numeric: tabular-nums;
+  color: #C8FF00; font-variant-numeric: tabular-nums;
   letter-spacing: -4px; margin-top: 4px;
   font-family: 'Courier New', 'SF Mono', monospace;
 }
 .loader-pct-sym { font-size: .36em; font-weight: 400; opacity: .50; letter-spacing: 0; }
 
-/* Progress bar — square, thick, no glow */
+/* Progress bar — square, thick, pure white border */
 .loader-bar-track {
   position: relative; width: min(280px, 80vw); height: 8px;
-  background: rgba(255, 225, 77, 0.20); border-radius: 0;
+  background: rgba(200, 255, 0, 0.15); border-radius: 0;
   overflow: visible; margin-top: 16px;
-  border: 2px solid rgba(255, 225, 77, 0.50);
+  border: 2px solid rgba(200, 255, 0, 0.45);
 }
 .loader-bar-fill {
-  height: 100%; background: #FFE14D; border-radius: 0;
+  height: 100%; background: #C8FF00; border-radius: 0;
   transition: width .06s linear;
 }
 .loader-bar-glow {
   position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 0;
-  background: #FFE14D; transform: translate(-50%, -50%);
+  background: #C8FF00; transform: translate(-50%, -50%);
   border: 2px solid #FFFFFF;
   transition: left .06s linear; pointer-events: none;
 }
