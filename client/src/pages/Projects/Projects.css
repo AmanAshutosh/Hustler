@@ -68,15 +68,18 @@ input:focus, select:focus, textarea:focus {
 .project-desc  { font-size: 12px; font-weight: 600; color: var(--text3); margin-top: 3px; }
 .project-right { display: flex; align-items: center; gap: 8px; }
 
-/* Status badges — flat, bordered */
+/* Status badges — solid-filled, multi-palette */
 .badge {
   display: inline-block; font-size: 10px; font-weight: 900;
-  padding: 4px 10px; border-radius: 0;
-  text-transform: uppercase; letter-spacing: .6px; border: 2px solid currentColor;
+  padding: 4px 12px; border-radius: 0;
+  text-transform: uppercase; letter-spacing: .6px;
+  border: 2px solid #000000;
 }
-.badge-planned     { background: var(--surface-3); color: var(--text3); border-color: var(--border-2); }
-.badge-in-progress { background: var(--blue-light); color: var(--blue); }
-.badge-completed   { background: var(--green-light); color: var(--green); }
+/* Sky Blue (#00BFFF) — "Primary & Raw" */
+.badge-planned     { background: #E8E8E8; color: #000000; border-color: #888888; }
+.badge-in-progress { background: #00BFFF; color: #000000; }
+/* Electric Green (#00FF7F) — "Neon Pops" */
+.badge-completed   { background: #00FF7F; color: #000000; }
 
 .del-btn {
   background: none; border: 2px solid transparent; cursor: pointer;

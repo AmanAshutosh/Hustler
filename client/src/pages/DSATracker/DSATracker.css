@@ -91,16 +91,19 @@ input:focus, select:focus, textarea:focus {
 .problems-table tr:last-child td { border-bottom: none; }
 .problems-table tr:hover td { background: var(--surface-2); }
 
-/* Badges — flat, loud */
+/* Badges — solid-filled, multi-palette colors */
 .badge {
   display: inline-block; font-size: 10px; font-weight: 900;
-  padding: 3px 10px; border-radius: 0;
-  text-transform: uppercase; letter-spacing: .5px;
-  border: 2px solid currentColor;
+  padding: 4px 12px; border-radius: 0;
+  text-transform: uppercase; letter-spacing: .6px;
+  border: 2px solid #000000;
 }
-.badge-easy   { background: var(--green-light); color: var(--green); }
-.badge-medium { background: var(--amber-light); color: var(--amber); }
-.badge-hard   { background: var(--red-light);   color: var(--red); }
+/* Electric Green (#00FF7F) — "Neon Pops" */
+.badge-easy   { background: #00FF7F; color: #000000; }
+/* Burnt Orange (#FF4F00) — "Moody & Muted" */
+.badge-medium { background: #FF4F00; color: #FFFFFF; }
+/* Bright Pink (#FF4081) — "Neon Pops" */
+.badge-hard   { background: #FF4081; color: #FFFFFF; }
 
 .del-btn {
   background: none; border: 2px solid transparent; cursor: pointer;

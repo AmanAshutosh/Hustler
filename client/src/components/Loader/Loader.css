@@ -1,67 +1,63 @@
-/* ── Loader overlay — neobrutalism boot screen ── */
+/* ── Loader — Neobrutalism boot screen: Black + Yellow + Neons ── */
 .loader-overlay {
   position: fixed; inset: 0; z-index: 9999;
-  background: #0A0A0A;
+  background: #000000;
   display: flex; align-items: center; justify-content: center;
   animation: lo-in .18s ease both;
 }
 .loader-overlay.loader-exit { animation: lo-out .35s ease forwards; }
 
 @keyframes lo-in  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes lo-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
+@keyframes lo-out { from { opacity: 1; } to { opacity: 0; } }
 
-/* Center content */
 .loader-body {
   display: flex; flex-direction: column; align-items: center;
   width: 100%; padding: 0 16px; box-sizing: border-box;
 }
 
-/* Chip SVG */
 .chip-wrapper { width: 100%; max-width: 340px; }
 .chip-wrapper svg { width: 100%; height: auto; display: block; }
-
 @media (min-width: 480px) { .chip-wrapper { max-width: 460px; } }
 @media (min-width: 768px) { .chip-wrapper { max-width: 580px; } }
 
-/* Traces — electric lime on black */
-.trace-bg   { stroke: rgba(200, 255, 0, 0.18); stroke-width: 1.8; fill: none; }
+/* Traces — multi-palette neons on black */
+.trace-bg   { stroke: rgba(253, 200, 0, 0.15); stroke-width: 1.8; fill: none; }
 .trace-flow {
   stroke-width: 1.8; fill: none;
   stroke-dasharray: 40 400; stroke-dashoffset: 438;
   animation: flow 3s cubic-bezier(0.5, 0, 0.9, 1) infinite;
 }
-.yellow { stroke: #C8FF00; color: #C8FF00; }
-.blue   { stroke: #4DA6FF; color: #4DA6FF; }
-.green  { stroke: #00FF80; color: #00FF80; }
-.purple { stroke: #AA5BFF; color: #AA5BFF; }
-.red    { stroke: #FF3333; color: #FF3333; }
+/* Each trace color from a different palette */
+.yellow { stroke: #FDC800; color: #FDC800; }   /* Vibrant Yellow */
+.blue   { stroke: #00BFFF; color: #00BFFF; }   /* Sky Blue */
+.green  { stroke: #00FF7F; color: #00FF7F; }   /* Electric Green */
+.purple { stroke: #432DD7; color: #432DD7; }   /* Deep Violet */
+.red    { stroke: #FF4081; color: #FF4081; }   /* Bright Pink */
 
-/* Percentage counter — monospace, electric lime */
+/* Percentage — Vibrant Yellow, monospace, huge */
 .loader-pct {
   font-size: clamp(56px, 12vw, 90px); font-weight: 900; line-height: 1;
-  color: #C8FF00; font-variant-numeric: tabular-nums;
+  color: #FDC800;
+  font-variant-numeric: tabular-nums;
   letter-spacing: -4px; margin-top: 4px;
   font-family: 'Courier New', 'SF Mono', monospace;
 }
-.loader-pct-sym { font-size: .36em; font-weight: 400; opacity: .50; letter-spacing: 0; }
+.loader-pct-sym { font-size: .36em; font-weight: 400; opacity: .55; letter-spacing: 0; }
 
-/* Progress bar — square, thick, pure white border */
+/* Progress bar — Yellow fill, white border glow dot */
 .loader-bar-track {
   position: relative; width: min(280px, 80vw); height: 8px;
-  background: rgba(200, 255, 0, 0.15); border-radius: 0;
+  background: rgba(253, 200, 0, 0.15); border-radius: 0;
   overflow: visible; margin-top: 16px;
-  border: 2px solid rgba(200, 255, 0, 0.45);
+  border: 2px solid rgba(253, 200, 0, 0.45);
 }
 .loader-bar-fill {
-  height: 100%; background: #C8FF00; border-radius: 0;
+  height: 100%; background: #FDC800; border-radius: 0;
   transition: width .06s linear;
 }
 .loader-bar-glow {
   position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 0;
-  background: #C8FF00; transform: translate(-50%, -50%);
+  background: #FDC800; transform: translate(-50%, -50%);
   border: 2px solid #FFFFFF;
   transition: left .06s linear; pointer-events: none;
 }

@@ -83,12 +83,15 @@
 .level-left  { display: flex; align-items: center; gap: 8px; }
 .level-badge {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: .8px; padding: 3px 10px; border-radius: 0;
-  border: 2px solid currentColor;
+  letter-spacing: .8px; padding: 4px 12px; border-radius: 0;
+  border: 2px solid #000000;
 }
-.level-beginner     { background: var(--green-light); color: var(--green); }
-.level-intermediate { background: var(--amber-light); color: var(--amber); }
-.level-advanced     { background: var(--red-light);   color: var(--red); }
+/* Electric Green — beginner */
+.level-beginner     { background: #00FF7F; color: #000000; }
+/* Burnt Orange — intermediate */
+.level-intermediate { background: #FF4F00; color: #FFFFFF; }
+/* Bright Pink — advanced */
+.level-advanced     { background: #FF4081; color: #FFFFFF; }
 .level-count { font-size: 11px; font-weight: 700; color: var(--text3); font-family: monospace; }
 
 /* Topic list */

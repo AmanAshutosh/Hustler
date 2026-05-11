@@ -60,18 +60,23 @@
 }
 .hm-cell:hover { transform: scale(1.4); z-index: 1; border-color: var(--border-hard); }
 
-/* Heatmap color scale — flat, no glass */
+/* Heatmap — multi-palette intensity scale */
+/* Level 0: empty */
 .hm-0 { background: var(--surface-3); }
-.hm-1 { background: var(--blue-light); border: 1px solid var(--blue); }
-.hm-2 { background: rgba(77, 166, 255, 0.45); }
-.hm-3 { background: rgba(77, 166, 255, 0.75); }
-.hm-4 { background: var(--accent); border: 1px solid var(--border-hard); }
+/* Level 1: Sky Blue (#00BFFF) — "Primary & Raw" — low activity */
+.hm-1 { background: rgba(0, 191, 255, 0.35); border: 1px solid rgba(0, 191, 255, 0.6); }
+/* Level 2: Deep Violet (#432DD7) — medium activity */
+.hm-2 { background: #432DD7; }
+/* Level 3: Burnt Orange (#FF4F00) — high activity */
+.hm-3 { background: #FF4F00; }
+/* Level 4: Vibrant Yellow (#FDC800) — peak activity (accent = most active) */
+.hm-4 { background: #FDC800; border: 1px solid #000000; }
 
 [data-theme="light"] .hm-0 { background: var(--surface-3); }
-[data-theme="light"] .hm-1 { background: rgba(0, 85, 255, 0.15); border-color: var(--blue); }
-[data-theme="light"] .hm-2 { background: rgba(0, 85, 255, 0.40); }
-[data-theme="light"] .hm-3 { background: rgba(0, 85, 255, 0.70); }
-[data-theme="light"] .hm-4 { background: var(--accent); border-color: var(--border-hard); }
+[data-theme="light"] .hm-1 { background: rgba(0, 191, 255, 0.25); border: 1px solid rgba(0, 191, 255, 0.55); }
+[data-theme="light"] .hm-2 { background: #432DD7; }
+[data-theme="light"] .hm-3 { background: #FF4F00; }
+[data-theme="light"] .hm-4 { background: #FDC800; border: 1px solid #000000; }
 
 .hm-today { outline: 3px solid var(--accent); outline-offset: 1px; border-radius: 0; }
 

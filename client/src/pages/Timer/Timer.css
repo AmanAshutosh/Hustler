@@ -36,7 +36,8 @@ select:disabled, input:disabled { opacity: .40; cursor: not-allowed; }
   font-family: 'Courier New', 'SF Mono', 'Fira Code', monospace;
   padding: 30px 0 18px; transition: color .2s;
 }
-.timer-clock.running { color: var(--accent); }
+/* Running: Electric Green (#00FF7F) — "Neon Pops" — signals GO */
+.timer-clock.running { color: #00FF7F; }
 .timer-clock.paused  { color: var(--text2); }
 .timer-clock.inactive { color: var(--text3); }
 
@@ -45,7 +46,7 @@ select:disabled, input:disabled { opacity: .40; cursor: not-allowed; }
   color: var(--text3); min-height: 18px; margin-bottom: 26px;
   text-transform: uppercase; letter-spacing: 1px; transition: color .2s;
 }
-.timer-status.live        { color: var(--accent); }
+.timer-status.live        { color: #00FF7F; }
 .timer-status.paused-text { color: var(--text2); }
 
 /* Buttons */
