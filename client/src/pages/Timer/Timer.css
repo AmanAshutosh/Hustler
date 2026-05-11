@@ -1,56 +1,51 @@
 /* src/pages/Timer/Timer.css */
-.timer-page { padding: 28px; max-width: 720px; animation: fadeIn .35s cubic-bezier(.4, 0, .2, 1); }
+.timer-page { padding: 28px; max-width: 720px; animation: fadeIn .25s ease; }
 
-/* Glass card */
+/* Neobrutalism card */
 .card {
   background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 26px; margin-bottom: 18px;
+  border: 3px solid var(--border-hard);
+  border-radius: 0; padding: 26px; margin-bottom: 18px;
   box-shadow: var(--shadow-md);
-  transition: border-color .2s, box-shadow .2s;
+  transition: box-shadow .1s, transform .1s;
 }
-.card:hover { border-color: var(--border-2); box-shadow: var(--shadow-md), var(--glow-sm); }
+.card:hover { box-shadow: var(--shadow-lg); transform: translate(-2px, -2px); }
 
-/* Form selects */
+/* Form */
 .select-row { display: flex; gap: 12px; margin-bottom: 22px; }
 .select-row > * { flex: 1; }
 .field-group { display: flex; flex-direction: column; }
 
 select, input[type="text"] {
-  width: 100%; padding: 10px 12px; font-size: 13px;
-  border: 1px solid var(--border); border-radius: var(--radius);
+  width: 100%; padding: 10px 12px; font-size: 13px; font-weight: 600;
+  border: 2px solid var(--border-2); border-radius: var(--radius);
   background: var(--surface-2); color: var(--text); outline: none;
-  transition: border-color .18s, box-shadow .18s, background .18s;
+  transition: border-color .1s, box-shadow .1s;
 }
 select:focus, input[type="text"]:focus {
   border-color: var(--accent);
-  background: var(--surface-3);
-  box-shadow: 0 0 0 3px var(--accent-light);
+  box-shadow: 3px 3px 0px var(--accent);
 }
 select:disabled, input:disabled { opacity: .40; cursor: not-allowed; }
 
-/* ── Timer clock — brutalism scale ── */
+/* ── Timer clock — monospace, raw, oversized ── */
 .timer-clock {
-  font-size: clamp(54px, 14vw, 80px); font-weight: 200;
-  letter-spacing: 8px; text-align: center; color: var(--text);
+  font-size: clamp(58px, 14vw, 88px); font-weight: 900;
+  letter-spacing: 6px; text-align: center; color: var(--text);
   font-variant-numeric: tabular-nums;
-  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
-  padding: 30px 0 18px; transition: color .4s, text-shadow .4s;
+  font-family: 'Courier New', 'SF Mono', 'Fira Code', monospace;
+  padding: 30px 0 18px; transition: color .2s;
 }
-.timer-clock.running {
-  color: var(--text);
-  text-shadow: 0 0 48px var(--accent-glow);
-}
-.timer-clock.paused { color: var(--text2); }
+.timer-clock.running { color: var(--accent); }
+.timer-clock.paused  { color: var(--text2); }
 .timer-clock.inactive { color: var(--text3); }
 
 .timer-status {
-  text-align: center; font-size: 12px; color: var(--text3);
-  min-height: 18px; margin-bottom: 26px; transition: color .3s;
+  text-align: center; font-size: 12px; font-weight: 800;
+  color: var(--text3); min-height: 18px; margin-bottom: 26px;
+  text-transform: uppercase; letter-spacing: 1px; transition: color .2s;
 }
-.timer-status.live        { color: var(--accent); font-weight: 600; }
+.timer-status.live        { color: var(--accent); }
 .timer-status.paused-text { color: var(--text2); }
 
 /* Buttons */
@@ -59,34 +54,28 @@ select:disabled, input:disabled { opacity: .40; cursor: not-allowed; }
 .btn {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 11px 24px; border-radius: var(--radius);
-  font-size: 13px; font-weight: 500; cursor: pointer;
-  border: 1px solid var(--border-2);
+  font-size: 13px; font-weight: 800; cursor: pointer;
+  border: 2px solid var(--border-2);
   background: var(--surface-2); color: var(--text);
-  transition: background .15s, transform .12s, box-shadow .15s, border-color .15s;
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: box-shadow .1s, transform .1s;
+  box-shadow: var(--shadow);
+  text-transform: uppercase; letter-spacing: .3px;
 }
-.btn:hover {
-  background: var(--surface-3);
-  border-color: var(--border-3);
-  transform: translateY(-1px); box-shadow: var(--shadow);
-}
-.btn:active { transform: scale(0.97); }
+.btn:hover { box-shadow: var(--shadow-md); transform: translate(-2px, -2px); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px var(--border-hard); }
 .btn:disabled { opacity: .40; cursor: not-allowed; transform: none !important; }
 
 .btn-start {
-  background: var(--accent); color: #ffffff;
-  border-color: var(--accent); font-weight: 700;
+  background: var(--accent); color: #000000;
+  border: 2px solid var(--border-hard); font-weight: 900;
+  box-shadow: var(--shadow);
 }
-.btn-start:hover {
-  background: var(--accent-hover); border-color: var(--accent-hover);
-  box-shadow: 0 6px 24px var(--accent-glow), var(--glow-md);
-}
+.btn-start:hover { box-shadow: var(--shadow-md); transform: translate(-2px, -2px); }
 
 .btn-stop {
   background: var(--surface-2); color: var(--text);
-  border-color: var(--border-2);
+  border: 2px solid var(--border-2);
 }
-.btn-stop:hover { background: var(--surface-3); }
 
 /* Session log */
 .session-log-header {
@@ -95,63 +84,66 @@ select:disabled, input:disabled { opacity: .40; cursor: not-allowed; }
 
 .log-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .log-table th {
-  text-align: left; color: var(--text3); font-weight: 600; padding: 0 6px 10px;
-  border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px;
+  text-align: left; color: var(--text3); font-weight: 800; padding: 0 6px 10px;
+  border-bottom: 3px solid var(--border-hard); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .8px;
 }
-.log-table td { padding: 9px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.log-table td { padding: 9px 6px; border-bottom: 2px solid var(--border); vertical-align: middle; }
 .log-table tr:last-child td { border-bottom: none; }
 .log-table tr:hover td { background: var(--surface-2); }
 
-.td-subj  { font-weight: 500; }
-.td-topic { color: var(--text3); }
+.td-subj  { font-weight: 700; }
+.td-topic { color: var(--text3); font-weight: 600; }
 .td-time  { color: var(--text3); }
-.td-dur   { font-family: monospace; font-weight: 700; text-align: right; color: var(--accent); }
+.td-dur   { font-family: 'Courier New', monospace; font-weight: 900; text-align: right; color: var(--accent); font-size: 13px; }
 .td-actions { width: 56px; text-align: right; white-space: nowrap; }
 
 .btn-del, .btn-cal {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 26px; height: 26px; border: none; background: transparent;
-  cursor: pointer; border-radius: 7px; opacity: 0;
-  transition: opacity .15s, color .12s, background .12s;
+  width: 26px; height: 26px; border: 2px solid transparent; background: transparent;
+  cursor: pointer; border-radius: var(--radius); opacity: 0;
+  transition: opacity .1s, color .1s, background .1s, border-color .1s;
 }
 .btn-del { color: var(--text3); }
 .btn-cal { color: var(--text3); }
 .log-table tr:hover .btn-del,
 .log-table tr:hover .btn-cal { opacity: 1; }
-.btn-del:hover { color: var(--red); background: var(--red-light); }
-.btn-cal:hover { color: var(--accent); background: var(--accent-light); }
+.btn-del:hover { color: var(--red); background: var(--red-light); border-color: var(--red); }
+.btn-cal:hover { color: var(--accent); background: var(--accent-light); border-color: var(--accent); }
 
 .btn-clear-all {
-  display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px;
-  font-size: 11px; font-weight: 500; border-radius: var(--radius);
-  border: 1px solid var(--border); background: transparent; color: var(--text3);
-  cursor: pointer; transition: color .12s, border-color .12s, background .12s;
+  display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px;
+  font-size: 11px; font-weight: 800; border-radius: var(--radius);
+  border: 2px solid var(--border-2); background: var(--surface-2); color: var(--text3);
+  cursor: pointer; transition: box-shadow .1s, transform .1s;
+  box-shadow: 2px 2px 0px var(--border-hard); text-transform: uppercase; letter-spacing: .4px;
 }
 .btn-clear-all:hover {
-  color: var(--text); border-color: var(--border-2); background: var(--surface-2);
+  color: var(--text);
+  box-shadow: 3px 3px 0px var(--border-hard);
+  transform: translate(-1px, -1px);
 }
 
 .alarm-actions { display: flex; gap: 10px; justify-content: center; }
 
-/* Overlay modal */
+/* Overlay modal — neobrutalism: no blur */
 .overlay {
-  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.70);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.80);
   display: flex; align-items: center; justify-content: center; z-index: 999;
 }
 .alarm-modal {
-  background: var(--surface);
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1px solid var(--border-2);
-  border-radius: var(--radius-xl); padding: 38px 34px; text-align: center;
+  background: var(--accent);
+  border: 4px solid var(--border-hard);
+  border-radius: 0; padding: 38px 34px; text-align: center;
   max-width: 340px; width: 100%;
-  box-shadow: var(--shadow-lg), var(--glow-md);
-  animation: fadeIn .3s cubic-bezier(.4, 0, .2, 1);
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn .2s ease;
 }
-.alarm-icon  { color: var(--accent); display: flex; justify-content: center; margin-bottom: 16px; }
-.alarm-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
-.alarm-sub   { font-size: 13px; color: var(--text3); margin-bottom: 26px; }
+.alarm-icon  { color: #000000; display: flex; justify-content: center; margin-bottom: 16px; }
+.alarm-title { font-size: 22px; font-weight: 900; margin-bottom: 6px; color: #000000; text-transform: uppercase; }
+.alarm-sub   { font-size: 13px; font-weight: 700; color: rgba(0,0,0,0.65); margin-bottom: 26px; }
 
-@media (max-width: 768px) { .timer-page { padding: 18px; } .select-row { flex-direction: column; } }
+@media (max-width: 768px) {
+  .timer-page { padding: 18px; }
+  .select-row { flex-direction: column; }
+}

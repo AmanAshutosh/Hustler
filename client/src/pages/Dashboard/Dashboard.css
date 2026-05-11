@@ -1,5 +1,5 @@
 /* src/pages/Dashboard/Dashboard.css */
-.dashboard { padding: 28px; max-width: 980px; animation: fadeIn .35s cubic-bezier(.4, 0, .2, 1); }
+.dashboard { padding: 28px; max-width: 980px; animation: fadeIn .25s ease; }
 
 /* Header with clock */
 .dash-header {
@@ -7,82 +7,75 @@
   flex-wrap: wrap; gap: 14px; margin-bottom: 24px;
 }
 
-/* ── Quote card ── */
+/* ── Quote card — signature neobrutalism accent block ── */
 .quote-card {
   position: relative; overflow: hidden;
-  background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl); padding: 22px 26px; margin-bottom: 18px;
+  background: var(--accent);
+  border: 3px solid var(--border-hard);
+  border-radius: 0; padding: 22px 26px; margin-bottom: 18px;
   box-shadow: var(--shadow-md);
-  /* Brutalism: thick accent left border */
-  border-left: 3px solid var(--accent);
+  transition: box-shadow .1s, transform .1s;
 }
-.quote-card:hover { border-color: var(--border-2); box-shadow: var(--shadow-md), var(--glow-sm); }
-/* Subtle ambient glow orb */
-.quote-card::before {
-  content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%;
-  background: var(--accent); filter: blur(80px); opacity: .06;
-  top: -80px; right: -40px; pointer-events: none;
+.quote-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translate(-2px, -2px);
 }
-/* Overwrite left border for hover (keep thick left border) */
-.quote-card:hover { border-left-color: var(--accent); }
+.quote-card::before { display: none; }
 
 .quote-header {
   display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
 }
 .quote-badge {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
-  color: var(--accent); background: var(--accent-light); padding: 3px 10px;
-  border-radius: 20px; border: 1px solid var(--border-2);
+  font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+  background: #000000; color: var(--accent);
+  padding: 4px 12px; border-radius: 0; border: 2px solid #000000;
 }
 .quote-company-tag {
-  font-size: 10px; font-weight: 600; color: var(--text3);
-  text-transform: uppercase; letter-spacing: .5px;
-  background: var(--surface-2); padding: 3px 9px; border-radius: 20px;
-  border: 1px solid var(--border);
+  font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.75);
+  text-transform: uppercase; letter-spacing: .7px;
+  background: rgba(0,0,0,0.12); padding: 4px 10px; border-radius: 0;
+  border: 2px solid rgba(0,0,0,0.30);
 }
 .quote-text {
-  font-size: 15px; font-weight: 600; color: var(--text);
-  line-height: 1.65; margin-bottom: 10px; font-style: italic;
+  font-size: 16px; font-weight: 800; color: #000000;
+  line-height: 1.55; margin-bottom: 10px; font-style: italic;
 }
 .quote-text::before {
-  content: '\201C'; color: var(--accent); font-size: 30px;
-  line-height: 0; vertical-align: -9px; margin-right: 4px; font-style: normal;
+  content: '\201C'; color: #000000; font-size: 40px;
+  line-height: 0; vertical-align: -13px; margin-right: 4px; font-style: normal;
+  opacity: .5;
 }
-.quote-author { font-size: 12px; color: var(--accent); font-weight: 500; }
+.quote-author { font-size: 12px; color: #000000; font-weight: 900; text-transform: uppercase; letter-spacing: .5px; }
 
-/* ── Metric grid — Brutalism large numbers ── */
+/* ── Metric grid — brutalism oversized numbers ── */
 .metric-grid {
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 12px; margin-bottom: 18px;
 }
 .metric-card {
   background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 20px 16px; text-align: center;
+  border: 3px solid var(--border-hard);
+  border-radius: 0; padding: 22px 16px; text-align: center;
   box-shadow: var(--shadow-md);
-  transition: transform .22s, box-shadow .22s, border-color .22s;
+  transition: transform .1s, box-shadow .1s;
   cursor: default;
 }
 .metric-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-2);
-  box-shadow: var(--shadow-md), var(--glow-sm);
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-lg);
 }
-.metric-icon { display: flex; justify-content: center; margin-bottom: 10px; opacity: .80; }
-/* Brutalism: oversized numbers */
+.metric-icon { display: flex; justify-content: center; margin-bottom: 10px; color: var(--accent); }
 .metric-val {
-  font-size: 30px; font-weight: 800; line-height: 1.05;
-  font-variant-numeric: tabular-nums; letter-spacing: -.5px;
+  font-size: 34px; font-weight: 900; line-height: 1.05;
+  font-variant-numeric: tabular-nums; letter-spacing: -1px;
+  font-family: 'Courier New', 'SF Mono', monospace;
+  color: var(--accent);
 }
 .metric-lbl {
-  font-size: 10px; color: var(--text3); margin-top: 5px;
-  text-transform: uppercase; letter-spacing: .5px; font-weight: 600;
+  font-size: 10px; color: var(--text3); margin-top: 6px;
+  text-transform: uppercase; letter-spacing: 1.2px; font-weight: 800;
+  border-top: 2px solid var(--border); padding-top: 8px; margin-top: 10px;
 }
 
 /* ── Two-column layout ── */
@@ -90,38 +83,41 @@
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;
 }
 
-/* ── Glass card (local override) ── */
+/* ── Card (local override) ── */
 .card {
   background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 22px;
+  border: 3px solid var(--border-hard);
+  border-radius: 0; padding: 22px;
   box-shadow: var(--shadow-md);
-  transition: border-color .2s, box-shadow .2s; margin-bottom: 18px;
+  transition: box-shadow .1s, transform .1s;
+  margin-bottom: 18px;
 }
 .card:hover {
-  border-color: var(--border-2);
-  box-shadow: var(--shadow-md), var(--glow-sm);
+  box-shadow: var(--shadow-lg);
+  transform: translate(-2px, -2px);
 }
 .card:last-child { margin-bottom: 0; }
 
 /* ── Session table ── */
 .session-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .session-table td {
-  padding: 9px 4px; border-bottom: 1px solid var(--border); vertical-align: middle;
+  padding: 10px 4px; border-bottom: 2px solid var(--border); vertical-align: middle;
 }
 .session-table tr:last-child td { border-bottom: none; }
-.session-table tr:hover td { background: var(--surface-2); border-radius: 6px; }
-.subj-name  { font-weight: 600; font-size: 13px; color: var(--text); }
-.subj-topic { color: var(--text3); font-size: 11px; }
-.subj-dur   { font-family: 'SF Mono', monospace; text-align: right; font-weight: 700; color: var(--accent); }
+.session-table tr:hover td { background: var(--surface-2); }
+.subj-name  { font-weight: 800; font-size: 13px; color: var(--text); }
+.subj-topic { color: var(--text3); font-size: 11px; font-weight: 600; }
+.subj-dur   {
+  font-family: 'Courier New', monospace; text-align: right;
+  font-weight: 900; color: var(--accent); font-size: 13px;
+}
 
 /* ── Skeleton ── */
 .skeleton-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 28px; }
 .skeleton-card {
-  height: 96px; border-radius: var(--radius-lg);
+  height: 96px; border-radius: 0;
   background: var(--surface-2); animation: shimmer 1.5s infinite;
+  border: 2px solid var(--border);
 }
 
 /* ── Responsive ── */
@@ -133,5 +129,5 @@
 }
 @media (max-width: 420px) {
   .metric-grid { gap: 8px; }
-  .metric-val  { font-size: 24px; }
+  .metric-val  { font-size: 26px; }
 }

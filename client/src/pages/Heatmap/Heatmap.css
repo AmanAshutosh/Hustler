@@ -1,5 +1,5 @@
 /* src/pages/Heatmap/Heatmap.css */
-.heatmap-page { padding: 28px; max-width: 980px; animation: fadeIn .35s cubic-bezier(.4, 0, .2, 1); }
+.heatmap-page { padding: 28px; max-width: 980px; animation: fadeIn .25s ease; }
 
 /* Metric grid */
 .metric-grid {
@@ -8,96 +8,95 @@
 }
 .metric-card {
   background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 18px; text-align: center;
+  border: 3px solid var(--border-hard);
+  border-radius: 0; padding: 20px; text-align: center;
   box-shadow: var(--shadow-md);
-  transition: transform .22s, border-color .22s, box-shadow .22s;
+  transition: transform .1s, box-shadow .1s;
 }
 .metric-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-2);
-  box-shadow: var(--shadow-md), var(--glow-sm);
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-lg);
 }
 .metric-val {
-  font-size: 28px; font-weight: 800; line-height: 1.1;
-  font-variant-numeric: tabular-nums; letter-spacing: -.4px;
+  font-size: 30px; font-weight: 900; line-height: 1.1;
+  font-variant-numeric: tabular-nums; letter-spacing: -1px;
+  font-family: 'Courier New', 'SF Mono', monospace;
+  color: var(--accent);
 }
 .metric-lbl {
-  font-size: 10px; color: var(--text3); margin-top: 5px;
-  text-transform: uppercase; letter-spacing: .5px; font-weight: 600;
+  font-size: 10px; color: var(--text3); margin-top: 6px;
+  text-transform: uppercase; letter-spacing: 1.2px; font-weight: 800;
+  border-top: 2px solid var(--border); padding-top: 8px; margin-top: 10px;
 }
 
 /* Card */
 .card {
   background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 22px; margin-bottom: 18px;
+  border: 3px solid var(--border-hard);
+  border-radius: 0; padding: 22px; margin-bottom: 18px;
   box-shadow: var(--shadow-md);
-  transition: border-color .2s, box-shadow .2s;
+  transition: box-shadow .1s, transform .1s;
 }
-.card:hover { border-color: var(--border-2); box-shadow: var(--shadow-md), var(--glow-sm); }
+.card:hover { box-shadow: var(--shadow-lg); transform: translate(-2px, -2px); }
 
 /* Heatmap layout */
 .heatmap-wrap { overflow-x: auto; }
 
 .month-labels { display: flex; margin-left: 30px; margin-bottom: 5px; }
-.month-label-cell { width: 15px; min-width: 15px; font-size: 9px; color: var(--text3); }
+.month-label-cell { width: 15px; min-width: 15px; font-size: 9px; font-weight: 700; color: var(--text3); text-transform: uppercase; }
 
 .heatmap-body { display: flex; align-items: flex-start; }
 
 .dow-labels { display: flex; flex-direction: column; gap: 2px; margin-right: 5px; width: 26px; flex-shrink: 0; }
-.dow-label  { height: 13px; line-height: 13px; font-size: 9px; color: var(--text3); text-align: right; }
+.dow-label  { height: 13px; line-height: 13px; font-size: 9px; font-weight: 700; color: var(--text3); text-align: right; text-transform: uppercase; }
 
 .heatmap-grid { display: flex; gap: 2px; }
 .hm-col { display: flex; flex-direction: column; gap: 2px; }
 
 .hm-cell {
-  width: 13px; height: 13px; border-radius: 3px;
-  cursor: default; transition: filter .1s, transform .1s; flex-shrink: 0;
+  width: 13px; height: 13px; border-radius: 0;
+  cursor: default; transition: transform .1s; flex-shrink: 0;
+  border: 1px solid transparent;
 }
-.hm-cell:hover { filter: brightness(1.35); transform: scale(1.25); z-index: 1; }
+.hm-cell:hover { transform: scale(1.4); z-index: 1; border-color: var(--border-hard); }
 
-/* Heatmap color scale — theme-aware */
-.hm-0 { background: var(--border); }
-.hm-1 { background: var(--blue-light); }
-.hm-2 { background: rgba(37, 99, 235, 0.40); }
-.hm-3 { background: rgba(37, 99, 235, 0.75); }
-.hm-4 { background: var(--accent); }
+/* Heatmap color scale — flat, no glass */
+.hm-0 { background: var(--surface-3); }
+.hm-1 { background: var(--blue-light); border: 1px solid var(--blue); }
+.hm-2 { background: rgba(77, 166, 255, 0.45); }
+.hm-3 { background: rgba(77, 166, 255, 0.75); }
+.hm-4 { background: var(--accent); border: 1px solid var(--border-hard); }
 
-[data-theme="light"] .hm-0 { background: rgba(0, 0, 0, 0.07); }
-[data-theme="light"] .hm-1 { background: rgba(0, 122, 255, 0.18); }
-[data-theme="light"] .hm-2 { background: rgba(0, 122, 255, 0.45); }
-[data-theme="light"] .hm-3 { background: rgba(0, 122, 255, 0.72); }
-[data-theme="light"] .hm-4 { background: #007aff; }
+[data-theme="light"] .hm-0 { background: var(--surface-3); }
+[data-theme="light"] .hm-1 { background: rgba(0, 85, 255, 0.15); border-color: var(--blue); }
+[data-theme="light"] .hm-2 { background: rgba(0, 85, 255, 0.40); }
+[data-theme="light"] .hm-3 { background: rgba(0, 85, 255, 0.70); }
+[data-theme="light"] .hm-4 { background: var(--accent); border-color: var(--border-hard); }
 
-.hm-today { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 3px; }
+.hm-today { outline: 3px solid var(--accent); outline-offset: 1px; border-radius: 0; }
 
 .hm-tooltip-bubble {
   position: absolute; transform: translate(-50%, -100%);
-  background: var(--bg-2); backdrop-filter: blur(16px);
-  color: var(--text); font-size: 11px; font-weight: 500;
-  padding: 6px 10px; border-radius: 9px;
+  background: var(--bg-2);
+  color: var(--text); font-size: 11px; font-weight: 700;
+  padding: 6px 10px; border-radius: 0;
   white-space: nowrap; pointer-events: none; z-index: 10;
-  border: 1px solid var(--border-2);
-  box-shadow: var(--shadow-md);
+  border: 2px solid var(--border-hard);
+  box-shadow: var(--shadow);
 }
 .hm-tooltip-bubble::after {
   content: ''; position: absolute; top: 100%; left: 50%;
-  transform: translateX(-50%); border: 5px solid transparent;
-  border-top-color: var(--bg-2);
+  transform: translateX(-50%); border: 6px solid transparent;
+  border-top-color: var(--border-hard);
 }
 
 .heatmap-footer {
   display: flex; align-items: center;
-  justify-content: flex-end; gap: 5px; margin-top: 12px;
+  justify-content: flex-end; gap: 6px; margin-top: 14px;
 }
-.hm-legend-label { font-size: 10px; color: var(--text3); }
+.hm-legend-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .4px; }
 .hm-legend { display: flex; align-items: center; gap: 3px; }
-.hm-sq { width: 11px; height: 11px; border-radius: 2px; cursor: default; }
+.hm-sq { width: 11px; height: 11px; border-radius: 0; cursor: default; border: 1px solid var(--border); }
 
 @media (max-width: 768px) {
   .heatmap-page { padding: 18px; }
