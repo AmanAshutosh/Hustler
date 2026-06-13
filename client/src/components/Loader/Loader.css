@@ -1,4 +1,4 @@
-/* ── Loader — Neobrutalism boot screen: Black + Yellow + Neons ── */
+/* ── Loader — boot screen: Black + Lime ── */
 .loader-overlay {
   position: fixed; inset: 0; z-index: 9999;
   background: #000000;
@@ -20,44 +20,43 @@
 @media (min-width: 480px) { .chip-wrapper { max-width: 460px; } }
 @media (min-width: 768px) { .chip-wrapper { max-width: 580px; } }
 
-/* Traces — multi-palette neons on black */
-.trace-bg   { stroke: rgba(253, 200, 0, 0.15); stroke-width: 1.8; fill: none; }
+/* Traces */
+.trace-bg   { stroke: rgba(163, 220, 25, 0.15); stroke-width: 1.8; fill: none; }
 .trace-flow {
   stroke-width: 1.8; fill: none;
   stroke-dasharray: 40 400; stroke-dashoffset: 438;
   animation: flow 3s cubic-bezier(0.5, 0, 0.9, 1) infinite;
 }
-/* Each trace color from a different palette */
-.yellow { stroke: #FDC800; color: #FDC800; }   /* Vibrant Yellow */
-.blue   { stroke: #00BFFF; color: #00BFFF; }   /* Sky Blue */
-.green  { stroke: #00FF7F; color: #00FF7F; }   /* Electric Green */
-.purple { stroke: #432DD7; color: #432DD7; }   /* Deep Violet */
-.red    { stroke: #FF4081; color: #FF4081; }   /* Bright Pink */
+.yellow { stroke: #A3DC19; color: #A3DC19; }
+.blue   { stroke: #00BFFF; color: #00BFFF; }
+.green  { stroke: #00FF7F; color: #00FF7F; }
+.purple { stroke: #432DD7; color: #432DD7; }
+.red    { stroke: #FF4081; color: #FF4081; }
 
-/* Percentage — Vibrant Yellow, monospace, huge */
+/* Percentage */
 .loader-pct {
   font-size: clamp(56px, 12vw, 90px); font-weight: 900; line-height: 1;
-  color: #FDC800;
+  color: #A3DC19;
   font-variant-numeric: tabular-nums;
   letter-spacing: -4px; margin-top: 4px;
   font-family: 'Courier New', 'SF Mono', monospace;
 }
 .loader-pct-sym { font-size: .36em; font-weight: 400; opacity: .55; letter-spacing: 0; }
 
-/* Progress bar — Yellow fill, white border glow dot */
+/* Progress bar */
 .loader-bar-track {
   position: relative; width: min(280px, 80vw); height: 8px;
-  background: rgba(253, 200, 0, 0.15); border-radius: 0;
+  background: rgba(163, 220, 25, 0.15); border-radius: 0;
   overflow: visible; margin-top: 16px;
-  border: 2px solid rgba(253, 200, 0, 0.45);
+  border: 2px solid rgba(163, 220, 25, 0.45);
 }
 .loader-bar-fill {
-  height: 100%; background: #FDC800; border-radius: 0;
+  height: 100%; background: #A3DC19; border-radius: 0;
   transition: width .06s linear;
 }
 .loader-bar-glow {
   position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 0;
-  background: #FDC800; transform: translate(-50%, -50%);
+  background: #A3DC19; transform: translate(-50%, -50%);
   border: 2px solid #FFFFFF;
   transition: left .06s linear; pointer-events: none;
 }
