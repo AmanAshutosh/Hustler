@@ -1,17 +1,19 @@
-// client/src/lib/calendar.js — Apple Calendar / iCal export utility
-// Generates .ics files for recurring weekly schedule events
-// Uses Asia/Kolkata timezone (IST, UTC+5:30)
+// client/src/lib/calendar.js — Calendar integration utility
+// Supports: Google Calendar links (Android + iOS) and .ics download (desktop)
 
 import { WEEKDAY, SATURDAY, SUNDAY, CATEGORIES, START_DATE } from '../data/careerData.js';
 
 const TZ = 'Asia/Kolkata';
+// IST offset in minutes
+const IST_OFFSET_MINS = 330;
 
-// Parses "10:30 AM" → { h: 10, m: 30 } in 24h
+// ─── Time parsing ─────────────────────────────────────────────────────────────
+
 function parseTime(str) {
   const clean = str.trim();
-  const isPM = clean.toUpperCase().includes('PM');
-  const isAM = clean.toUpperCase().includes('AM');
-  const [hStr, mStr] = clean.replace(/[APM]/gi, '').trim().split(':');
+  const isPM = /PM/i.test(clean);
+  const isAM = /AM/i.test(clean);
+  const [hStr, mStr] = clean.replace(/[APM\s]/gi, '').split(':');
   let h = parseInt(hStr, 10);
   const m = parseInt(mStr || '0', 10);
   if (isPM && h !== 12) h += 12;
@@ -19,33 +21,41 @@ function parseTime(str) {
   return { h, m };
 }
 
-// Parses "10:30 AM – 01:00 PM" → { start: {h,m}, end: {h,m} }
 function parseTimeRange(timeStr) {
   const parts = timeStr.split('–').map(s => s.trim());
   if (parts.length !== 2) return null;
   return { start: parseTime(parts[0]), end: parseTime(parts[1]) };
 }
 
-// Format date + time to iCal local datetime string
-// Returns "YYYYMMDDTHHMMSS"
+// ─── Date formatting ──────────────────────────────────────────────────────────
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+// Returns YYYYMMDDTHHMMSS (local, no Z) for iCal TZID usage
 function toICalLocal(date, h, m) {
   const d = new Date(date);
   d.setHours(h, m, 0, 0);
-  const pad = n => String(n).padStart(2, '0');
-  return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(h)}${pad(m)}00`;
 }
 
-// Generate a random UID
+// Returns YYYYMMDDTHHMMSSZ (UTC) for Google Calendar URLs
+// IST = UTC+5:30, so subtract 5h30m
+function toGCalUTC(date, h, m) {
+  const d = new Date(date);
+  d.setHours(h, m, 0, 0);
+  const utcMs = d.getTime() - IST_OFFSET_MINS * 60 * 1000;
+  const u = new Date(utcMs);
+  return `${u.getUTCFullYear()}${pad(u.getUTCMonth() + 1)}${pad(u.getUTCDate())}T${pad(u.getUTCHours())}${pad(u.getUTCMinutes())}00Z`;
+}
+
 function uid() {
   return `hustler-${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}@hustler`;
 }
 
-// Escape text for iCal
 function esc(str) {
   return String(str).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 }
 
-// Fold long lines per RFC 5545 (max 75 octets)
 function fold(str) {
   const lines = [];
   while (str.length > 75) {
@@ -56,44 +66,102 @@ function fold(str) {
   return lines.join('\r\n');
 }
 
+function firstOccurrence(startDate, targetDow) {
+  const d = new Date(startDate);
+  const diff = (targetDow - d.getDay() + 7) % 7;
+  d.setDate(d.getDate() + diff);
+  return d;
+}
+
+function getUntilDate() {
+  const until = new Date(START_DATE);
+  until.setMonth(until.getMonth() + 6);
+  return until.toISOString().slice(0, 10).replace(/-/g, '');
+}
+
+// ─── Google Calendar link builder ────────────────────────────────────────────
+
+// byday: 'MO,TU,WE,TH,FR' | 'SA' | 'SU'
+function makeGCalLink(slot, firstDate, byday) {
+  const range = parseTimeRange(slot.time);
+  if (!range) return null;
+
+  const crossesMidnight = range.end.h < range.start.h;
+  const endDate = new Date(firstDate);
+  if (crossesMidnight) endDate.setDate(endDate.getDate() + 1);
+
+  const dtStart = toGCalUTC(firstDate, range.start.h, range.start.m);
+  const dtEnd   = toGCalUTC(endDate,   range.end.h,   range.end.m);
+  const untilStr = getUntilDate() + 'T000000Z';
+  const rrule = `RRULE:FREQ=WEEKLY;BYDAY=${byday};UNTIL=${untilStr}`;
+
+  const cat = CATEGORIES[slot.cat];
+  const details = cat ? cat.label : '';
+
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: slot.label,
+    dates: `${dtStart}/${dtEnd}`,
+    recur: rrule,
+    ctz: TZ,
+    details,
+  });
+
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
 /**
- * Build iCal VEVENT blocks for one schedule day
- * @param {Array} slots - WEEKDAY | SATURDAY | SUNDAY
- * @param {Date} firstDate - the first occurrence date of this day type
- * @param {string} rruleByDay - 'MO,TU,WE,TH,FR' | 'SA' | 'SU'
- * @param {string} untilDate - YYYYMMDD until which to repeat
- * @returns {string[]} array of VEVENT strings
+ * Returns all schedule slots with their Google Calendar add links.
+ * Filters out sleep and off-type blocks by default.
+ * @returns {Array<{ label: string, time: string, cat: string, gcalUrl: string, dayType: string }>}
  */
-function slotsToEvents(slots, firstDate, rruleByDay, untilDate) {
+export function getGCalLinks() {
+  const weekdayFirst  = firstOccurrence(START_DATE, 1);
+  const saturdayFirst = firstOccurrence(START_DATE, 6);
+  const sundayFirst   = firstOccurrence(START_DATE, 0);
+
+  const result = [];
+
+  const add = (slots, firstDate, byday, dayType) => {
+    for (const slot of slots) {
+      if (slot.cat === 'sleep') continue; // skip sleep
+      const gcalUrl = makeGCalLink(slot, firstDate, byday);
+      if (gcalUrl) result.push({ ...slot, gcalUrl, dayType });
+    }
+  };
+
+  add(WEEKDAY,  weekdayFirst,  'MO,TU,WE,TH,FR', 'Mon–Fri');
+  add(SATURDAY, saturdayFirst, 'SA',              'Saturdays');
+  add(SUNDAY,   sundayFirst,   'SU',              'Sundays');
+
+  return result;
+}
+
+// ─── .ics export (desktop + iOS Safari) ──────────────────────────────────────
+
+function slotsToEvents(slots, firstDate, rruleByDay, untilStr) {
   const events = [];
 
   for (const slot of slots) {
     const range = parseTimeRange(slot.time);
     if (!range) continue;
 
-    let startDate = new Date(firstDate);
-    let endDate = new Date(firstDate);
-
-    // Handle overnight slots (e.g., "10:00 PM – 06:00 AM")
-    const crossesMidnight = range.end.h < range.start.h;
-    if (crossesMidnight) {
-      endDate.setDate(endDate.getDate() + 1);
-    }
+    const startDate = new Date(firstDate);
+    const endDate   = new Date(firstDate);
+    if (range.end.h < range.start.h) endDate.setDate(endDate.getDate() + 1);
 
     const dtStart = toICalLocal(startDate, range.start.h, range.start.m);
     const dtEnd   = toICalLocal(endDate,   range.end.h,   range.end.m);
     const cat = CATEGORIES[slot.cat];
-    const summary = slot.label;
-    const description = cat ? cat.label : '';
 
     events.push([
       'BEGIN:VEVENT',
       fold(`UID:${uid()}`),
       `DTSTART;TZID=${TZ}:${dtStart}`,
       `DTEND;TZID=${TZ}:${dtEnd}`,
-      fold(`RRULE:FREQ=WEEKLY;BYDAY=${rruleByDay};UNTIL=${untilDate}T000000Z`),
-      fold(`SUMMARY:${esc(summary)}`),
-      fold(`DESCRIPTION:${esc(description)}`),
+      fold(`RRULE:FREQ=WEEKLY;BYDAY=${rruleByDay};UNTIL=${untilStr}T000000Z`),
+      fold(`SUMMARY:${esc(slot.label)}`),
+      fold(`DESCRIPTION:${esc(cat ? cat.label : '')}`),
       'STATUS:CONFIRMED',
       'TRANSP:OPAQUE',
       'END:VEVENT',
@@ -104,25 +172,11 @@ function slotsToEvents(slots, firstDate, rruleByDay, untilDate) {
 }
 
 /**
- * Get the first occurrence of a given weekday (0=Sun, 6=Sat) on or after startDate
+ * Download the full weekly schedule as a .ics file.
+ * On iOS Safari, uses a data: URI so it opens in Files/Calendar instead of downloading.
  */
-function firstOccurrence(startDate, targetDow) {
-  const d = new Date(startDate);
-  const current = d.getDay();
-  const diff = (targetDow - current + 7) % 7;
-  d.setDate(d.getDate() + diff);
-  return d;
-}
-
-/**
- * Export the weekly schedule as a .ics file and trigger download
- * @param {Object} opts - optional: { untilDate: 'YYYYMMDD' }
- */
-export function exportScheduleToCalendar(opts = {}) {
-  // 6 months from START_DATE
-  const until = new Date(START_DATE);
-  until.setMonth(until.getMonth() + 6);
-  const untilStr = opts.untilDate || until.toISOString().slice(0, 10).replace(/-/g, '');
+export function exportScheduleToCalendar() {
+  const untilStr = getUntilDate();
 
   const allEvents = [
     ...slotsToEvents(WEEKDAY,  firstOccurrence(START_DATE, 1), 'MO,TU,WE,TH,FR', untilStr),
@@ -136,19 +190,26 @@ export function exportScheduleToCalendar(opts = {}) {
     'PRODID:-//HUSTLER//Career Planner//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    `X-WR-CALNAME:HUSTLER Study Schedule`,
+    'X-WR-CALNAME:HUSTLER Study Schedule',
     `X-WR-TIMEZONE:${TZ}`,
     ...allEvents,
     'END:VCALENDAR',
   ].join('\r\n');
 
-  const blob = new Blob([vcalendar], { type: 'text/calendar;charset=utf-8' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'hustler-schedule.ics';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS) {
+    // iOS Safari: data URI opens directly in Calendar app
+    window.location.href = `data:text/calendar;charset=utf-8,${encodeURIComponent(vcalendar)}`;
+  } else {
+    const blob = new Blob([vcalendar], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'hustler-schedule.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 }

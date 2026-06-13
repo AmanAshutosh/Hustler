@@ -5,8 +5,8 @@ import api from '../../lib/api.js';
 import { useAuth } from '../../store/auth.js';
 import toast from 'react-hot-toast';
 import { Play } from 'lucide-react';
-import { STACK_FS, STACK_DA, DAILY_SCHEDULE, MONTHLY_PLAN } from '../../data/careerData.js';
-import { exportScheduleToCalendar } from '../../lib/calendar.js';
+import { STACK_FS, STACK_DA, DAILY_SCHEDULE, MONTHLY_PLAN, CATEGORIES } from '../../data/careerData.js';
+import { exportScheduleToCalendar, getGCalLinks } from '../../lib/calendar.js';
 import './Profile.css';
 
 const SOCIAL_LINKS = [
@@ -161,14 +161,46 @@ export default function Profile() {
         <pre className="share-preview">{shareText}</pre>
       </div>
 
+      {/* Add to Calendar */}
+      <div className="card cal-card">
+        <div className="sec-title">Add to Calendar</div>
+        <div className="tt-subtitle">Tap any block to add that recurring event to your calendar</div>
+
+        {/* Google Calendar — works on Android + iOS */}
+        <div className="cal-section-label">Google Calendar (Android + iPhone)</div>
+        <div className="cal-links-grid">
+          {getGCalLinks().map((slot, i) => (
+            <a
+              key={i}
+              href={slot.gcalUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="cal-link-btn"
+              style={{ '--cal-color': CATEGORIES[slot.cat]?.color || 'var(--accent)' }}
+            >
+              <span className="cal-link-dot" />
+              <span className="cal-link-info">
+                <span className="cal-link-label">{slot.label}</span>
+                <span className="cal-link-meta">{slot.time} · {slot.dayType}</span>
+              </span>
+              <span className="cal-link-icon">+</span>
+            </a>
+          ))}
+        </div>
+
+        {/* .ics — Apple Calendar on Mac / iOS Files app */}
+        <div className="cal-section-label" style={{ marginTop: 16 }}>Apple Calendar (Mac / iPhone via Files)</div>
+        <button className="cal-ics-btn" onClick={exportScheduleToCalendar}>
+          Download .ics — All events (opens in Calendar app)
+        </button>
+        <p className="cal-hint">
+          iPhone: tap Download .ics → tap the file in Safari downloads → "Add All" in Calendar app.
+        </p>
+      </div>
+
       {/* Daily timetable */}
       <div className="card">
-        <div className="sec-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span>Daily Schedule</span>
-          <button className="tt-cal-btn" onClick={exportScheduleToCalendar} title="Export to Apple Calendar">
-            Export .ics
-          </button>
-        </div>
+        <div className="sec-title">Daily Schedule</div>
         <div className="tt-subtitle">Wake up 6am · Gym + breakfast · Free from 11am · ~7h study/day</div>
         <div className="tt-daily">
           {DAILY_SCHEDULE.map((slot, i) => (
