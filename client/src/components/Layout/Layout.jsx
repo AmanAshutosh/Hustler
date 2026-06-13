@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../store/auth.js';
 import { useTheme } from '../../context/ThemeContext.jsx';
+import { getStoredPath, setStoredPath } from '../../data/careerData.js';
 import Footer from '../Footer/Footer.jsx';
 import Loader from '../Loader/Loader.jsx';
 import api from '../../lib/api.js';
@@ -40,6 +41,7 @@ export default function Layout() {
   const [menuOpen, setMenuOpen]     = useState(false);
   const [loading, setLoading]       = useState(true);
   const [offline, setOffline]       = useState(false);
+  const [path, setPath]             = useState(getStoredPath);
 
   useEffect(() => {
     setLoading(true);
@@ -61,6 +63,13 @@ export default function Layout() {
   const pct = Math.min(100, (todayHours / 8) * 100);
   const closeSidebar = () => setMenuOpen(false);
 
+  const handlePathChange = (p) => {
+    setPath(p);
+    setStoredPath(p);
+    // Dispatch a storage event so other tabs/pages can react
+    window.dispatchEvent(new Event('hustler-path-change'));
+  };
+
   return (
     <div className="app-shell">
       {loading && <Loader onDone={() => setLoading(false)} />}
@@ -68,12 +77,12 @@ export default function Layout() {
       {/* Mobile top bar */}
       <header className="mobile-topbar">
         <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
-          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          {menuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
         <span className="mobile-brand">HUSTLER</span>
         <div className="mobile-right">
           <button className="theme-toggle-mobile" onClick={toggle} aria-label="Toggle theme">
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
           <span className="mobile-hours">{todayHours.toFixed(1)}h</span>
         </div>
@@ -87,20 +96,32 @@ export default function Layout() {
           <div className="sidebar-logo-mark">H</div>
           <div>
             <div className="sidebar-logo-name">HUSTLER</div>
-            <div className="sidebar-logo-sub">Job Hunt Tracker</div>
+            <div className="sidebar-logo-sub">Career Tracker</div>
+          </div>
+        </div>
+
+        {/* Career path selector */}
+        <div className="sidebar-path">
+          <div className="sidebar-path-tabs">
+            <button
+              className={`sidebar-path-btn${path === 'fs' ? ' active' : ''}`}
+              onClick={() => handlePathChange('fs')}
+            >Full Stack</button>
+            <button
+              className={`sidebar-path-btn${path === 'da' ? ' active' : ''}`}
+              onClick={() => handlePathChange('da')}
+            >Data Analytics</button>
           </div>
         </div>
 
         <nav className="sidebar-nav">
           {NAV.map(({ to, label, Icon }) => (
             <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
+              key={to} to={to} end={to === '/'}
               className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
               onClick={closeSidebar}
             >
-              <Icon size={16} className="nav-icon" />
+              <Icon size={15} className="nav-icon" />
               <span>{label}</span>
             </NavLink>
           ))}
@@ -109,12 +130,11 @@ export default function Layout() {
 
           {NAV_CAREER.map(({ to, label, Icon }) => (
             <NavLink
-              key={to}
-              to={to}
+              key={to} to={to}
               className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
               onClick={closeSidebar}
             >
-              <Icon size={16} className="nav-icon" />
+              <Icon size={15} className="nav-icon" />
               <span>{label}</span>
             </NavLink>
           ))}
@@ -128,16 +148,15 @@ export default function Layout() {
           <div className="progress-track">
             <div className="progress-fill" style={{ width: `${pct}%` }} />
           </div>
-
           <div className="sidebar-footer-actions">
             <button className="theme-toggle-btn" onClick={toggle} aria-label="Toggle theme">
               {theme === 'dark'
-                ? <><Sun size={13} /><span>Light</span></>
-                : <><Moon size={13} /><span>Dark</span></>
+                ? <><Sun size={12} /><span>Light</span></>
+                : <><Moon size={12} /><span>Dark</span></>
               }
             </button>
             <button className="sign-out-btn" onClick={handleLogout}>
-              <LogOut size={13} /> Sign out
+              <LogOut size={12} /> Sign out
             </button>
           </div>
         </div>
@@ -147,7 +166,7 @@ export default function Layout() {
       <div className="main-area">
         {offline && (
           <div className="offline-banner">
-            ⚠ Backend offline — run <code>npm run dev</code> to save data.
+            Backend offline — run <code>npm run dev</code> in /server to save data.
           </div>
         )}
         <main className="main-content">

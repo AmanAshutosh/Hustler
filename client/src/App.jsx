@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from './store/auth.js';
 import { useTheme } from './context/ThemeContext.jsx';
@@ -55,6 +56,9 @@ function ToasterThemed() {
 }
 
 export default function App() {
+  const { token, validateToken } = useAuth();
+  useEffect(() => { if (token) validateToken(); }, []);
+
   return (
     <BrowserRouter>
       <ToasterThemed />

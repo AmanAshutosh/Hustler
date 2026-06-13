@@ -2,7 +2,7 @@ const express  = require('express');
 const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
 const db       = require('../db/database');
-const { JWT_SECRET } = require('../middleware/auth');
+const { JWT_SECRET, authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 const makeId = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -79,6 +79,22 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Login failed. Please try again.' });
+  }
+});
+
+// GET /api/auth/me — validate token + return current user
+router.get('/me', authenticate, async (req, res) => {
+  try {
+    const user = db.get('users').find({ id: req.userId }).value();
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    return res.json({
+      id:             user.id,
+      name:           user.name,
+      email:          user.email,
+      avatarInitials: user.avatar_initials,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch user' });
   }
 });
 

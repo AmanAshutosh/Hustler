@@ -28,6 +28,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <div className="auth-logo">H</div>
         <div className="auth-brand">HUSTLER</div>
         <p className="auth-sub">Sign in to your account</p>
 

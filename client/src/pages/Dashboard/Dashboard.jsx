@@ -1,103 +1,47 @@
 // src/pages/Dashboard/Dashboard.jsx
 import { useEffect, useState } from 'react';
-import { Clock, Flame, Zap, FolderKanban, TrendingUp, Sparkles } from 'lucide-react';
+import { Clock, Flame, Zap, FolderKanban, TrendingUp, Sparkles, Trophy } from 'lucide-react';
 import api from '../../lib/api.js';
 import DigitalClock from '../../components/DigitalClock/DigitalClock.jsx';
+import {
+  FS_SUBJECTS, DA_SUBJECTS, FS_MONTHS, DA_MONTHS,
+  getStoredPath, setStoredPath,
+} from '../../data/careerData.js';
 import './Dashboard.css';
 
 const QUOTES = [
-  { text: "The best way to predict the future is to create it.", author: "Peter Drucker", tag: "FAANG mindset" },
-  { text: "At Google, we hire people who are smarter than us, and then get out of their way.", author: "Eric Schmidt, Google", tag: "Google" },
+  { text: "The best way to predict the future is to create it.", author: "Peter Drucker", tag: "Mindset" },
   { text: "Done is better than perfect.", author: "Sheryl Sandberg, Meta", tag: "Meta" },
   { text: "Stay hungry, stay foolish.", author: "Steve Jobs, Apple", tag: "Apple" },
-  { text: "Work hard, have fun, make history.", author: "Jeff Bezos, Amazon", tag: "Amazon" },
-  { text: "The more risks you take, the more you learn.", author: "Reed Hastings, Netflix", tag: "Netflix" },
-  { text: "Move fast with stable infrastructure.", author: "Mark Zuckerberg, Meta", tag: "Meta" },
-  { text: "Focus on the user and all else will follow.", author: "Google's Ten Things", tag: "Google" },
-  { text: "Our mission is to be Earth's most customer-centric company.", author: "Jeff Bezos, Amazon", tag: "Amazon" },
-  { text: "Every line of code you write today is a step toward your dream offer.", author: "FAANG Engineers", tag: "Grind" },
-  { text: "Leetcode today, dream offer tomorrow. Keep going.", author: "FAANG Engineers", tag: "DSA" },
-  { text: "The interview is just the gate. The real work starts after you're inside.", author: "Senior SDE, Google", tag: "Google" },
-  { text: "Ship code, break things, fix things, repeat. That is how great engineers are made.", author: "Meta Engineering", tag: "Meta" },
-  { text: "You're not behind. You're on your own timeline to greatness.", author: "FAANG Engineers", tag: "Grind" },
+  { text: "Focus on the user and all else will follow.", author: "Google", tag: "Google" },
   { text: "Consistency beats talent when talent doesn't show up every day.", author: "FAANG Engineers", tag: "Mindset" },
   { text: "First, solve the problem. Then, write the code.", author: "John Johnson", tag: "Engineering" },
-  { text: "The best error message is the one that never shows up.", author: "Thomas Fuchs", tag: "Engineering" },
-  { text: "Amazon was not built in a day. Your skills won't be either. Keep coding.", author: "Amazon SDE", tag: "Amazon" },
-  { text: "Hard work, hustle, and a killer resume — that's how you land FAANG.", author: "FAANG Engineers", tag: "Grind" },
-  { text: "Your GitHub green squares are your proof of work. Fill them every single day.", author: "Open Source Engineers", tag: "Grind" },
-  { text: "The difference between a good developer and a great one is discipline.", author: "FAANG Engineers", tag: "Mindset" },
-  { text: "If you're not embarrassed by the first version of your product, you've launched too late.", author: "Reid Hoffman, LinkedIn", tag: "LinkedIn" },
-  { text: "It's not about ideas. It's about making ideas happen.", author: "Scott Belsky", tag: "Mindset" },
-  { text: "An investment in knowledge pays the best interest.", author: "Benjamin Franklin", tag: "Learning" },
-  { text: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau", tag: "Mindset" },
-  { text: "One coding session a day keeps regret away.", author: "FAANG Engineers", tag: "Grind" },
-  { text: "Every rejected application brought you closer. Keep applying. Keep improving.", author: "FAANG Engineers", tag: "Resilience" },
-  { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "FAANG Engineers", tag: "Mindset" },
+  { text: "Be so good they can't ignore you.", author: "Cal Newport", tag: "Mindset" },
+  { text: "Think big, start small, move fast.", author: "Google Engineering", tag: "Google" },
+  { text: "Each DSA problem you solve makes you 1% closer to the offer.", author: "Leetcode Grinders", tag: "DSA" },
+  { text: "Imposter syndrome means you're growing. Keep pushing.", author: "FAANG Engineers", tag: "Mindset" },
+  { text: "Your GitHub green squares are your proof of work.", author: "Open Source Engineers", tag: "Grind" },
+  { text: "Every line of code you write today is a step toward your dream offer.", author: "FAANG Engineers", tag: "Grind" },
+  { text: "Ship code, break things, fix things, repeat.", author: "Meta Engineering", tag: "Meta" },
   { text: "You are one project away from being noticed. Build that project today.", author: "FAANG Engineers", tag: "Projects" },
   { text: "Dream companies aren't for special people. They're for dedicated people.", author: "FAANG Engineers", tag: "Mindset" },
-  { text: "Code is like humor. When you have to explain it, it's bad — but keep learning.", author: "Cory House", tag: "Engineering" },
-  { text: "Be so good they can't ignore you.", author: "Steve Martin / Cal Newport", tag: "Mindset" },
-  { text: "Think big, start small, move fast.", author: "Google Engineering", tag: "Google" },
-  { text: "The difference between try and triumph is a little umph.", author: "Marvin Phillips", tag: "Motivation" },
-  { text: "Your future FAANG badge is waiting. Don't let it wait forever.", author: "FAANG Engineers", tag: "Goal" },
-  { text: "Each DSA problem you solve makes you 1% closer to the offer.", author: "Leetcode Grinders", tag: "DSA" },
-  { text: "The best time to start was yesterday. The second best time is now.", author: "FAANG Engineers", tag: "Grind" },
-  { text: "Imposter syndrome means you're growing. Keep pushing.", author: "FAANG Engineers", tag: "Mindset" },
+  { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "FAANG Engineers", tag: "Mindset" },
+  { text: "Move fast with stable infrastructure.", author: "Mark Zuckerberg, Meta", tag: "Meta" },
+  { text: "An investment in knowledge pays the best interest.", author: "Benjamin Franklin", tag: "Learning" },
   { text: "Netflix engineers watch movies and build the future. So can you.", author: "Netflix Engineering", tag: "Netflix" },
-  { text: "The only way out is through the code. Keep grinding.", author: "FAANG Engineers", tag: "Grind" },
+  { text: "The best time to start was yesterday. The second best time is now.", author: "FAANG Engineers", tag: "Grind" },
 ];
-
-const QUOTES_KEY = 'hustler_daily_quote';
 
 function getDailyQuote() {
   const today = new Date().toDateString();
   try {
-    const stored = JSON.parse(localStorage.getItem(QUOTES_KEY) || '{}');
+    const stored = JSON.parse(localStorage.getItem('hustler_daily_quote') || '{}');
     if (stored.date === today && stored.index != null) return QUOTES[stored.index];
-    const seen = (stored.date !== today && stored.resetSeen) ? [] : (stored.seen || []);
-    const available = QUOTES.map((_, i) => i).filter(i => !seen.includes(i));
-    const pool = available.length > 0 ? available : QUOTES.map((_, i) => i);
-    const newSeen = available.length > 0 ? seen : [];
-    const idx = pool[Math.floor(Math.random() * pool.length)];
-    localStorage.setItem(QUOTES_KEY, JSON.stringify({ date: today, index: idx, seen: [...newSeen, idx] }));
+    const idx = Math.floor(Math.random() * QUOTES.length);
+    localStorage.setItem('hustler_daily_quote', JSON.stringify({ date: today, index: idx }));
     return QUOTES[idx];
   } catch { return QUOTES[0]; }
 }
-
-const FS_SUBJECTS = [
-  { name: 'JavaScript (ES6+)', target: 40, color: '#D1FF05' },
-  { name: 'React',             target: 35, color: '#61dafb' },
-  { name: 'Node.js',           target: 30, color: '#68a063' },
-  { name: 'DSA',               target: 50, color: '#a855f7' },
-  { name: 'System Design',     target: 20, color: '#3b82f6' },
-];
-
-const DA_SUBJECTS = [
-  { name: 'SQL',              target: 20, color: '#f59e0b' },
-  { name: 'Python',           target: 25, color: '#3b82f6' },
-  { name: 'Power BI',         target: 15, color: '#FDC800' },
-  { name: 'Excel',            target: 10, color: '#00A854' },
-  { name: 'Statistics',       target: 15, color: '#ec4899' },
-];
-
-const ROADMAP_FS = [
-  { name: 'M1 — Foundation Rebuild',    color: '#00BFFF' },
-  { name: 'M2 — Backend & Databases',  color: '#FF4F00' },
-  { name: 'M3 — Polish + Apply',        color: '#432DD7' },
-  { name: 'M4 — Interview Mode',        color: '#00FF7F' },
-  { name: 'M5 — First Offer',          color: '#FDC800' },
-  { name: 'M6 — Employed + Growth',    color: '#FF4081' },
-];
-
-const ROADMAP_DA = [
-  { name: 'M1 — Excel + SQL Basics',   color: '#00BFFF' },
-  { name: 'M2 — SQL Adv + Statistics', color: '#FF4F00' },
-  { name: 'M3 — Python for Data',      color: '#432DD7' },
-  { name: 'M4 — Power BI + Data Viz',  color: '#00FF7F' },
-  { name: 'M5 — Tableau + Portfolio',  color: '#FDC800' },
-  { name: 'M6 — DA Job Hunt',          color: '#FF4081' },
-];
 
 function fmtDur(secs) {
   if (!secs) return '—';
@@ -105,91 +49,151 @@ function fmtDur(secs) {
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
 
-const METRICS = [
-  { key: 'totalHours', label: 'Total Hours', suffix: 'h', Icon: Clock,        color: 'var(--accent)' },
-  { key: 'streak',     label: 'Day Streak',  suffix: '',  Icon: Flame,        color: '#f97316' },
-  { key: 'dsaTotal',   label: 'DSA Solved',  suffix: '',  Icon: Zap,          color: 'var(--purple)' },
-  { key: 'projectsTotal', label: 'Projects', suffix: '',  Icon: FolderKanban, color: 'var(--blue)' },
-];
+function getDayLabel(dateStr) {
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return days[new Date(dateStr + 'T12:00').getDay()];
+}
 
 export default function Dashboard() {
+  const [path, setPath]         = useState(getStoredPath);
   const [summary, setSummary]   = useState(null);
   const [sessions, setSessions] = useState([]);
+  const [weekly, setWeekly]     = useState({});
   const [loading, setLoading]   = useState(true);
   const dailyQuote = getDailyQuote();
 
   useEffect(() => {
-    Promise.all([api.get('/stats/summary'), api.get('/sessions?limit=6')])
-      .then(([s, sess]) => { setSummary(s.data); setSessions(sess.data.sessions); })
+    Promise.all([
+      api.get('/stats/summary'),
+      api.get('/sessions?limit=5'),
+      api.get('/stats/weekly'),
+    ])
+      .then(([s, sess, w]) => {
+        setSummary(s.data);
+        setSessions(sess.data.sessions);
+        setWeekly(w.data || {});
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return (
-    <div className="dashboard">
-      <div className="skeleton-grid">
-        {[1,2,3,4].map(i => <div key={i} className="skeleton-card" />)}
-      </div>
-    </div>
-  );
+  // Sync with sidebar path changes
+  useEffect(() => {
+    const handler = () => setPath(getStoredPath());
+    window.addEventListener('hustler-path-change', handler);
+    return () => window.removeEventListener('hustler-path-change', handler);
+  }, []);
+
+  const handlePathChange = (p) => {
+    setPath(p);
+    setStoredPath(p);
+    window.dispatchEvent(new Event('hustler-path-change'));
+  };
 
   const subMap = {};
   (summary?.subjectHours || []).forEach(s => { subMap[s.subject] = s.hours; });
 
   const totalH = summary?.totalHours || 0;
-  // FS roadmap: 6 months, ~40h per month milestone
-  const fsPct = [
-    Math.min(100, Math.round((totalH / 40) * 100)),
-    Math.max(0, Math.min(100, Math.round(((totalH - 40) / 40) * 100))),
-    Math.max(0, Math.min(100, Math.round(((totalH - 80) / 40) * 100))),
-    Math.max(0, Math.min(100, Math.round(((totalH - 120) / 40) * 100))),
-    Math.max(0, Math.min(100, Math.round(((totalH - 160) / 40) * 100))),
-    Math.max(0, Math.min(100, Math.round(((totalH - 200) / 40) * 100))),
+  const MONTHS = path === 'fs' ? FS_MONTHS : DA_MONTHS;
+  const SUBJECTS = path === 'fs' ? FS_SUBJECTS : DA_SUBJECTS;
+
+  // Roadmap progress (distributed across 6 months by total hours)
+  const hoursPerMonth = totalH / 6;
+  const roadPct = MONTHS.map((_, i) => {
+    const base = i * (totalH / 6);
+    const contribution = Math.min(totalH, (i + 1) * (totalH / 6)) - base;
+    return Math.min(100, Math.round((contribution / Math.max(totalH / 6, 1)) * 100));
+  });
+
+  // Weekly chart — last 7 days
+  const last7 = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    const key = d.toISOString().split('T')[0];
+    return { key, label: getDayLabel(key), hours: weekly[key] || 0 };
+  });
+  const maxH = Math.max(...last7.map(d => d.hours), 1);
+
+  // FS metrics
+  const fsMetrics = [
+    { key: 'totalHours',   label: 'Study Hours',  suffix: 'h',  val: totalH,                     Icon: Clock,        color: 'var(--accent)' },
+    { key: 'streak',       label: 'Day Streak',   suffix: ' 🔥', val: summary?.streak || 0,       Icon: Flame,        color: '#F97316' },
+    { key: 'dsaTotal',     label: 'DSA Solved',   suffix: '/150',val: summary?.dsaTotal || 0,     Icon: Zap,          color: 'var(--purple)' },
+    { key: 'projectsTotal',label: 'Projects',     suffix: '',    val: summary?.projectsTotal || 0,Icon: FolderKanban, color: 'var(--blue)' },
   ];
+  const daMetrics = [
+    { key: 'totalHours',   label: 'Study Hours',  suffix: 'h',  val: totalH,                     Icon: Clock,        color: 'var(--accent)' },
+    { key: 'streak',       label: 'Day Streak',   suffix: ' 🔥', val: summary?.streak || 0,       Icon: Flame,        color: '#F97316' },
+    { key: 'sql',          label: 'SQL Hours',    suffix: 'h',  val: subMap['SQL'] || 0,          Icon: TrendingUp,   color: '#F59E0B' },
+    { key: 'projectsTotal',label: 'DA Projects',  suffix: '',   val: summary?.projectsTotal || 0, Icon: Trophy,       color: '#22C55E' },
+  ];
+  const METRICS = path === 'fs' ? fsMetrics : daMetrics;
+
+  if (loading) return (
+    <div className="dashboard">
+      <div className="dash-skeleton">
+        {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: 96 }} />)}
+      </div>
+    </div>
+  );
 
   return (
     <div className="dashboard">
-      <div className="page-header dash-header">
+      {/* Header */}
+      <div className="dash-header">
         <div>
           <h2>Dashboard</h2>
-          <p>Your full-stack grind at a glance</p>
+          <p>{path === 'fs' ? 'Full Stack Developer' : 'Data Analytics'} track</p>
         </div>
         <DigitalClock />
       </div>
 
+      {/* Career path selector */}
+      <div className="path-tabs" style={{ marginBottom: 20 }}>
+        <button
+          className={`path-tab${path === 'fs' ? ' active' : ''}`}
+          onClick={() => handlePathChange('fs')}
+        >Full Stack Dev</button>
+        <button
+          className={`path-tab${path === 'da' ? ' active' : ''}`}
+          onClick={() => handlePathChange('da')}
+        >Data Analytics</button>
+      </div>
+
+      {/* Daily quote */}
       <div className="quote-card">
-        <div className="quote-header">
-          <span className="quote-badge"><Sparkles size={10} /> Daily Fuel</span>
-          <span className="quote-company-tag">{dailyQuote.tag}</span>
-        </div>
+        <div className="quote-tag"><Sparkles size={10} /> {dailyQuote.tag}</div>
         <div className="quote-text">{dailyQuote.text}</div>
         <div className="quote-author">— {dailyQuote.author}</div>
       </div>
 
+      {/* Metric cards */}
       <div className="metric-grid">
-        {METRICS.map(({ key, label, suffix, Icon, color }) => (
+        {METRICS.map(({ key, label, suffix, val, Icon, color }) => (
           <div className="metric-card" key={key}>
             <div className="metric-icon" style={{ color }}>
-              <Icon size={20} />
+              <Icon size={18} />
             </div>
             <div className="metric-val" style={{ color }}>
-              {summary?.[key] || 0}{suffix}
+              {val}{suffix}
             </div>
             <div className="metric-lbl">{label}</div>
           </div>
         ))}
       </div>
 
-      <div className="two-col">
-        <div className="card">
-          <div className="sec-title"><TrendingUp size={12} /> Full Stack Progress</div>
-          {FS_SUBJECTS.map(s => {
-            const pct = Math.min(100, Math.round(((subMap[s.name] || 0) / s.target) * 100));
+      <div className="dash-grid">
+        {/* Left: subject progress */}
+        <div className="card" style={{ marginBottom: 0 }}>
+          <div className="sec-title"><TrendingUp size={12} /> {path === 'fs' ? 'FS' : 'DA'} Skills</div>
+          {SUBJECTS.map(s => {
+            const h = subMap[s.name] || 0;
+            const pct = Math.min(100, Math.round((h / s.target) * 100));
             return (
               <div className="bar-row" key={s.name}>
                 <div className="bar-label">
                   <span>{s.name}</span>
-                  <span>{subMap[s.name] || 0}h / {s.target}h</span>
+                  <span>{h}h / {s.target}h</span>
                 </div>
                 <div className="bar-track">
                   <div className="bar-fill" style={{ width: `${pct}%`, background: s.color }} />
@@ -197,29 +201,44 @@ export default function Dashboard() {
               </div>
             );
           })}
+          {path === 'fs' && (() => {
+            const dsa = summary?.dsaTotal || 0;
+            const pct = Math.round((dsa / 150) * 100);
+            return (
+              <div className="bar-row" style={{ marginTop: 4 }}>
+                <div className="bar-label"><span>DSA — Neetcode 150</span><span>{dsa}/150</span></div>
+                <div className="bar-track">
+                  <div className="bar-fill" style={{ width: `${pct}%`, background: 'var(--purple)' }} />
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
-        <div className="card">
-          <div className="sec-title"><TrendingUp size={12} /> Data Analytics Progress</div>
-          {DA_SUBJECTS.map(s => {
-            const pct = Math.min(100, Math.round(((subMap[s.name] || 0) / s.target) * 100));
-            return (
-              <div className="bar-row" key={s.name}>
-                <div className="bar-label">
-                  <span>{s.name}</span>
-                  <span>{subMap[s.name] || 0}h / {s.target}h</span>
+        {/* Right: weekly activity */}
+        <div className="card" style={{ marginBottom: 0 }}>
+          <div className="sec-title"><Flame size={12} /> Weekly Activity</div>
+          <div className="weekly-chart">
+            {last7.map(({ key, label, hours }) => (
+              <div className="wc-col" key={key}>
+                <div className="wc-bar-wrap">
+                  <div
+                    className="wc-bar"
+                    style={{ height: `${Math.round((hours / maxH) * 100)}%` }}
+                    title={`${hours.toFixed(1)}h`}
+                  />
                 </div>
-                <div className="bar-track">
-                  <div className="bar-fill" style={{ width: `${pct}%`, background: s.color }} />
-                </div>
+                <div className="wc-label">{label}</div>
+                <div className="wc-val">{hours > 0 ? `${hours.toFixed(1)}h` : ''}</div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="two-col">
-        <div className="card">
+      <div className="dash-grid" style={{ marginTop: 14 }}>
+        {/* Recent sessions */}
+        <div className="card" style={{ marginBottom: 0 }}>
           <div className="sec-title"><Clock size={12} /> Recent Sessions</div>
           {sessions.filter(s => !s.is_active).length === 0
             ? <p className="empty-msg">No sessions yet. Start the timer!</p>
@@ -242,22 +261,22 @@ export default function Dashboard() {
           }
         </div>
 
-        <div className="card">
-          <div className="sec-title"><TrendingUp size={12} /> 6-Month FS Roadmap</div>
-          {ROADMAP_FS.map((r, i) => (
-            <div className="bar-row" key={r.name}>
+        {/* 6-Month roadmap */}
+        <div className="card" style={{ marginBottom: 0 }}>
+          <div className="sec-title"><Trophy size={12} /> 6-Month {path === 'fs' ? 'FS' : 'DA'} Roadmap</div>
+          {MONTHS.map((r, i) => (
+            <div className="bar-row" key={r.num}>
               <div className="bar-label">
-                <span>{r.name}</span>
-                <span>{fsPct[i]}%</span>
+                <span>M{r.num} — {r.title}</span>
+                <span>{roadPct[i]}%</span>
               </div>
               <div className="bar-track">
-                <div className="bar-fill" style={{ width: `${fsPct[i]}%`, background: r.color }} />
+                <div className="bar-fill" style={{ width: `${roadPct[i]}%`, background: r.color }} />
               </div>
             </div>
           ))}
         </div>
       </div>
-
     </div>
   );
 }
