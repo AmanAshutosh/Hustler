@@ -8,12 +8,14 @@ const adapter = new FileSync(path.join(__dirname, '../devtrack.json'));
 const db = low(adapter);
 
 db.defaults({
-  users:            [],
-  sessions:         [],
-  dsa_problems:     [],
-  projects:         [],
-  daily_stats:      [],
-  subject_progress: [],
+  users:             [],
+  sessions:          [],
+  dsa_problems:      [],
+  projects:          [],
+  daily_stats:       [],
+  subject_progress:  [],
+  habit_logs:        [],
+  roadmap_progress:  [],
 }).write();
 
 module.exports = db;

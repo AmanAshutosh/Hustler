@@ -3,17 +3,20 @@ import { Toaster } from 'react-hot-toast';
 import { useAuth } from './store/auth.js';
 import { useTheme } from './context/ThemeContext.jsx';
 
-import Layout     from './components/Layout/Layout.jsx';
-import Dashboard  from './pages/Dashboard/Dashboard.jsx';
-import Timer      from './pages/Timer/Timer.jsx';
-import Heatmap    from './pages/Heatmap/Heatmap.jsx';
-import Subjects   from './pages/Subjects/Subjects.jsx';
-import DSATracker from './pages/DSATracker/DSATracker.jsx';
-import Projects   from './pages/Projects/Projects.jsx';
-import Practice   from './pages/Practice/Practice.jsx';
-import Profile    from './pages/Profile/Profile.jsx';
-import Login      from './pages/Login/Login.jsx';
-import Register   from './pages/Register/Register.jsx';
+import Layout      from './components/Layout/Layout.jsx';
+import Dashboard   from './pages/Dashboard/Dashboard.jsx';
+import Timer       from './pages/Timer/Timer.jsx';
+import Heatmap     from './pages/Heatmap/Heatmap.jsx';
+import Subjects    from './pages/Subjects/Subjects.jsx';
+import DSATracker  from './pages/DSATracker/DSATracker.jsx';
+import Projects    from './pages/Projects/Projects.jsx';
+import Practice    from './pages/Practice/Practice.jsx';
+import Profile     from './pages/Profile/Profile.jsx';
+import Login       from './pages/Login/Login.jsx';
+import Register    from './pages/Register/Register.jsx';
+import DailyTracker from './pages/DailyTracker/DailyTracker.jsx';
+import WeeklyView   from './pages/WeeklyView/WeeklyView.jsx';
+import Roadmap      from './pages/Roadmap/Roadmap.jsx';
 
 // Redirect already-logged-in users away from auth pages
 function AuthRoute({ children }) {
@@ -67,6 +70,9 @@ export default function App() {
           <Route path="projects"    element={<Projects />} />
           <Route path="practice"    element={<Practice />} />
           <Route path="profile"     element={<Profile />} />
+          <Route path="tracker"     element={<DailyTracker />} />
+          <Route path="weekly"      element={<WeeklyView />} />
+          <Route path="roadmap"     element={<Roadmap />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

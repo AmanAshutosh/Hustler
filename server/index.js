@@ -21,6 +21,8 @@ app.use("/api/projects", authenticate, require("./routes/projects"));
 app.use("/api/stats",    authenticate, require("./routes/stats"));
 app.use("/api/subjects", authenticate, require("./routes/subjects"));
 app.use("/api/user",     authenticate, require("./routes/user"));
+app.use("/api/tracker",  authenticate, require("./routes/tracker"));
+app.use("/api/roadmap",  authenticate, require("./routes/roadmap"));
 
 app.get("/api/health", (_, res) => res.json({ ok: true }));
 
