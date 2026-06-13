@@ -1,6 +1,20 @@
 /* src/pages/Practice/Practice.css */
 .practice-page { padding: 28px; max-width: 920px; animation: fadeIn .25s ease; }
 
+/* Path tabs */
+.practice-path-tabs {
+  display: flex; gap: 0; margin-bottom: 20px;
+  border: 3px solid var(--border-hard); width: fit-content;
+}
+.practice-path-btn {
+  padding: 10px 24px; font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .05em;
+  background: var(--surface-2); color: var(--text3);
+  border: none; cursor: pointer; transition: background .08s, color .08s;
+}
+.practice-path-btn + .practice-path-btn { border-left: 3px solid var(--border-hard); }
+.practice-path-btn.active { background: var(--accent); color: #000; }
+
 /* Header */
 .practice-header {
   display: flex; align-items: flex-start; justify-content: space-between;

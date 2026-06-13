@@ -1,6 +1,6 @@
 {
-  "name": "Hustler 2.0 — Job Hunt Tracker",
-  "short_name": "Hustler 2.0",
+  "name": "HUSTLER — Job Hunt Tracker",
+  "short_name": "HUSTLER",
   "description": "Track your full-stack dev journey — sessions, DSA, projects & more.",
   "start_url": "/",
   "display": "standalone",

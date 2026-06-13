@@ -1,6 +1,20 @@
 /* src/pages/Subjects/Subjects.css */
 .subjects-page { padding: 28px; max-width: 820px; animation: fadeIn .25s ease; }
 
+/* Track tabs */
+.subj-track-tabs {
+  display: flex; gap: 0; margin-bottom: 20px;
+  border: 3px solid var(--border-hard); width: fit-content;
+}
+.subj-track-btn {
+  padding: 10px 24px; font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .05em;
+  background: var(--surface-2); color: var(--text3);
+  border: none; cursor: pointer; transition: background .08s, color .08s;
+}
+.subj-track-btn + .subj-track-btn { border-left: 3px solid var(--border-hard); }
+.subj-track-btn.subj-track-active { background: var(--accent); color: #000; }
+
 /* Overview pills — stamp-style */
 .subject-overview { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
 

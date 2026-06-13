@@ -7,16 +7,22 @@ import toast from 'react-hot-toast';
 import { Play } from 'lucide-react';
 import './Profile.css';
 
-const STACK = [
+const STACK_FS = [
   { label: 'JavaScript ES6+',  key: 'JavaScript (ES6+)', target: 40 },
   { label: 'React',            key: 'React',             target: 35 },
   { label: 'Node.js',          key: 'Node.js',           target: 30 },
   { label: 'System Design',    key: 'System Design',     target: 20 },
-  { label: 'SQL',              key: 'SQL',               target: 10 },
   { label: 'DBMS',             key: 'DBMS',              target: 10 },
-  { label: 'Operating System', key: 'Operating System',  target: 10 },
-  { label: 'Computer Networks',key: 'Computer Networks', target: 10 },
-  { label: 'English',          key: 'English',           target: 20 },
+  { label: 'OS',               key: 'Operating System',  target: 10 },
+  { label: 'Networks',         key: 'Computer Networks', target: 10 },
+];
+
+const STACK_DA = [
+  { label: 'SQL',         key: 'SQL',        target: 20 },
+  { label: 'Python',      key: 'Python',     target: 25 },
+  { label: 'Power BI',    key: 'Power BI',   target: 15 },
+  { label: 'Excel',       key: 'Excel',      target: 10 },
+  { label: 'Statistics',  key: 'Statistics', target: 15 },
 ];
 
 const SOCIAL_LINKS = [
@@ -28,56 +34,72 @@ const SOCIAL_LINKS = [
 ];
 
 const DAILY_SCHEDULE = [
-  { time: '11:00 – 11:15', label: 'Warm-up',  desc: 'Review yesterday\'s notes + plan today', type: 'prep' },
-  { time: '11:15 – 13:00', label: 'Block 1',  desc: 'Main topic — deep focused study',        type: 'study', duration: '1h 45m' },
-  { time: '13:00 – 13:45', label: 'Lunch',    desc: 'Meal + rest, no screens',                type: 'break' },
-  { time: '13:45 – 15:30', label: 'Block 2',  desc: 'Continue topic / next topic',            type: 'study', duration: '1h 45m' },
-  { time: '15:30 – 15:45', label: 'Break',    desc: 'Stretch, water, walk',                   type: 'break' },
-  { time: '15:45 – 17:00', label: 'Block 3',  desc: 'Coding practice / exercises',            type: 'study', duration: '1h 15m' },
-  { time: '17:00 – 19:00', label: 'Free',     desc: 'Dinner + personal time',                 type: 'off' },
-  { time: '19:00 – 19:15', label: 'Review',   desc: 'Check notes, plan evening',              type: 'prep' },
-  { time: '19:15 – 20:45', label: 'Block 4',  desc: 'LeetCode / Projects / Revision',         type: 'study', duration: '1h 30m' },
-  { time: '20:45 – 21:00', label: 'Break',    desc: 'Short break',                            type: 'break' },
-  { time: '21:00 – 22:00', label: 'Block 5',  desc: 'Revision / English / Next day prep',     type: 'study', duration: '1h' },
+  { time: '10:00 PM – 06:00 AM', label: 'Sleep',    desc: '8 hours — non-negotiable',              type: 'off' },
+  { time: '06:00 – 10:00 AM',    label: 'Gym',      desc: 'Gym + travel + post-workout',           type: 'break', duration: '4h' },
+  { time: '10:00 – 10:30 AM',    label: 'Breakfast',desc: 'Meal + freshen up',                     type: 'break' },
+  { time: '10:30 AM – 01:00 PM', label: 'Block 1',  desc: 'Full Stack Dev — React / JS',           type: 'study', duration: '2.5h' },
+  { time: '01:00 – 02:00 PM',    label: 'Lunch',    desc: 'Meal + rest',                           type: 'break' },
+  { time: '02:00 – 05:00 PM',    label: 'Block 2',  desc: 'Backend / Node.js',                     type: 'study', duration: '3h' },
+  { time: '05:00 – 05:30 PM',    label: 'Tea Break',desc: 'Tea + walk',                            type: 'break' },
+  { time: '05:30 – 07:00 PM',    label: 'Block 3',  desc: 'Data Analytics — SQL / Power BI',       type: 'study', duration: '1.5h' },
+  { time: '07:00 – 09:00 PM',    label: 'Projects', desc: 'Build projects + GitHub commits',       type: 'study', duration: '2h' },
+  { time: '09:00 – 09:30 PM',    label: 'Dinner',   desc: 'Meal',                                  type: 'break' },
+  { time: '09:30 – 10:00 PM',    label: 'LinkedIn', desc: 'LinkedIn + job applications',           type: 'prep' },
 ];
 
 const MONTHLY_PLAN = [
   {
-    month: 1, title: 'JavaScript + React', color: '#D1FF05',
+    month: 1, title: 'Foundation Rebuild', color: '#00BFFF',
     weeks: [
-      { week: 1, subject: 'JavaScript (ES6+)', topic: 'Variables, Functions, Arrays, DOM, Events' },
-      { week: 2, subject: 'JavaScript (ES6+)', topic: 'Closures, Promises, Async/Await, Event Loop' },
-      { week: 3, subject: 'React',             topic: 'JSX, Components, Props, useState, useEffect' },
-      { week: 4, subject: 'React',             topic: 'React Router, Custom Hooks, Zustand, Mini project' },
+      { week: 1, subject: 'JavaScript (ES6+)', topic: 'ES6+, async/await, Promises, DOM' },
+      { week: 2, subject: 'React',             topic: 'Hooks, Context, React Router, Vite' },
+      { week: 3, subject: 'SQL',               topic: 'SELECT, JOINs, GROUP BY, subqueries' },
+      { week: 4, subject: 'Excel',             topic: 'Pivot Tables, VLOOKUP, dashboards' },
     ],
   },
   {
-    month: 2, title: 'Node.js + DSA Fundamentals', color: '#f59e0b',
+    month: 2, title: 'Backend & SQL Advanced', color: '#FF4F00',
     weeks: [
-      { week: 5, subject: 'Node.js', topic: 'Express, Middleware, REST APIs, JWT Auth' },
-      { week: 6, subject: 'Node.js', topic: 'Streams, WebSockets, Rate Limiting, Deploy' },
-      { week: 7, subject: 'DSA',     topic: 'Arrays, Strings, Linked Lists, Stacks, Queues' },
-      { week: 8, subject: 'DSA',     topic: 'Trees (BFS/DFS), Binary Search, Two Pointers' },
+      { week: 5, subject: 'Node.js', topic: 'Express, REST APIs, JWT Auth, Middleware' },
+      { week: 6, subject: 'Node.js', topic: 'MongoDB/PostgreSQL, Mongoose/Prisma, CRUD' },
+      { week: 7, subject: 'SQL',     topic: 'Window functions, CTEs, query optimization' },
+      { week: 8, subject: 'Statistics', topic: 'Hypothesis testing, regression, A/B tests' },
     ],
   },
   {
-    month: 3, title: 'CS Fundamentals + System Design', color: '#a855f7',
+    month: 3, title: 'Polish + Python for Data', color: '#432DD7',
     weeks: [
-      { week: 9,  subject: 'SQL',              topic: 'Joins, Transactions, Normalization, Indexes, Window Functions' },
-      { week: 10, subject: 'DBMS',             topic: 'ER Diagrams, ACID, Concurrency, B-Tree Indexes, Recovery' },
-      { week: 11, subject: 'Operating System', topic: 'Processes, Scheduling, Virtual Memory, Deadlocks, IPC' },
-      { week: 12, subject: 'Computer Networks',topic: 'TCP/IP, OSI Model, HTTP/HTTPS, DNS, SSL/TLS' },
-      { week: 13, subject: 'System Design',    topic: 'Scalability, Load Balancing, Caching, CAP Theorem' },
-      { week: 14, subject: 'System Design',    topic: 'Design Twitter, Netflix, WhatsApp, URL Shortener' },
+      { week: 9,  subject: 'Python',    topic: 'pandas, NumPy, data cleaning' },
+      { week: 10, subject: 'Python',    topic: 'matplotlib, seaborn, EDA' },
+      { week: 11, subject: 'Projects',  topic: 'Project 3: full stack or E-commerce clone' },
+      { week: 12, subject: 'Power BI',  topic: 'Power Query, DAX basics, dashboards' },
     ],
   },
   {
-    month: 4, title: 'Advanced DSA + Mock + Apply', color: '#22c55e',
+    month: 4, title: 'Interview Mode + Power BI', color: '#00FF7F',
     weeks: [
-      { week: 15, subject: 'DSA',      topic: 'Dynamic Programming, Backtracking, Tries' },
-      { week: 16, subject: 'DSA',      topic: 'Graphs (Dijkstra, BFS/DFS), Union-Find, Segment Trees' },
-      { week: 17, subject: 'DSA',      topic: 'Neetcode 150 full revision + mock interview rounds' },
-      { week: 18, subject: 'Projects', topic: 'Build FAANG-worthy projects, apply, LeetCode daily' },
+      { week: 13, subject: 'DSA',      topic: 'Arrays, Linked Lists, Stacks, Binary Search' },
+      { week: 14, subject: 'DSA',      topic: 'Trees, Graphs, Dynamic Programming basics' },
+      { week: 15, subject: 'Power BI', topic: 'Advanced DAX, time intelligence, publish' },
+      { week: 16, subject: 'Projects', topic: 'DA portfolio project + job applications' },
+    ],
+  },
+  {
+    month: 5, title: 'First Offer + Tableau', color: '#FDC800',
+    weeks: [
+      { week: 17, subject: 'Tableau',   topic: 'Charts, LOD, dashboards, Tableau Public' },
+      { week: 18, subject: 'Projects',  topic: 'Final FS portfolio project + 50+ applications' },
+      { week: 19, subject: 'Interviews',topic: 'Mock interviews, salary negotiation, offers' },
+      { week: 20, subject: 'Interviews',topic: 'Continue applying, evaluate and accept offer' },
+    ],
+  },
+  {
+    month: 6, title: 'Employed + Growth', color: '#FF4081',
+    weeks: [
+      { week: 21, subject: 'Work',        topic: 'Join company + onboard' },
+      { week: 22, subject: 'Open Source', topic: 'Contribute to OSS + build AI projects' },
+      { week: 23, subject: 'DA Course',   topic: 'Complete remaining DA modules on weekends' },
+      { week: 24, subject: 'Growth',      topic: 'Plan for 12-month salary jump' },
     ],
   },
 ];
@@ -128,13 +150,13 @@ export default function Profile() {
     : 1;
 
   const shareText =
-    `🚀 Day ${daysSince} of my dev grind — Hustler 2.0 update\n\n` +
+    `🚀 Day ${daysSince} of my dev grind — HUSTLER update\n\n` +
     `📚 ${summary?.totalHours || 0}h of focused study\n` +
     `⚡ ${summary?.dsaTotal || 0}/150 Neetcode problems solved\n` +
     `🔥 ${summary?.streak || 0} day streak\n` +
     `🗂 ${summary?.projectsTotal || 0} projects built\n\n` +
-    `Grinding toward a full-stack dev role 💪\n\n` +
-    `#100DaysOfCode #FullStack #JavaScript #React #NodeJS #DSA`;
+    `Grinding toward Full-Stack Dev + Data Analytics roles 💪\n\n` +
+    `#100DaysOfCode #FullStack #DataAnalytics #JavaScript #React #NodeJS #SQL #PowerBI`;
 
   const shareX  = () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
   const shareLI = () => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(form.github_url || 'https://github.com/AmanAshutosh')}`, '_blank');
@@ -158,7 +180,7 @@ export default function Profile() {
             <div className="avatar">{user?.avatarInitials || 'AA'}</div>
             <div>
               <div className="portfolio-name">{userData?.name || user?.name}</div>
-              <div className="portfolio-role">Full-Stack Developer in Training · Day {daysSince}</div>
+              <div className="portfolio-role">Full-Stack Dev + Data Analytics · Day {daysSince}</div>
             </div>
           </div>
           <button className="edit-btn" onClick={() => setEditing(e => !e)}>
@@ -247,10 +269,10 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* 4-Month Plan */}
+      {/* 6-Month Plan */}
       <div className="card">
-        <div className="sec-title">4-Month Roadmap — Week by Week</div>
-        <div className="tt-subtitle">Sat = projects + revision · Sun = rest + English · Click Study to start a session</div>
+        <div className="sec-title">6-Month Career Plan — Week by Week</div>
+        <div className="tt-subtitle">FS + DA running in parallel · Sat = projects + revision · Click Study to start a session</div>
         {MONTHLY_PLAN.map(month => (
           <div key={month.month} className="tt-month">
             <div className="tt-month-header" style={{ borderColor: month.color }}>
@@ -278,8 +300,8 @@ export default function Profile() {
 
       {/* Stack progress */}
       <div className="card">
-        <div className="sec-title">Stack mastery</div>
-        {STACK.map(s => {
+        <div className="sec-title">Full Stack Mastery</div>
+        {STACK_FS.map(s => {
           const hours = subMap[s.key] || 0;
           const pct   = Math.min(100, Math.round((hours / s.target) * 100));
           return (
@@ -294,8 +316,6 @@ export default function Profile() {
             </div>
           );
         })}
-
-        {/* DSA separate bar */}
         {(() => {
           const dsa = summary?.dsaTotal || 0;
           const pct = Math.round((dsa / 150) * 100);
@@ -311,6 +331,26 @@ export default function Profile() {
             </div>
           );
         })()}
+      </div>
+
+      {/* Data Analytics Stack */}
+      <div className="card">
+        <div className="sec-title">Data Analytics Mastery</div>
+        {STACK_DA.map(s => {
+          const hours = subMap[s.key] || 0;
+          const pct   = Math.min(100, Math.round((hours / s.target) * 100));
+          return (
+            <div className="bar-row" key={s.label}>
+              <div className="bar-label">
+                <span>{s.label}</span>
+                <span>{hours}h / {s.target}h · {pct}%</span>
+              </div>
+              <div className="bar-track">
+                <div className="bar-fill" style={{ width: `${pct}%`, background: '#f59e0b' }} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

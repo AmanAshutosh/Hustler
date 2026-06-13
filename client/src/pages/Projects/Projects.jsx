@@ -21,8 +21,8 @@ const SUGGESTED = [
     tech_stack: ['React', 'Node.js', 'OpenAI API', 'GitHub OAuth'],
   },
   {
-    name: 'Hustler 2.0 (this app)',
-    description: 'The full version of this tracker — Hustler 2.0 with auth, DB, and all features — your flagship project.',
+    name: 'HUSTLER (this app)',
+    description: 'The full version of this tracker — HUSTLER with auth, DB, and all features — your flagship project.',
     tech_stack: ['React', 'Node.js', 'Express', 'lowdb', 'Zustand'],
   },
 ];

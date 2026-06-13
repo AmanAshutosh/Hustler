@@ -70,7 +70,7 @@ export default function Layout() {
         <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
-        <span className="mobile-brand">Hustler 2.0</span>
+        <span className="mobile-brand">HUSTLER</span>
         <div className="mobile-right">
           <button className="theme-toggle-mobile" onClick={toggle} aria-label="Toggle theme">
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
@@ -86,7 +86,7 @@ export default function Layout() {
         <div className="sidebar-logo">
           <div className="sidebar-logo-mark">H</div>
           <div>
-            <div className="sidebar-logo-name">Hustler 2.0</div>
+            <div className="sidebar-logo-name">HUSTLER</div>
             <div className="sidebar-logo-sub">Job Hunt Tracker</div>
           </div>
         </div>

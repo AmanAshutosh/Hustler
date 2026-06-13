@@ -29,7 +29,7 @@ export default function Register() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-brand">Hustler 2.0</div>
+        <div className="auth-brand">HUSTLER</div>
         <p className="auth-sub">Create your account — start grinding</p>
 
         <form onSubmit={submit}>

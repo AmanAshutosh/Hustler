@@ -8,7 +8,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-brand">
-        <span className="footer-brand-name">Hustler 2.0</span>
+        <span className="footer-brand-name">HUSTLER</span>
         <span className="footer-brand-tag">Job Hunt Tracker</span>
       </div>
 

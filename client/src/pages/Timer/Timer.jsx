@@ -47,7 +47,7 @@ function exportToCalendar(session) {
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Hustler 2.0//Study Tracker//EN',
+    'PRODID:-//HUSTLER//Study Tracker//EN',
     'BEGIN:VEVENT',
     `DTSTART:${fmtICS(start)}`,
     `DTEND:${fmtICS(end)}`,

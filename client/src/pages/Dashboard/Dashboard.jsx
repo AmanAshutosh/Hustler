@@ -65,24 +65,38 @@ function getDailyQuote() {
   } catch { return QUOTES[0]; }
 }
 
-const SUBJECTS = [
+const FS_SUBJECTS = [
   { name: 'JavaScript (ES6+)', target: 40, color: '#D1FF05' },
   { name: 'React',             target: 35, color: '#61dafb' },
   { name: 'Node.js',           target: 30, color: '#68a063' },
   { name: 'DSA',               target: 50, color: '#a855f7' },
   { name: 'System Design',     target: 20, color: '#3b82f6' },
-  { name: 'SQL',               target: 10, color: '#f59e0b' },
-  { name: 'DBMS',              target: 10, color: '#ec4899' },
-  { name: 'Operating System',  target: 10, color: '#06b6d4' },
-  { name: 'Computer Networks', target: 10, color: '#a855f7' },
-  { name: 'English',           target: 20, color: '#10b981' },
 ];
 
-const ROADMAP = [
-  { name: 'Month 1 — JS + React',          color: '#D1FF05' },
-  { name: 'Month 2 — Node.js + DSA',       color: '#f59e0b' },
-  { name: 'Month 3 — System Design',        color: '#a855f7' },
-  { name: 'Month 4 — Apply + Mock rounds', color: '#22c55e' },
+const DA_SUBJECTS = [
+  { name: 'SQL',              target: 20, color: '#f59e0b' },
+  { name: 'Python',           target: 25, color: '#3b82f6' },
+  { name: 'Power BI',         target: 15, color: '#FDC800' },
+  { name: 'Excel',            target: 10, color: '#00A854' },
+  { name: 'Statistics',       target: 15, color: '#ec4899' },
+];
+
+const ROADMAP_FS = [
+  { name: 'M1 — Foundation Rebuild',    color: '#00BFFF' },
+  { name: 'M2 — Backend & Databases',  color: '#FF4F00' },
+  { name: 'M3 — Polish + Apply',        color: '#432DD7' },
+  { name: 'M4 — Interview Mode',        color: '#00FF7F' },
+  { name: 'M5 — First Offer',          color: '#FDC800' },
+  { name: 'M6 — Employed + Growth',    color: '#FF4081' },
+];
+
+const ROADMAP_DA = [
+  { name: 'M1 — Excel + SQL Basics',   color: '#00BFFF' },
+  { name: 'M2 — SQL Adv + Statistics', color: '#FF4F00' },
+  { name: 'M3 — Python for Data',      color: '#432DD7' },
+  { name: 'M4 — Power BI + Data Viz',  color: '#00FF7F' },
+  { name: 'M5 — Tableau + Portfolio',  color: '#FDC800' },
+  { name: 'M6 — DA Job Hunt',          color: '#FF4081' },
 ];
 
 function fmtDur(secs) {
@@ -123,11 +137,14 @@ export default function Dashboard() {
   (summary?.subjectHours || []).forEach(s => { subMap[s.subject] = s.hours; });
 
   const totalH = summary?.totalHours || 0;
-  const roadPct = [
-    Math.min(100, Math.round((totalH / 60) * 100)),
-    Math.max(0, Math.min(100, Math.round(((totalH - 60) / 90) * 100))),
-    Math.max(0, Math.min(100, Math.round(((totalH - 150) / 60) * 100))),
-    Math.max(0, Math.min(100, Math.round(((totalH - 210) / 60) * 100))),
+  // FS roadmap: 6 months, ~40h per month milestone
+  const fsPct = [
+    Math.min(100, Math.round((totalH / 40) * 100)),
+    Math.max(0, Math.min(100, Math.round(((totalH - 40) / 40) * 100))),
+    Math.max(0, Math.min(100, Math.round(((totalH - 80) / 40) * 100))),
+    Math.max(0, Math.min(100, Math.round(((totalH - 120) / 40) * 100))),
+    Math.max(0, Math.min(100, Math.round(((totalH - 160) / 40) * 100))),
+    Math.max(0, Math.min(100, Math.round(((totalH - 200) / 40) * 100))),
   ];
 
   return (
@@ -165,10 +182,8 @@ export default function Dashboard() {
 
       <div className="two-col">
         <div className="card">
-          <div className="sec-title">
-            <TrendingUp size={12} /> Subject Progress
-          </div>
-          {SUBJECTS.map(s => {
+          <div className="sec-title"><TrendingUp size={12} /> Full Stack Progress</div>
+          {FS_SUBJECTS.map(s => {
             const pct = Math.min(100, Math.round(((subMap[s.name] || 0) / s.target) * 100));
             return (
               <div className="bar-row" key={s.name}>
@@ -184,6 +199,26 @@ export default function Dashboard() {
           })}
         </div>
 
+        <div className="card">
+          <div className="sec-title"><TrendingUp size={12} /> Data Analytics Progress</div>
+          {DA_SUBJECTS.map(s => {
+            const pct = Math.min(100, Math.round(((subMap[s.name] || 0) / s.target) * 100));
+            return (
+              <div className="bar-row" key={s.name}>
+                <div className="bar-label">
+                  <span>{s.name}</span>
+                  <span>{subMap[s.name] || 0}h / {s.target}h</span>
+                </div>
+                <div className="bar-track">
+                  <div className="bar-fill" style={{ width: `${pct}%`, background: s.color }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="two-col">
         <div className="card">
           <div className="sec-title"><Clock size={12} /> Recent Sessions</div>
           {sessions.filter(s => !s.is_active).length === 0
@@ -206,21 +241,21 @@ export default function Dashboard() {
             )
           }
         </div>
-      </div>
 
-      <div className="card">
-        <div className="sec-title"><TrendingUp size={12} /> 4-Month Roadmap</div>
-        {ROADMAP.map((r, i) => (
-          <div className="bar-row" key={r.name}>
-            <div className="bar-label">
-              <span>{r.name}</span>
-              <span>{roadPct[i]}%</span>
+        <div className="card">
+          <div className="sec-title"><TrendingUp size={12} /> 6-Month FS Roadmap</div>
+          {ROADMAP_FS.map((r, i) => (
+            <div className="bar-row" key={r.name}>
+              <div className="bar-label">
+                <span>{r.name}</span>
+                <span>{fsPct[i]}%</span>
+              </div>
+              <div className="bar-track">
+                <div className="bar-fill" style={{ width: `${fsPct[i]}%`, background: r.color }} />
+              </div>
             </div>
-            <div className="bar-track">
-              <div className="bar-fill" style={{ width: `${roadPct[i]}%`, background: r.color }} />
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
     </div>

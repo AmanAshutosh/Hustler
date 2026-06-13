@@ -16,6 +16,23 @@
   font-weight: 900; letter-spacing: .12em;
 }
 
+/* Path tabs */
+.rm-path-tabs {
+  display: flex; gap: 0; margin-bottom: 20px;
+  border: 3px solid var(--border-hard); width: fit-content;
+}
+.rm-path-btn {
+  padding: 10px 24px; font-size: 13px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .05em;
+  background: var(--surface-2); color: var(--text3);
+  border: none; cursor: pointer;
+  transition: background .08s, color .08s;
+}
+.rm-path-btn + .rm-path-btn { border-left: 3px solid var(--border-hard); }
+.rm-path-btn.rm-path-active {
+  background: var(--pc, var(--accent)); color: #000;
+}
+
 /* Overall bar */
 .rm-overall-bar {
   background: var(--surface); border: 3px solid var(--border-hard);

@@ -5,7 +5,7 @@ import api from '../../lib/api.js';
 import toast from 'react-hot-toast';
 import './Roadmap.css';
 
-const MONTHS = [
+const MONTHS_FS = [
   {
     num: 1, title: 'Foundation Rebuild',
     color: '#00BFFF', bg: 'rgba(0,191,255,0.10)',
@@ -14,7 +14,6 @@ const MONTHS = [
       'HTML/CSS/JS refresh (ES6+, async/await)',
       'React: hooks, context, React Router, Vite',
       'Git + GitHub daily commits established',
-      'DA: Excel + SQL basics',
       'Project 1: React portfolio/clone app deployed on Netlify/Vercel',
     ],
   },
@@ -26,7 +25,6 @@ const MONTHS = [
       'Node.js + Express.js mastered',
       'REST APIs — CRUD, middleware, JWT auth',
       'MongoDB + Mongoose (or PostgreSQL + Prisma)',
-      'DA: SQL queries, joins, Power BI dashboards',
       'Project 2: Full stack MERN app with auth + CRUD',
     ],
   },
@@ -40,7 +38,6 @@ const MONTHS = [
       'Resume + LinkedIn optimization complete',
       'Applying 5–10 applications/day',
       'Mock interviews: DSA basics, system design intro',
-      'DA: Power BI project (1 dashboard for resume)',
     ],
   },
   {
@@ -51,7 +48,6 @@ const MONTHS = [
       'DSA: Arrays, strings, linked lists (LeetCode easy/medium)',
       'System Design basics studied',
       'TypeScript fundamentals learned',
-      'DA: Python basics — pandas, matplotlib',
       '50+ company applications submitted',
     ],
   },
@@ -63,7 +59,6 @@ const MONTHS = [
       'Continuing interview process actively',
       'Salary negotiated successfully',
       'Target: ₹5–6.5 LPA Full Stack role',
-      'Remaining DA course modules completed',
     ],
   },
   {
@@ -72,26 +67,96 @@ const MONTHS = [
     goal: 'Settled in job, planning 12-month raise',
     milestones: [
       'Joined company',
-      'DA course completed on weekends',
       'Open source contributions started',
       'AI-integrated projects built',
-      'Plan for salary jump at 12 months created',
+      'Plan for salary jump at 12 months',
     ],
   },
 ];
 
-// Roadmap started June 2026 — adjust if different
+const MONTHS_DA = [
+  {
+    num: 1, title: 'Excel + SQL Basics',
+    color: '#00BFFF', bg: 'rgba(0,191,255,0.10)',
+    goal: 'Excel fundamentals + SQL basics mastered',
+    milestones: [
+      'Excel: formulas, Pivot Tables, VLOOKUP/INDEX-MATCH',
+      'Excel: charts, conditional formatting, dashboards',
+      'SQL: SELECT, JOIN, GROUP BY, subqueries',
+      'SQL: Aggregate functions, indexes, transactions',
+    ],
+  },
+  {
+    num: 2, title: 'SQL Advanced + Statistics',
+    color: '#FF4F00', bg: 'rgba(255,79,0,0.10)',
+    goal: 'Advanced SQL + statistics foundations',
+    milestones: [
+      'SQL: Window functions (ROW_NUMBER, RANK, LAG/LEAD)',
+      'SQL: CTEs, query optimization, EXPLAIN',
+      'Statistics: Mean, median, mode, standard deviation',
+      'Statistics: Hypothesis testing, A/B testing, distributions',
+    ],
+  },
+  {
+    num: 3, title: 'Python for Data',
+    color: '#432DD7', bg: 'rgba(67,45,215,0.10)',
+    goal: 'Python data analysis pipeline complete',
+    milestones: [
+      'Python basics: lists, dicts, functions, Jupyter',
+      'NumPy arrays + Pandas DataFrames',
+      'Data cleaning: handling nulls, duplicates, outliers',
+      'Matplotlib + Seaborn visualizations',
+    ],
+  },
+  {
+    num: 4, title: 'Power BI + Data Viz',
+    color: '#00FF7F', bg: 'rgba(0,255,127,0.10)',
+    goal: '1 published Power BI dashboard on resume',
+    milestones: [
+      'Power BI: connect data, Power Query transformations',
+      'Power BI: DAX basics (CALCULATE, FILTER, SUMX)',
+      'Power BI: relationships, drill-through, slicers',
+      'DA Project: end-to-end dashboard for portfolio',
+    ],
+  },
+  {
+    num: 5, title: 'Tableau + Portfolio',
+    color: '#FDC800', bg: 'rgba(253,200,0,0.10)',
+    goal: '2 portfolio DA projects published',
+    milestones: [
+      'Tableau: basic charts, calculated fields, filters',
+      'Tableau: LOD expressions, dashboard design',
+      'Portfolio Project 1: SQL + Python + Power BI end-to-end',
+      'Portfolio Project 2: Tableau dashboard published to Tableau Public',
+    ],
+  },
+  {
+    num: 6, title: 'DA Job Hunt + First Role',
+    color: '#FF4081', bg: 'rgba(255,64,129,0.10)',
+    goal: 'First Data Analyst role landed',
+    milestones: [
+      'Resume + LinkedIn optimized for DA roles',
+      'Interview prep: SQL problems, statistics questions, case studies',
+      '50+ DA job applications submitted',
+      'First Data Analyst role accepted',
+    ],
+  },
+];
+
 const START_DATE = new Date('2026-06-01');
 function getCurrentMonth() {
-  const diff   = Date.now() - START_DATE.getTime();
-  const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44));
-  return Math.max(1, Math.min(6, months + 1));
+  const diff = Date.now() - START_DATE.getTime();
+  return Math.max(1, Math.min(6, Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44)) + 1));
 }
 
 export default function Roadmap() {
   const [progress, setProgress] = useState({});
   const [loading,  setLoading]  = useState(true);
+  const [path, setPath] = useState('fs'); // 'fs' | 'da'
   const currentMonth = getCurrentMonth();
+
+  const MONTHS = path === 'fs' ? MONTHS_FS : MONTHS_DA;
+  const keyPrefix = path; // 'fs' or 'da'
 
   useEffect(() => {
     api.get('/roadmap/progress')
@@ -112,8 +177,8 @@ export default function Roadmap() {
   };
 
   const total      = MONTHS.reduce((s, m) => s + m.milestones.length, 0);
-  const done       = Object.values(progress).filter(Boolean).length;
-  const overallPct = Math.round((done / total) * 100);
+  const done       = MONTHS.reduce((s, m) => s + m.milestones.filter((_, i) => progress[`${keyPrefix}_m${m.num}_${i}`]).length, 0);
+  const overallPct = total ? Math.round((done / total) * 100) : 0;
 
   if (loading) return (
     <div className="rm-page">
@@ -125,12 +190,10 @@ export default function Roadmap() {
 
   return (
     <div className="rm-page">
-
-      {/* Page header */}
       <div className="page-header rm-header">
         <div>
           <h2>6-Month Roadmap</h2>
-          <p>Track milestones toward your first ₹5–6.5 LPA offer</p>
+          <p>Track milestones toward your first job offer</p>
         </div>
         <div className="rm-overall-stat">
           <span className="rm-overall-pct">{overallPct}%</span>
@@ -138,10 +201,28 @@ export default function Roadmap() {
         </div>
       </div>
 
-      {/* Overall progress bar */}
+      {/* Path selector */}
+      <div className="rm-path-tabs">
+        <button
+          className={`rm-path-btn${path === 'fs' ? ' rm-path-active' : ''}`}
+          style={path === 'fs' ? { '--pc': '#00BFFF' } : {}}
+          onClick={() => setPath('fs')}
+        >
+          Full Stack Dev
+        </button>
+        <button
+          className={`rm-path-btn${path === 'da' ? ' rm-path-active' : ''}`}
+          style={path === 'da' ? { '--pc': '#00FF7F' } : {}}
+          onClick={() => setPath('da')}
+        >
+          Data Analytics
+        </button>
+      </div>
+
+      {/* Overall bar */}
       <div className="rm-overall-bar">
         <div className="rm-bar-row">
-          <span className="rm-bar-lbl"><Trophy size={13} /> {done} / {total} milestones done</span>
+          <span className="rm-bar-lbl"><Trophy size={13} /> {done} / {total} milestones — {path === 'fs' ? 'Full Stack' : 'Data Analytics'}</span>
           <span className="rm-bar-val">{overallPct}%</span>
         </div>
         <div className="rm-prog-track">
@@ -149,10 +230,10 @@ export default function Roadmap() {
         </div>
       </div>
 
-      {/* Month cards grid */}
+      {/* Month cards */}
       <div className="rm-grid">
         {MONTHS.map(m => {
-          const mk     = `m${m.num}`;
+          const mk     = `${keyPrefix}_m${m.num}`;
           const isCurr = m.num === currentMonth;
           const isPast = m.num < currentMonth;
           const mDone  = m.milestones.filter((_, i) => progress[`${mk}_${i}`]).length;
@@ -164,7 +245,6 @@ export default function Roadmap() {
               className={`rm-month${isCurr ? ' rm-current' : ''}${isPast ? ' rm-past' : ''}`}
               style={{ '--mc': m.color, '--mb': m.bg }}
             >
-              {/* Month header */}
               <div className="rm-month-head">
                 <div className="rm-month-badge">M{m.num}</div>
                 <div className="rm-month-info">
@@ -173,22 +253,16 @@ export default function Roadmap() {
                 </div>
                 <span className="rm-month-pct">{mPct}%</span>
               </div>
-
-              {/* Month progress bar */}
               <div className="rm-mbar-track">
                 <div className="rm-mbar-fill" style={{ width: `${mPct}%`, background: m.color }} />
               </div>
-
-              {/* Goal */}
               <div className="rm-goal">
                 <span className="rm-goal-label">Goal</span>
                 {m.goal}
               </div>
-
-              {/* Milestones */}
               <ul className="rm-milestones">
                 {m.milestones.map((ms, i) => {
-                  const key   = `${mk}_${i}`;
+                  const key    = `${mk}_${i}`;
                   const isDone = !!progress[key];
                   return (
                     <li key={i} className={`rm-ms${isDone ? ' rm-ms-done' : ''}`}>

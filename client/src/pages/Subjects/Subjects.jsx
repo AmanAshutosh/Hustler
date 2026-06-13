@@ -14,6 +14,7 @@ const SUBJECTS = [
     id: 'javascript',
     name: 'JavaScript',
     color: '#D1FF05',
+    track: 'fs',
     timerSubject: 'JavaScript (ES6+)',
     beginner: [
       'Variables, let/const/var', 'Data Types & Type Coercion', 'Functions & Arrow Functions',
@@ -36,6 +37,7 @@ const SUBJECTS = [
     id: 'react',
     name: 'React',
     color: '#61dafb',
+    track: 'fs',
     timerSubject: 'React',
     courseUrl: 'https://namastedev.com/learn/namaste-react',
     courseLabel: 'NamasteDev',
@@ -59,6 +61,7 @@ const SUBJECTS = [
     id: 'nodejs',
     name: 'Node.js',
     color: '#68a063',
+    track: 'fs',
     timerSubject: 'Node.js',
     courseUrl: 'https://www.youtube.com/playlist?list=PL78RhpUUKSwfeSOOwfE9x6l5jTjn5LbY3',
     courseLabel: 'YouTube',
@@ -81,6 +84,7 @@ const SUBJECTS = [
     id: 'systemdesign',
     name: 'System Design',
     color: '#3b82f6',
+    track: 'fs',
     timerSubject: 'System Design',
     courseUrl: 'https://www.youtube.com/watch?v=SqcXvc3ZmRU&list=PLMCXHnjXnTnvo6alSjVkgxV-VH6EPyvoX',
     courseLabel: 'YouTube',
@@ -103,6 +107,7 @@ const SUBJECTS = [
     id: 'sql',
     name: 'SQL',
     color: '#f59e0b',
+    track: 'da',
     timerSubject: 'SQL',
     courseUrl: 'https://www.geeksforgeeks.org/batch/cip-1?tab=Resources',
     courseLabel: 'GFG',
@@ -125,6 +130,7 @@ const SUBJECTS = [
     id: 'dbms',
     name: 'DBMS',
     color: '#ec4899',
+    track: 'fs',
     timerSubject: 'DBMS',
     courseUrl: 'https://www.geeksforgeeks.org/batch/cip-1?tab=Resources',
     courseLabel: 'GFG',
@@ -147,6 +153,7 @@ const SUBJECTS = [
     id: 'os',
     name: 'Operating System',
     color: '#06b6d4',
+    track: 'fs',
     timerSubject: 'Operating System',
     beginner: [
       'What is an OS?', 'Process vs Thread', 'Types of OS',
@@ -168,6 +175,7 @@ const SUBJECTS = [
     id: 'cn',
     name: 'Computer Networks',
     color: '#a855f7',
+    track: 'fs',
     timerSubject: 'Computer Networks',
     beginner: [
       'OSI Model (7 Layers)', 'TCP/IP Model', 'IP Addressing & Subnetting',
@@ -188,6 +196,7 @@ const SUBJECTS = [
     id: 'english',
     name: 'English',
     color: '#10b981',
+    track: 'fs',
     timerSubject: 'English',
     courseUrl: 'https://www.udemy.com/course/complete-english-course-master-native-english-for-beginners/learn/lecture/31810926?start=0#overview',
     beginner: [
@@ -213,6 +222,7 @@ const SUBJECTS = [
     id: 'dsa',
     name: 'DSA',
     color: '#a855f7',
+    track: 'fs',
     timerSubject: 'DSA',
     courseUrl: 'https://namastedev.com/learn/namaste-dsa',
     courseLabel: 'NamasteDev',
@@ -230,6 +240,193 @@ const SUBJECTS = [
       'Advanced DP (Knapsack, LCS, LIS)', 'Graph Algorithms (Dijkstra, Bellman-Ford, Floyd-Warshall)',
       'Union-Find / Disjoint Set', 'Segment Trees & BIT', 'Topological Sort',
       'Advanced Graph (SCC, Bridges, Articulation Points)', 'KMP & Rabin-Karp',
+    ],
+  },
+  // ── Data Analytics Track ──
+  {
+    id: 'excel',
+    name: 'Excel',
+    color: '#00A854',
+    track: 'da',
+    timerSubject: 'Excel',
+    beginner: [
+      'Cells, rows, columns, basic navigation',
+      'Formatting: fonts, colors, borders, alignment',
+      'Basic formulas: SUM, COUNT, AVERAGE, MIN, MAX',
+      'Charts: bar, line, pie basics',
+      'Data entry + auto-fill + number formats',
+    ],
+    intermediate: [
+      'VLOOKUP & HLOOKUP', 'INDEX + MATCH',
+      'IF, AND, OR nested formulas',
+      'Pivot Tables + Pivot Charts',
+      'Conditional Formatting', 'Data Validation',
+      'COUNTIF / SUMIF / AVERAGEIF', 'Text functions (LEFT, RIGHT, MID, TRIM)',
+    ],
+    advanced: [
+      'Array formulas + XLOOKUP', 'Power Query (Get & Transform)',
+      'Macro basics (record + run)', 'Dashboard creation in Excel',
+      'Data consolidation + What-if analysis',
+      'Dynamic arrays (FILTER, SORT, UNIQUE)',
+    ],
+  },
+  {
+    id: 'python_da',
+    name: 'Python (Data)',
+    color: '#3b82f6',
+    track: 'da',
+    timerSubject: 'Python',
+    beginner: [
+      'Python basics: variables, lists, dicts, tuples',
+      'Loops (for, while) & conditional logic',
+      'Functions, modules, file I/O',
+      'Jupyter Notebook setup & workflow',
+      'Installing pandas/numpy with pip',
+    ],
+    intermediate: [
+      'NumPy: arrays, operations, broadcasting',
+      'Pandas: Series, DataFrames, read_csv/read_excel',
+      'Data cleaning: dropna, fillna, drop_duplicates',
+      'Filtering, groupby, merge, pivot_table',
+      'Matplotlib: line, bar, scatter, histogram',
+      'Seaborn: heatmaps, boxplots, pairplots',
+    ],
+    advanced: [
+      'Advanced pandas (multi-index, rolling, resample)',
+      'Scikit-learn basics: regression, classification',
+      'Web scraping (requests + BeautifulSoup)',
+      'APIs: pulling data via REST + JSON parsing',
+      'Statistical testing with scipy.stats',
+    ],
+  },
+  {
+    id: 'statistics',
+    name: 'Statistics',
+    color: '#ec4899',
+    track: 'da',
+    timerSubject: 'Statistics',
+    beginner: [
+      'Mean, Median, Mode', 'Range, Variance, Standard Deviation',
+      'Normal distribution & bell curve',
+      'Probability basics (events, outcomes)',
+      'Types of data: nominal, ordinal, interval, ratio',
+    ],
+    intermediate: [
+      'Hypothesis testing (null vs alternative)',
+      'p-value, significance level (α), Type I/II error',
+      'z-test vs t-test', 'Chi-square test',
+      'Pearson correlation coefficient',
+      'Simple linear regression',
+    ],
+    advanced: [
+      'Multiple regression', 'ANOVA',
+      'A/B testing design & analysis',
+      'Confidence intervals & margin of error',
+      'Bayesian basics', 'Time series decomposition',
+    ],
+  },
+  {
+    id: 'powerbi',
+    name: 'Power BI',
+    color: '#FDC800',
+    track: 'da',
+    timerSubject: 'Power BI',
+    beginner: [
+      'Connecting to data sources (Excel, CSV, SQL)',
+      'Power Query: filter, rename, change type, remove columns',
+      'Creating basic visuals: bar, line, card, table',
+      'Slicers, filters, cross-filtering',
+    ],
+    intermediate: [
+      'DAX: CALCULATE, SUM, COUNT, FILTER',
+      'DAX: SUMX, AVERAGEX, DIVIDE',
+      'Relationships between tables (1:M, M:M)',
+      'Drill-through pages + bookmarks',
+      'Row-level security (RLS)',
+    ],
+    advanced: [
+      'Advanced DAX: ALLEXCEPT, USERELATIONSHIP',
+      'Time intelligence: DATEADD, SAMEPERIODLASTYEAR',
+      'Performance optimization (star schema)',
+      'Publishing to Power BI Service',
+      'Embedding reports + scheduled refresh',
+    ],
+  },
+  {
+    id: 'tableau',
+    name: 'Tableau',
+    color: '#00BFFF',
+    track: 'da',
+    timerSubject: 'Tableau',
+    beginner: [
+      'Connect to Excel / CSV / database',
+      'Dimensions vs Measures, blue vs green pills',
+      'Basic charts: bar, line, scatter, pie, map',
+      'Filters: dimension, measure, table calculation',
+    ],
+    intermediate: [
+      'Calculated fields (IF, CASE, string/date functions)',
+      'Level of Detail (LOD) expressions: FIXED, INCLUDE, EXCLUDE',
+      'Dashboard design: layout containers, actions',
+      'Parameters + dynamic reference lines',
+      'Dual-axis charts, combo charts',
+    ],
+    advanced: [
+      'Table calculations (WINDOW_SUM, RUNNING_TOTAL)',
+      'Tableau Prep for data cleaning',
+      'Publishing to Tableau Public / Tableau Server',
+      'Custom SQL + data blending',
+      'Storytelling with data (Story Points)',
+    ],
+  },
+  {
+    id: 'datacleaning',
+    name: 'Data Cleaning',
+    color: '#f97316',
+    track: 'da',
+    timerSubject: 'Data Cleaning',
+    beginner: [
+      'Identifying dirty data (missing values, duplicates, typos)',
+      'Excel: remove duplicates, trim spaces, find & replace',
+      'Understanding data types and format issues',
+    ],
+    intermediate: [
+      'Pandas: dropna, fillna strategies',
+      'String cleaning: strip, lower, replace regex',
+      'Outlier detection: IQR method, z-score',
+      'Data type conversion: astype, to_datetime',
+      'Reshaping: melt, pivot, stack/unstack',
+    ],
+    advanced: [
+      'Automated data validation pipelines',
+      'Schema enforcement with pandera / Great Expectations',
+      'ETL basics: Extract, Transform, Load',
+      'Handling large datasets with chunking',
+    ],
+  },
+  {
+    id: 'dataviz',
+    name: 'Data Visualization',
+    color: '#8b5cf6',
+    track: 'da',
+    timerSubject: 'Data Visualization',
+    beginner: [
+      'Choosing the right chart type for data',
+      'Principles: simplicity, clarity, honesty',
+      'Color theory for data (sequential, diverging, categorical)',
+      'Basic storytelling with data structure',
+    ],
+    intermediate: [
+      'Matplotlib + Seaborn: styling, themes, subplots',
+      'Interactive charts with Plotly Express',
+      'Dashboard layout principles',
+      'Annotating charts: titles, labels, callouts',
+    ],
+    advanced: [
+      'D3.js basics for custom web visuals',
+      'Custom visuals in Power BI',
+      'Building infographic-style dashboards',
+      'Tableau advanced storytelling',
     ],
   },
 ];
@@ -252,6 +449,7 @@ export default function Subjects() {
   const [progressLoaded, setProgressLoaded] = useState(false);
   const [expanded, setExpanded]   = useState({});
   const [levelOpen, setLevelOpen] = useState({});
+  const [activeTrack, setActiveTrack] = useState('fs'); // 'fs' | 'da'
   const saveTimerRef = useRef(null);
 
   // Load from backend on mount; fallback to localStorage if offline
@@ -308,6 +506,8 @@ export default function Subjects() {
     return { done, total: topics.length };
   }
 
+  const visibleSubjects = SUBJECTS.filter(s => s.track === activeTrack);
+
   return (
     <div className="subjects-page">
       <div className="page-header">
@@ -315,9 +515,25 @@ export default function Subjects() {
         <p>Track your progress across every topic — Beginner to Advanced</p>
       </div>
 
+      {/* Track tabs */}
+      <div className="subj-track-tabs">
+        <button
+          className={`subj-track-btn${activeTrack === 'fs' ? ' subj-track-active' : ''}`}
+          onClick={() => setActiveTrack('fs')}
+        >
+          Full Stack Dev
+        </button>
+        <button
+          className={`subj-track-btn${activeTrack === 'da' ? ' subj-track-active' : ''}`}
+          onClick={() => setActiveTrack('da')}
+        >
+          Data Analytics
+        </button>
+      </div>
+
       {/* Overview pills */}
       <div className="subject-overview">
-        {SUBJECTS.map(s => {
+        {visibleSubjects.map(s => {
           const { done, total } = getSubjectStats(s);
           const pct = Math.round((done / total) * 100);
           return (
@@ -338,7 +554,7 @@ export default function Subjects() {
       </div>
 
       {/* Subject cards */}
-      {SUBJECTS.map(subject => {
+      {visibleSubjects.map(subject => {
         const { done, total } = getSubjectStats(subject);
         const pct = Math.round((done / total) * 100);
         const isOpen = expanded[subject.id];
