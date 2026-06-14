@@ -124,7 +124,6 @@ export function getGCalLinks() {
 
   const add = (slots, firstDate, byday, dayType) => {
     for (const slot of slots) {
-      if (slot.cat === 'sleep') continue; // skip sleep
       const gcalUrl = makeGCalLink(slot, firstDate, byday);
       if (gcalUrl) result.push({ ...slot, gcalUrl, dayType });
     }

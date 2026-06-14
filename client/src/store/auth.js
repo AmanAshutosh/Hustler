@@ -40,10 +40,13 @@ export const useAuth = create((set) => ({
       localStorage.setItem('devtrack_user', JSON.stringify(data));
       set({ user: data });
       return true;
-    } catch {
-      localStorage.removeItem('devtrack_token');
-      localStorage.removeItem('devtrack_user');
-      set({ user: null, token: null });
+    } catch (err) {
+      // Only invalidate on explicit auth rejection — not network/server errors
+      if (err?.response?.status === 401) {
+        localStorage.removeItem('devtrack_token');
+        localStorage.removeItem('devtrack_user');
+        set({ user: null, token: null });
+      }
       return false;
     }
   },

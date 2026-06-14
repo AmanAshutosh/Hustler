@@ -1,5 +1,5 @@
 // src/pages/WeeklyView/WeeklyView.jsx
-import { WEEKDAY, SATURDAY, SUNDAY, CATEGORIES } from '../../data/schedule.js';
+import { WEEKDAY, SATURDAY, SUNDAY, CATEGORIES } from '../../data/careerData.js';
 import './WeeklyView.css';
 
 const DAYS = [
@@ -57,6 +57,7 @@ export default function WeeklyView() {
                     >
                       <span className="wv-block-time">{block.time}</span>
                       <span className="wv-block-label">{block.label}</span>
+                      {block.duration && <span className="wv-block-dur">{block.duration}</span>}
                     </div>
                   );
                 })}
