@@ -24,7 +24,22 @@ function parseTime(str) {
 function parseTimeRange(timeStr) {
   const parts = timeStr.split('–').map(s => s.trim());
   if (parts.length !== 2) return null;
-  return { start: parseTime(parts[0]), end: parseTime(parts[1]) };
+  const [startStr, endStr] = parts;
+  const startHasAMPM = /[AP]M/i.test(startStr);
+  const endHasPM     = /PM/i.test(endStr);
+  const endHasAM     = /AM/i.test(endStr);
+  // When start lacks AM/PM (e.g. '01:00 – 02:00 PM'), inherit period from end
+  // so '01:00' → '01:00 PM' instead of being parsed as 1 AM
+  const resolvedStart = (!startHasAMPM && (endHasPM || endHasAM))
+    ? startStr + (endHasPM ? ' PM' : ' AM')
+    : startStr;
+  return { start: parseTime(resolvedStart), end: parseTime(endStr) };
+}
+
+function formatTime(h, m) {
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${pad(h12)}:${pad(m)} ${period}`;
 }
 
 // ─── Date formatting ──────────────────────────────────────────────────────────
@@ -168,6 +183,33 @@ function slotsToEvents(slots, firstDate, rruleByDay, untilStr) {
   }
 
   return events;
+}
+
+/**
+ * Returns a formatted text preview of the full week schedule (Mon–Sun)
+ * exactly as it will be exported to calendar, with normalized AM/PM times.
+ */
+export function getSchedulePreview() {
+  const days = [
+    { label: 'MONDAY',    slots: WEEKDAY },
+    { label: 'TUESDAY',   slots: WEEKDAY },
+    { label: 'WEDNESDAY', slots: WEEKDAY },
+    { label: 'THURSDAY',  slots: WEEKDAY },
+    { label: 'FRIDAY',    slots: WEEKDAY },
+    { label: 'SATURDAY',  slots: SATURDAY },
+    { label: 'SUNDAY',    slots: SUNDAY },
+  ];
+
+  return days.map(({ label, slots }) => {
+    const lines = slots.map(slot => {
+      const range = parseTimeRange(slot.time);
+      if (!range) return `  ${slot.label}`;
+      const s = formatTime(range.start.h, range.start.m);
+      const e = formatTime(range.end.h, range.end.m);
+      return `${s} – ${e}  ${slot.label}`;
+    });
+    return `${label}\n${lines.join('\n')}`;
+  }).join('\n\n');
 }
 
 /**

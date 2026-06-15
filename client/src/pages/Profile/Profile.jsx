@@ -6,7 +6,7 @@ import { useAuth } from '../../store/auth.js';
 import toast from 'react-hot-toast';
 import { Play } from 'lucide-react';
 import { STACK_FS, STACK_DA, DAILY_SCHEDULE, MONTHLY_PLAN, CATEGORIES } from '../../data/careerData.js';
-import { exportScheduleToCalendar, getGCalLinks } from '../../lib/calendar.js';
+import { exportScheduleToCalendar, getGCalLinks, getSchedulePreview } from '../../lib/calendar.js';
 import './Profile.css';
 
 const SOCIAL_LINKS = [
@@ -28,6 +28,8 @@ export default function Profile() {
     name: '', github_url: '', leetcode_url: '',
     gfg_url: '', x_url: '', linkedin_url: '',
   });
+  const [showCalPreview, setShowCalPreview] = useState(false);
+  const [showGCalLinks, setShowGCalLinks]   = useState(false);
 
   useEffect(() => {
     Promise.all([api.get('/stats/summary'), api.get('/user/me')]).then(([s, u]) => {
@@ -164,37 +166,83 @@ export default function Profile() {
       {/* Add to Calendar */}
       <div className="card cal-card">
         <div className="sec-title">Add to Calendar</div>
-        <div className="tt-subtitle">Tap any block to add that recurring event to your calendar</div>
+        <div className="tt-subtitle">Export your full Mon–Sun schedule as recurring weekly events</div>
 
-        {/* Google Calendar — works on Android + iOS */}
-        <div className="cal-section-label">Google Calendar (Android + iPhone)</div>
-        <div className="cal-links-grid">
-          {getGCalLinks().map((slot, i) => (
-            <a
-              key={i}
-              href={slot.gcalUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="cal-link-btn"
-              style={{ '--cal-color': CATEGORIES[slot.cat]?.color || 'var(--accent)' }}
-            >
-              <span className="cal-link-dot" />
-              <span className="cal-link-info">
-                <span className="cal-link-label">{slot.label}</span>
-                <span className="cal-link-meta">{slot.time} · {slot.dayType}</span>
-              </span>
-              <span className="cal-link-icon">+</span>
-            </a>
-          ))}
+        {/* Schedule preview */}
+        <div className="cal-preview-wrap">
+          <button
+            className="cal-preview-toggle"
+            onClick={() => setShowCalPreview(p => !p)}
+          >
+            {showCalPreview ? 'Hide preview' : 'Preview schedule before export'}
+            <span className="cal-preview-caret">{showCalPreview ? '▲' : '▼'}</span>
+          </button>
+          {showCalPreview && (
+            <pre className="cal-preview-text">{getSchedulePreview()}</pre>
+          )}
         </div>
 
-        {/* .ics — Apple Calendar on Mac / iOS Files app */}
-        <div className="cal-section-label" style={{ marginTop: 16 }}>Apple Calendar (Mac / iPhone via Files)</div>
-        <button className="cal-ics-btn" onClick={exportScheduleToCalendar}>
-          Download .ics — All events (opens in Calendar app)
-        </button>
+        {/* Three action buttons */}
+        <div className="cal-actions">
+          {/* Apple Calendar */}
+          <button className="cal-action-btn cal-action-apple" onClick={exportScheduleToCalendar}>
+            <span className="cal-action-icon"></span>
+            <span className="cal-action-body">
+              <span className="cal-action-title">Add to Apple Calendar</span>
+              <span className="cal-action-sub">Downloads .ics · opens in Calendar app on iPhone/Mac</span>
+            </span>
+          </button>
+
+          {/* Google Calendar */}
+          <button
+            className="cal-action-btn cal-action-google"
+            onClick={() => setShowGCalLinks(p => !p)}
+          >
+            <span className="cal-action-icon">G</span>
+            <span className="cal-action-body">
+              <span className="cal-action-title">Add to Google Calendar</span>
+              <span className="cal-action-sub">
+                {showGCalLinks ? 'Tap an event below to add it' : 'Tap to show individual event links'}
+              </span>
+            </span>
+            <span className="cal-preview-caret">{showGCalLinks ? '▲' : '▼'}</span>
+          </button>
+
+          {showGCalLinks && (
+            <div className="cal-links-grid">
+              {getGCalLinks().map((slot, i) => (
+                <a
+                  key={i}
+                  href={slot.gcalUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="cal-link-btn"
+                  style={{ '--cal-color': CATEGORIES[slot.cat]?.color || 'var(--accent)' }}
+                >
+                  <span className="cal-link-dot" />
+                  <span className="cal-link-info">
+                    <span className="cal-link-label">{slot.label}</span>
+                    <span className="cal-link-meta">{slot.time} · {slot.dayType}</span>
+                  </span>
+                  <span className="cal-link-icon">+</span>
+                </a>
+              ))}
+            </div>
+          )}
+
+          {/* Download ICS */}
+          <button className="cal-action-btn cal-action-ics" onClick={exportScheduleToCalendar}>
+            <span className="cal-action-icon">↓</span>
+            <span className="cal-action-body">
+              <span className="cal-action-title">Download ICS</span>
+              <span className="cal-action-sub">RFC 5545 file · import into any calendar app</span>
+            </span>
+          </button>
+        </div>
+
         <p className="cal-hint">
-          iPhone: tap Download .ics → tap the file in Safari downloads → "Add All" in Calendar app.
+          All 7 days are exported as weekly recurring events in IST (Asia/Kolkata).
+          Overnight events like Sleep (10:00 PM – 06:00 AM) are handled correctly.
         </p>
       </div>
 
