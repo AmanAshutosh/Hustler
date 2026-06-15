@@ -1,49 +1,49 @@
-/* DigitalClock — neobrutalism stamp widget */
+/* DigitalClock — premium, soft, modern */
 .dclock {
   background: var(--surface);
-  border: 3px solid var(--border-hard);
-  border-radius: 0;
-  padding: 13px 20px;
-  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  box-shadow: var(--shadow);
   text-align: right;
-  min-width: 200px;
+  min-width: 190px;
   flex-shrink: 0;
-  transition: box-shadow .1s, transform .1s;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .dclock:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-2);
 }
 
 .dclock-time {
   display: flex; align-items: baseline;
-  justify-content: flex-end; gap: 5px;
+  justify-content: flex-end; gap: 4px;
 }
 
 .dclock-digits {
-  font-family: 'Courier New', 'SF Mono', 'Fira Mono', 'Consolas', monospace;
-  font-size: 28px; font-weight: 900; letter-spacing: 3px;
+  font-family: 'Courier New', 'SF Mono', 'Fira Mono', monospace;
+  font-size: 26px; font-weight: 800; letter-spacing: 2px;
   color: var(--clock-color);
   font-variant-numeric: tabular-nums; line-height: 1;
 }
 
 .dclock-ampm {
   font-family: 'Courier New', 'SF Mono', monospace;
-  font-size: 11px; font-weight: 900; letter-spacing: 1px;
-  color: var(--clock-color); opacity: .65;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  color: var(--accent); opacity: 0.85;
   text-transform: uppercase; padding-bottom: 2px;
 }
 
 .dclock-meta {
   display: flex; align-items: center;
-  justify-content: flex-end; gap: 5px; margin-top: 6px;
-  border-top: 2px solid var(--border); padding-top: 6px;
+  justify-content: flex-end; gap: 5px; margin-top: 5px;
+  border-top: 1px solid var(--border); padding-top: 5px;
 }
 
 .dclock-date,
 .dclock-day {
   font-family: 'Courier New', 'SF Mono', monospace;
-  font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: .5px;
+  font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.3px;
   font-variant-numeric: tabular-nums; text-transform: uppercase;
 }
 

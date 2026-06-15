@@ -1,5 +1,5 @@
 /* src/pages/Roadmap/Roadmap.css */
-.rm-page { padding: 28px; max-width: 1100px; animation: fadeIn .25s ease; }
+.rm-page { padding: 28px; max-width: 1100px; animation: fadeIn 0.3s ease; }
 
 .rm-header {
   display: flex; align-items: flex-start; justify-content: space-between;
@@ -7,26 +7,27 @@
 }
 .rm-overall-stat { text-align: right; flex-shrink: 0; }
 .rm-overall-pct {
-  display: block; font-size: 36px; font-weight: 800; line-height: 1;
+  display: block; font-size: 34px; font-weight: 800; line-height: 1;
   color: var(--accent); font-variant-numeric: tabular-nums;
 }
 .rm-overall-sub {
-  font-size: 11px; color: var(--text3); font-weight: 500; letter-spacing: .04em;
+  font-size: 11px; color: var(--text3); font-weight: 500; letter-spacing: 0.04em;
 }
 
 /* Overall bar */
 .rm-overall-bar {
   display: flex; flex-direction: column; gap: 10px;
-  margin-bottom: 20px; border-left: 3px solid var(--accent) !important;
+  margin-bottom: 20px;
+  border-left: 2px solid var(--accent) !important;
 }
 .rm-bar-row { display: flex; justify-content: space-between; align-items: center; }
 .rm-bar-lbl { font-size: 13px; color: var(--text2); font-weight: 500; display: flex; align-items: center; gap: 6px; }
 .rm-bar-val { font-size: 16px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
 .rm-prog-track {
-  height: 8px; background: var(--surface-2);
+  height: 6px; background: var(--surface-2);
   border-radius: var(--radius-pill); overflow: hidden;
 }
-.rm-prog-fill { height: 100%; background: var(--accent); border-radius: var(--radius-pill); transition: width .5s ease; }
+.rm-prog-fill { height: 100%; background: var(--accent); border-radius: var(--radius-pill); transition: width 0.5s ease; }
 
 /* Month grid */
 .rm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -39,54 +40,53 @@
   border-radius: var(--radius-lg); padding: 18px;
   display: flex; flex-direction: column; gap: 12px;
   box-shadow: var(--shadow);
-  transition: box-shadow .2s, border-color .2s;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
-.rm-month:hover { box-shadow: var(--shadow-md); }
+.rm-month:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
 
 .rm-current {
-  border-color: var(--mc) !important;
-  background: var(--mb) !important;
-  box-shadow: 0 0 0 2px var(--mc), var(--shadow-md) !important;
+  border-color: var(--mc, var(--accent)) !important;
+  box-shadow: 0 0 0 2px rgba(var(--mc-rgb, 52,211,153), 0.15), var(--shadow-md) !important;
 }
 .rm-past { opacity: 0.70; }
 
 .rm-month-head { display: flex; align-items: center; gap: 10px; }
 .rm-month-badge {
   width: 34px; height: 34px; flex-shrink: 0;
-  background: var(--mc); color: var(--accent-on);
+  background: var(--mc, var(--accent)); color: var(--accent-on);
   font-size: 11px; font-weight: 800;
-  border-radius: 8px;
+  border-radius: var(--radius);
   display: flex; align-items: center; justify-content: center;
 }
 .rm-month-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .rm-month-title { font-size: 13px; font-weight: 700; color: var(--text); }
 .rm-curr-badge {
   font-size: 10px; padding: 2px 8px;
-  background: var(--mc); color: var(--accent-on);
-  font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--mc, var(--accent)); color: var(--accent-on);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
   border-radius: var(--radius-pill); width: fit-content;
 }
 .rm-month-pct {
   font-size: 20px; font-weight: 800;
-  color: var(--mc); font-variant-numeric: tabular-nums; flex-shrink: 0;
+  color: var(--mc, var(--accent)); font-variant-numeric: tabular-nums; flex-shrink: 0;
 }
 
 /* Month progress bar */
 .rm-mbar-track {
-  height: 4px; background: var(--surface-2);
+  height: 4px; background: var(--surface-3);
   border-radius: var(--radius-pill); overflow: hidden;
 }
-.rm-mbar-fill { height: 100%; border-radius: var(--radius-pill); transition: width .4s; }
+.rm-mbar-fill { height: 100%; border-radius: var(--radius-pill); transition: width 0.4s ease; }
 
 /* Goal */
 .rm-goal {
   font-size: 12px; color: var(--text2); font-weight: 500; line-height: 1.5;
   padding: 10px 12px; background: var(--surface-2);
-  border-radius: var(--radius); border-left: 3px solid var(--mc);
+  border-radius: var(--radius); border-left: 2px solid var(--mc, var(--accent));
 }
 .rm-goal-label {
-  display: block; font-size: 10px; font-weight: 700; color: var(--mc);
-  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px;
+  display: block; font-size: 10px; font-weight: 700; color: var(--mc, var(--accent));
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
 }
 
 /* Milestones */
@@ -95,9 +95,9 @@
 .rm-ms-btn {
   background: none; border: none; padding: 0; cursor: pointer;
   display: flex; align-items: center; flex-shrink: 0; margin-top: 1px;
-  transition: opacity .1s;
+  transition: opacity 0.1s;
 }
-.rm-ms-btn:hover { opacity: .65; }
+.rm-ms-btn:hover { opacity: 0.65; }
 .rm-ms-text { font-size: 12px; color: var(--text2); line-height: 1.5; font-weight: 500; }
 .rm-ms-done .rm-ms-text { text-decoration: line-through; color: var(--text3); }
 

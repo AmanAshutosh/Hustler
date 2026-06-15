@@ -1,116 +1,71 @@
 /* src/pages/DSATracker/DSATracker.css */
-.dsa-page { padding: 28px; max-width: 980px; animation: fadeIn .25s ease; }
+.dsa-page { padding: 28px; max-width: 980px; animation: fadeIn 0.3s ease; }
 
 .flex-between { display: flex; align-items: center; justify-content: space-between; }
 
-/* Neobrutalism card */
-.card {
-  background: var(--surface);
-  border: 3px solid var(--border-hard);
-  border-radius: 0; padding: 22px; margin-bottom: 18px;
-  box-shadow: var(--shadow-md);
-  transition: box-shadow .1s, transform .1s;
-}
-.card:hover { box-shadow: var(--shadow-lg); transform: translate(-2px, -2px); }
-.card.accent-border { border-color: var(--accent); }
-
 /* Overall progress */
-.overall-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-.overall-header span:first-child { font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: .5px; }
-.overall-header span:last-child  { font-weight: 900; color: var(--accent); font-size: 16px; font-family: 'Courier New', monospace; }
+.overall-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.overall-header span:first-child { font-weight: 700; font-size: 13px; color: var(--text2); }
+.overall-header span:last-child  { font-weight: 800; color: var(--accent); font-size: 15px; font-variant-numeric: tabular-nums; }
 
-.bar-track { height: 10px; background: var(--surface-3); border-radius: 0; overflow: hidden; border: 2px solid var(--border-2); }
-.bar-fill  { height: 100%; border-radius: 0; transition: width .7s cubic-bezier(.4, 0, .2, 1); }
-
-.diff-stats { display: flex; gap: 18px; margin-top: 14px; font-size: 12px; font-weight: 700; }
+.diff-stats { display: flex; gap: 18px; margin-top: 14px; font-size: 12px; font-weight: 600; }
 
 /* Form */
 .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .form-grid-1 { margin-top: 10px; }
-
-input, select, textarea {
-  width: 100%; padding: 10px 12px; font-size: 13px; font-weight: 600;
-  border: 2px solid var(--border-2); border-radius: var(--radius);
-  background: var(--surface-2); color: var(--text); outline: none;
-  transition: border-color .1s, box-shadow .1s; font-family: inherit;
-}
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 3px 3px 0px var(--accent);
-}
-
 .form-actions { display: flex; gap: 8px; margin-top: 16px; }
-
-.btn {
-  padding: 10px 20px; border-radius: var(--radius);
-  font-size: 13px; font-weight: 800; cursor: pointer;
-  border: 2px solid var(--border-2);
-  background: var(--surface-2); color: var(--text);
-  transition: box-shadow .1s, transform .1s;
-  display: inline-flex; align-items: center; gap: 6px;
-  box-shadow: var(--shadow); text-transform: uppercase; letter-spacing: .3px;
-}
-.btn:hover { box-shadow: var(--shadow-md); transform: translate(-2px, -2px); }
-.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px var(--border-hard); }
-.btn:disabled { opacity: .40; cursor: not-allowed; transform: none; }
-.btn-primary {
-  background: var(--accent); color: #000000;
-  border: 2px solid var(--border-hard); font-weight: 900;
-  box-shadow: var(--shadow);
-}
-.btn-primary:hover { box-shadow: var(--shadow-md); transform: translate(-2px, -2px); }
-.btn-sm { padding: 6px 14px; font-size: 12px; }
 
 /* Category grid */
 .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
 
 .cat-card {
   background: var(--surface-2);
-  border: 2px solid var(--border-2);
-  border-radius: 0; padding: 14px 16px;
-  transition: border-color .1s, box-shadow .1s, transform .1s;
-  box-shadow: 2px 2px 0px var(--border-hard);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 .cat-card:hover {
   border-color: var(--accent);
-  box-shadow: 4px 4px 0px var(--accent);
-  transform: translate(-2px, -2px);
+  box-shadow: 0 0 0 1px var(--accent-light), var(--shadow-md);
+  transform: translateY(-1px);
 }
-.cat-header { display: flex; justify-content: space-between; margin-bottom: 7px; }
-.cat-name   { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; }
-.cat-count  { font-size: 12px; color: var(--accent); font-weight: 900; font-family: 'Courier New', monospace; }
+.cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.cat-name   { font-size: 12px; font-weight: 700; color: var(--text); }
+.cat-count  { font-size: 13px; color: var(--accent); font-weight: 800; font-variant-numeric: tabular-nums; }
 
 /* Problems table */
 .problems-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .problems-table th {
-  text-align: left; color: var(--text3); font-weight: 800; font-size: 11px;
-  padding: 0 6px 10px; border-bottom: 3px solid var(--border-hard);
-  text-transform: uppercase; letter-spacing: .8px;
+  text-align: left; color: var(--text3); font-weight: 600; font-size: 11px;
+  padding: 0 6px 10px; border-bottom: 1px solid var(--border);
+  text-transform: uppercase; letter-spacing: 0.7px;
 }
-.problems-table td { padding: 9px 6px; border-bottom: 2px solid var(--border); vertical-align: middle; }
+.problems-table td { padding: 9px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 .problems-table tr:last-child td { border-bottom: none; }
 .problems-table tr:hover td { background: var(--surface-2); }
 
-/* Badges — solid-filled, multi-palette colors */
+/* Difficulty badges — soft, colored */
 .badge {
-  display: inline-block; font-size: 10px; font-weight: 900;
-  padding: 4px 12px; border-radius: 0;
-  text-transform: uppercase; letter-spacing: .6px;
-  border: 2px solid #000000;
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: var(--radius-pill);
 }
-/* Electric Green (#00FF7F) — "Neon Pops" */
-.badge-easy   { background: #00FF7F; color: #000000; }
-/* Burnt Orange (#FF4F00) — "Moody & Muted" */
-.badge-medium { background: #FF4F00; color: #FFFFFF; }
-/* Bright Pink (#FF4081) — "Neon Pops" */
-.badge-hard   { background: #FF4081; color: #FFFFFF; }
+.badge-easy   { background: rgba(52,211,153,0.12); color: var(--accent); }
+.badge-medium { background: rgba(251,191,36,0.12); color: var(--amber); }
+.badge-hard   { background: rgba(248,113,113,0.12); color: var(--red); }
+[data-theme="light"] .badge-easy   { background: rgba(5,150,105,0.10); color: var(--accent); }
+[data-theme="light"] .badge-medium { background: rgba(217,119,6,0.10);  color: var(--amber); }
+[data-theme="light"] .badge-hard   { background: rgba(220,38,38,0.10);  color: var(--red); }
 
 .del-btn {
-  background: none; border: 2px solid transparent; cursor: pointer;
-  color: var(--text3); font-size: 12px; transition: color .1s, border-color .1s, background .1s;
-  padding: 3px 5px; border-radius: var(--radius);
+  background: none; border: 1px solid transparent; cursor: pointer;
+  color: var(--text3); font-size: 12px;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+  padding: 3px 5px; border-radius: var(--radius-sm);
 }
 .del-btn:hover { color: var(--red); background: var(--red-light); border-color: var(--red); }
+
+.card.accent-border { border-color: var(--accent); }
 
 @media (max-width: 768px) {
   .dsa-page    { padding: 18px; }

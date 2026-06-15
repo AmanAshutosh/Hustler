@@ -1,11 +1,11 @@
-/* ── Loader — boot screen: Black + Lime ── */
+/* ── Loader — boot screen: deep dark + emerald ── */
 .loader-overlay {
   position: fixed; inset: 0; z-index: 9999;
-  background: #000000;
+  background: #07070E;
   display: flex; align-items: center; justify-content: center;
-  animation: lo-in .18s ease both;
+  animation: lo-in 0.2s ease both;
 }
-.loader-overlay.loader-exit { animation: lo-out .35s ease forwards; }
+.loader-overlay.loader-exit { animation: lo-out 0.4s ease forwards; }
 
 @keyframes lo-in  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes lo-out { from { opacity: 1; } to { opacity: 0; } }
@@ -20,43 +20,47 @@
 @media (min-width: 480px) { .chip-wrapper { max-width: 460px; } }
 @media (min-width: 768px) { .chip-wrapper { max-width: 580px; } }
 
-/* Traces */
-.trace-bg   { stroke: rgba(163, 220, 25, 0.15); stroke-width: 1.8; fill: none; }
+/* Traces — updated to emerald palette */
+.trace-bg   { stroke: rgba(52,211,153,0.12); stroke-width: 1.8; fill: none; }
 .trace-flow {
   stroke-width: 1.8; fill: none;
   stroke-dasharray: 40 400; stroke-dashoffset: 438;
-  animation: flow 3s cubic-bezier(0.5, 0, 0.9, 1) infinite;
+  animation: flow 3s cubic-bezier(0.5,0,0.9,1) infinite;
 }
-.yellow { stroke: #A3DC19; color: #A3DC19; }
-.blue   { stroke: #00BFFF; color: #00BFFF; }
-.green  { stroke: #00FF7F; color: #00FF7F; }
-.purple { stroke: #432DD7; color: #432DD7; }
-.red    { stroke: #FF4081; color: #FF4081; }
+.yellow { stroke: #34D399; color: #34D399; }
+.blue   { stroke: #60A5FA; color: #60A5FA; }
+.green  { stroke: #6EE7B7; color: #6EE7B7; }
+.purple { stroke: #A78BFA; color: #A78BFA; }
+.red    { stroke: #F87171; color: #F87171; }
 
 /* Percentage */
 .loader-pct {
-  font-size: clamp(56px, 12vw, 90px); font-weight: 900; line-height: 1;
-  color: #A3DC19;
+  font-size: clamp(52px, 12vw, 86px); font-weight: 900; line-height: 1;
+  color: #34D399;
   font-variant-numeric: tabular-nums;
   letter-spacing: -4px; margin-top: 4px;
   font-family: 'Courier New', 'SF Mono', monospace;
+  text-shadow: 0 0 40px rgba(52,211,153,0.40);
 }
-.loader-pct-sym { font-size: .36em; font-weight: 400; opacity: .55; letter-spacing: 0; }
+.loader-pct-sym { font-size: 0.36em; font-weight: 400; opacity: 0.55; letter-spacing: 0; }
 
 /* Progress bar */
 .loader-bar-track {
-  position: relative; width: min(280px, 80vw); height: 8px;
-  background: rgba(163, 220, 25, 0.15); border-radius: 0;
-  overflow: visible; margin-top: 16px;
-  border: 2px solid rgba(163, 220, 25, 0.45);
+  position: relative; width: min(280px, 80vw); height: 4px;
+  background: rgba(52,211,153,0.12); border-radius: 9999px;
+  overflow: hidden; margin-top: 20px;
 }
 .loader-bar-fill {
-  height: 100%; background: #A3DC19; border-radius: 0;
-  transition: width .06s linear;
+  height: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
+  border-radius: 9999px;
+  transition: width 0.06s linear;
+  box-shadow: 0 0 12px rgba(52,211,153,0.50);
 }
 .loader-bar-glow {
-  position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 0;
-  background: #A3DC19; transform: translate(-50%, -50%);
-  border: 2px solid #FFFFFF;
-  transition: left .06s linear; pointer-events: none;
+  position: absolute; top: 50%; width: 10px; height: 10px;
+  border-radius: 50%; background: #6EE7B7;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 16px rgba(52,211,153,0.80);
+  transition: left 0.06s linear; pointer-events: none;
 }

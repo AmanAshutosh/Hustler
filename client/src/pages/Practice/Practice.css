@@ -1,5 +1,5 @@
 /* src/pages/Practice/Practice.css */
-.practice-page { padding: 28px; max-width: 920px; animation: fadeIn .25s ease; }
+.practice-page { padding: 28px; max-width: 920px; animation: fadeIn 0.3s ease; }
 
 /* Header */
 .practice-header {
@@ -7,19 +7,19 @@
   gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
   padding-bottom: 16px; border-bottom: 1px solid var(--border);
 }
-.practice-header h2 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.4px; }
+.practice-header h2 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
 .practice-header p  { font-size: 13px; color: var(--text3); margin-top: 4px; }
 
 /* Overall number */
 .practice-overall { text-align: right; min-width: 130px; }
 .practice-overall-num { display: flex; align-items: baseline; justify-content: flex-end; gap: 2px; }
-.practice-done-big  { font-size: 32px; font-weight: 800; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.practice-done-big  { font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
 .practice-total-big { font-size: 16px; font-weight: 600; color: var(--text3); font-variant-numeric: tabular-nums; }
 .practice-bar-wrap  {
-  height: 6px; background: var(--surface-3);
+  height: 5px; background: var(--surface-3);
   border-radius: var(--radius-pill); margin: 9px 0 5px; overflow: hidden;
 }
-.practice-bar { height: 100%; background: var(--accent); border-radius: var(--radius-pill); transition: width .4s ease; }
+.practice-bar { height: 100%; background: var(--accent); border-radius: var(--radius-pill); transition: width 0.4s ease; }
 .practice-pct { font-size: 11px; font-weight: 600; color: var(--text3); }
 
 /* How to Practice card */
@@ -32,7 +32,7 @@
   width: 100%; display: flex; align-items: center; justify-content: space-between;
   padding: 14px 18px; background: none; border: none; cursor: pointer;
   color: var(--text); font-family: inherit; font-size: 13px; font-weight: 600;
-  transition: background .1s;
+  transition: background 0.1s;
 }
 .how-to-toggle:hover { background: var(--surface-2); }
 .how-to-label  { color: var(--text2); }
@@ -54,21 +54,21 @@
 .practice-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
 .practice-tab {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 10px 16px; border-radius: var(--radius);
+  padding: 10px 16px; border-radius: var(--radius-lg);
   background: var(--surface); border: 1px solid var(--border);
   cursor: pointer; font-family: inherit;
   box-shadow: var(--shadow);
-  transition: box-shadow .15s, border-color .15s;
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
 }
-.practice-tab:hover { box-shadow: var(--shadow-md); border-color: var(--border-2); }
+.practice-tab:hover { box-shadow: var(--shadow-md); border-color: var(--border-2); transform: translateY(-1px); }
 .practice-tab.active {
   background: var(--accent); border-color: var(--accent);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 16px var(--accent-glow);
 }
 .tab-label { font-size: 12px; font-weight: 600; color: var(--text); }
 .practice-tab.active .tab-label { color: var(--accent-on); }
-.tab-count { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.practice-tab.active .tab-count { color: var(--accent-on); }
+.tab-count { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text3); }
+.practice-tab.active .tab-count { color: var(--accent-on); opacity: 0.8; }
 
 /* Set panel */
 .set-panel {
@@ -87,7 +87,7 @@
 .set-progress-pill {
   display: flex; align-items: center; gap: 2px;
   padding: 5px 14px; border-radius: var(--radius-pill);
-  border: 1px solid; background: var(--surface);
+  border: 1px solid var(--border-2); background: var(--surface);
   font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums;
 }
 .set-progress-sep { color: var(--text3); font-weight: 400; margin: 0 1px; }
@@ -98,7 +98,7 @@
   display: flex; align-items: flex-start; gap: 10px;
   padding: 12px 22px; cursor: pointer;
   border-bottom: 1px solid var(--border);
-  transition: background .1s;
+  transition: background 0.1s;
 }
 .project-item:last-child { border-bottom: none; }
 .project-item:hover { background: var(--surface-2); }
@@ -110,7 +110,7 @@
   background: var(--surface);
   display: flex; align-items: center; justify-content: center;
   font-size: 10px; font-weight: 700; color: var(--accent-on);
-  transition: background .1s, border-color .1s; margin-top: 2px;
+  transition: background 0.12s, border-color 0.12s; margin-top: 2px;
 }
 .project-item.done .project-check { background: var(--accent); border-color: var(--accent); }
 
@@ -128,7 +128,7 @@
 }
 .bottom-card-title {
   font-size: 11px; font-weight: 700; color: var(--text3);
-  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 14px;
+  text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 14px;
   padding-bottom: 10px; border-bottom: 1px solid var(--border);
 }
 

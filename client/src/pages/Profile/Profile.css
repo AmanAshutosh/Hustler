@@ -101,6 +101,16 @@ input:focus {
 .bar-track   { height: 8px; background: var(--surface-3); border-radius: var(--radius-pill); overflow: hidden; }
 .bar-fill    { height: 100%; border-radius: var(--radius-pill); transition: width .6s ease; }
 
+/* ── Profile card ── */
+.portfolio-card {
+  border-radius: var(--radius-xl) !important;
+}
+.avatar {
+  border-radius: var(--radius-lg) !important;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%) !important;
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
 /* ── Add to Calendar card ── */
 .cal-card { }
 
