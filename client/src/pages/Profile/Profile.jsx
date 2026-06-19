@@ -5,7 +5,10 @@ import api from '../../lib/api.js';
 import { useAuth } from '../../store/auth.js';
 import toast from 'react-hot-toast';
 import { Play } from 'lucide-react';
-import { STACK_FS, STACK_DA, DAILY_SCHEDULE, MONTHLY_PLAN, CATEGORIES } from '../../data/careerData.js';
+import {
+  STACK_FS, STACK_DA, DAILY_SCHEDULE, EVENING_DAILY_SCHEDULE, MONTHLY_PLAN, CATEGORIES,
+  getStoredGymMode, setStoredGymMode, GYM_MODE_CHANGE_EVENT,
+} from '../../data/careerData.js';
 import { exportScheduleToCalendar, getGCalLinks, getSchedulePreview } from '../../lib/calendar.js';
 import './Profile.css';
 
@@ -30,6 +33,19 @@ export default function Profile() {
   });
   const [showCalPreview, setShowCalPreview] = useState(false);
   const [showGCalLinks, setShowGCalLinks]   = useState(false);
+  const [gymMode, setGymMode] = useState(getStoredGymMode);
+
+  useEffect(() => {
+    const handler = () => setGymMode(getStoredGymMode());
+    window.addEventListener(GYM_MODE_CHANGE_EVENT, handler);
+    return () => window.removeEventListener(GYM_MODE_CHANGE_EVENT, handler);
+  }, []);
+
+  const handleGymModeChange = (mode) => {
+    setGymMode(mode);
+    setStoredGymMode(mode);
+    window.dispatchEvent(new Event(GYM_MODE_CHANGE_EVENT));
+  };
 
   useEffect(() => {
     Promise.all([api.get('/stats/summary'), api.get('/user/me')]).then(([s, u]) => {
@@ -168,6 +184,21 @@ export default function Profile() {
         <div className="sec-title">Add to Calendar</div>
         <div className="tt-subtitle">Export your full Mon–Sun schedule as recurring weekly events</div>
 
+        <div className="path-tabs">
+          <button
+            className={`path-tab${gymMode === 'morning' ? ' active' : ''}`}
+            onClick={() => handleGymModeChange('morning')}
+          >
+            🌅 Morning Gym
+          </button>
+          <button
+            className={`path-tab${gymMode === 'evening' ? ' active' : ''}`}
+            onClick={() => handleGymModeChange('evening')}
+          >
+            🌙 Evening Gym
+          </button>
+        </div>
+
         {/* Schedule preview */}
         <div className="cal-preview-wrap">
           <button
@@ -178,14 +209,14 @@ export default function Profile() {
             <span className="cal-preview-caret">{showCalPreview ? '▲' : '▼'}</span>
           </button>
           {showCalPreview && (
-            <pre className="cal-preview-text">{getSchedulePreview()}</pre>
+            <pre className="cal-preview-text">{getSchedulePreview(gymMode)}</pre>
           )}
         </div>
 
         {/* Three action buttons */}
         <div className="cal-actions">
           {/* Apple Calendar */}
-          <button className="cal-action-btn cal-action-apple" onClick={exportScheduleToCalendar}>
+          <button className="cal-action-btn cal-action-apple" onClick={() => exportScheduleToCalendar(gymMode)}>
             <span className="cal-action-icon"></span>
             <span className="cal-action-body">
               <span className="cal-action-title">Add to Apple Calendar</span>
@@ -210,7 +241,7 @@ export default function Profile() {
 
           {showGCalLinks && (
             <div className="cal-links-grid">
-              {getGCalLinks().map((slot, i) => (
+              {getGCalLinks(gymMode).map((slot, i) => (
                 <a
                   key={i}
                   href={slot.gcalUrl}
@@ -231,7 +262,7 @@ export default function Profile() {
           )}
 
           {/* Download ICS */}
-          <button className="cal-action-btn cal-action-ics" onClick={exportScheduleToCalendar}>
+          <button className="cal-action-btn cal-action-ics" onClick={() => exportScheduleToCalendar(gymMode)}>
             <span className="cal-action-icon">↓</span>
             <span className="cal-action-body">
               <span className="cal-action-title">Download ICS</span>
@@ -242,16 +273,20 @@ export default function Profile() {
 
         <p className="cal-hint">
           All 7 days are exported as weekly recurring events in IST (Asia/Kolkata).
-          Overnight events like Sleep (10:00 PM – 06:00 AM) are handled correctly.
+          Overnight events like Sleep ({gymMode === 'evening' ? '12:00 – 08:30 AM' : '10:00 PM – 06:00 AM'}) are handled correctly.
         </p>
       </div>
 
       {/* Daily timetable */}
       <div className="card">
         <div className="sec-title">Daily Schedule</div>
-        <div className="tt-subtitle">Wake up 6am · Gym + breakfast · Free from 11am · ~7h study/day</div>
+        <div className="tt-subtitle">
+          {gymMode === 'evening'
+            ? 'Wake up 8:30am · Study before gym · Gym 6:30–9pm · ~8.5h study/day'
+            : 'Wake up 6am · Gym + breakfast · Free from 11am · ~7h study/day'}
+        </div>
         <div className="tt-daily">
-          {DAILY_SCHEDULE.map((slot, i) => (
+          {(gymMode === 'evening' ? EVENING_DAILY_SCHEDULE : DAILY_SCHEDULE).map((slot, i) => (
             <div key={i} className={`tt-slot tt-slot-${slot.type}`}>
               <div className="tt-time">{slot.time}</div>
               <div className="tt-info">

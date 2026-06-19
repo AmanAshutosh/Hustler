@@ -1,7 +1,17 @@
 // client/src/lib/calendar.js — Calendar integration utility
 // Supports: Google Calendar links (Android + iOS) and .ics download (desktop)
 
-import { WEEKDAY, SATURDAY, SUNDAY, CATEGORIES, START_DATE } from '../data/careerData.js';
+import {
+  WEEKDAY, SATURDAY, SUNDAY,
+  EVENING_WEEKDAY, EVENING_SATURDAY, EVENING_SUNDAY,
+  CATEGORIES, START_DATE,
+} from '../data/careerData.js';
+
+function scheduleFor(mode) {
+  return mode === 'evening'
+    ? { weekday: EVENING_WEEKDAY, saturday: EVENING_SATURDAY, sunday: EVENING_SUNDAY }
+    : { weekday: WEEKDAY, saturday: SATURDAY, sunday: SUNDAY };
+}
 
 const TZ = 'Asia/Kolkata';
 // IST offset in minutes
@@ -128,9 +138,12 @@ function makeGCalLink(slot, firstDate, byday) {
 /**
  * Returns all schedule slots with their Google Calendar add links.
  * Filters out sleep and off-type blocks by default.
+ * @param {'morning'|'evening'} mode - which gym schedule to export
  * @returns {Array<{ label: string, time: string, cat: string, gcalUrl: string, dayType: string }>}
  */
-export function getGCalLinks() {
+export function getGCalLinks(mode = 'morning') {
+  const { weekday, saturday, sunday } = scheduleFor(mode);
+
   const weekdayFirst  = firstOccurrence(START_DATE, 1);
   const saturdayFirst = firstOccurrence(START_DATE, 6);
   const sundayFirst   = firstOccurrence(START_DATE, 0);
@@ -144,9 +157,9 @@ export function getGCalLinks() {
     }
   };
 
-  add(WEEKDAY,  weekdayFirst,  'MO,TU,WE,TH,FR', 'Mon–Fri');
-  add(SATURDAY, saturdayFirst, 'SA',              'Saturdays');
-  add(SUNDAY,   sundayFirst,   'SU',              'Sundays');
+  add(weekday,  weekdayFirst,  'MO,TU,WE,TH,FR', 'Mon–Fri');
+  add(saturday, saturdayFirst, 'SA',              'Saturdays');
+  add(sunday,   sundayFirst,   'SU',              'Sundays');
 
   return result;
 }
@@ -188,16 +201,18 @@ function slotsToEvents(slots, firstDate, rruleByDay, untilStr) {
 /**
  * Returns a formatted text preview of the full week schedule (Mon–Sun)
  * exactly as it will be exported to calendar, with normalized AM/PM times.
+ * @param {'morning'|'evening'} mode - which gym schedule to preview
  */
-export function getSchedulePreview() {
+export function getSchedulePreview(mode = 'morning') {
+  const { weekday, saturday, sunday } = scheduleFor(mode);
   const days = [
-    { label: 'MONDAY',    slots: WEEKDAY },
-    { label: 'TUESDAY',   slots: WEEKDAY },
-    { label: 'WEDNESDAY', slots: WEEKDAY },
-    { label: 'THURSDAY',  slots: WEEKDAY },
-    { label: 'FRIDAY',    slots: WEEKDAY },
-    { label: 'SATURDAY',  slots: SATURDAY },
-    { label: 'SUNDAY',    slots: SUNDAY },
+    { label: 'MONDAY',    slots: weekday },
+    { label: 'TUESDAY',   slots: weekday },
+    { label: 'WEDNESDAY', slots: weekday },
+    { label: 'THURSDAY',  slots: weekday },
+    { label: 'FRIDAY',    slots: weekday },
+    { label: 'SATURDAY',  slots: saturday },
+    { label: 'SUNDAY',    slots: sunday },
   ];
 
   return days.map(({ label, slots }) => {
@@ -215,14 +230,16 @@ export function getSchedulePreview() {
 /**
  * Download the full weekly schedule as a .ics file.
  * On iOS Safari, uses a data: URI so it opens in Files/Calendar instead of downloading.
+ * @param {'morning'|'evening'} mode - which gym schedule to export
  */
-export function exportScheduleToCalendar() {
+export function exportScheduleToCalendar(mode = 'morning') {
+  const { weekday, saturday, sunday } = scheduleFor(mode);
   const untilStr = getUntilDate();
 
   const allEvents = [
-    ...slotsToEvents(WEEKDAY,  firstOccurrence(START_DATE, 1), 'MO,TU,WE,TH,FR', untilStr),
-    ...slotsToEvents(SATURDAY, firstOccurrence(START_DATE, 6), 'SA', untilStr),
-    ...slotsToEvents(SUNDAY,   firstOccurrence(START_DATE, 0), 'SU', untilStr),
+    ...slotsToEvents(weekday,  firstOccurrence(START_DATE, 1), 'MO,TU,WE,TH,FR', untilStr),
+    ...slotsToEvents(saturday, firstOccurrence(START_DATE, 6), 'SA', untilStr),
+    ...slotsToEvents(sunday,   firstOccurrence(START_DATE, 0), 'SU', untilStr),
   ];
 
   const vcalendar = [

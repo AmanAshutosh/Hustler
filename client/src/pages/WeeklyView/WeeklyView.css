@@ -1,6 +1,12 @@
 /* src/pages/WeeklyView/WeeklyView.css */
 .wv-page { padding: 28px; max-width: 1400px; animation: fadeIn 0.3s ease; }
 
+.wv-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 14px;
+}
+.wv-header .path-tabs { margin-bottom: 0; }
+
 /* Legend */
 .wv-legend { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px; }
 .wv-legend-chip {

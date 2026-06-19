@@ -44,7 +44,51 @@ export const SUNDAY = [
   { time: '05:00 – 08:00 PM',    label: 'Light Study / Rest',  cat: 'break',     duration: '3h' },
 ];
 
-export function getSchedule(dayOfWeek) {
+// ── Evening Gym Mode ────────────────────────────────────────────────────────
+// Gym shifts to 6:30–9:00 PM; all study/work blocks are completed earlier in
+// the day so the evening stays free for gym + dinner + wind-down.
+
+export const EVENING_WEEKDAY = [
+  { time: '12:00 – 08:30 AM',    label: 'Sleep',                            cat: 'sleep',     duration: '8.5h' },
+  { time: '08:30 – 09:00 AM',    label: 'Breakfast',                       cat: 'break' },
+  { time: '09:00 AM – 12:00 PM', label: 'Block 1 — Full Stack (React/JS)', cat: 'fullstack', duration: '3h' },
+  { time: '12:00 – 01:00 PM',    label: 'Lunch',                           cat: 'break',     duration: '1h' },
+  { time: '01:00 – 04:00 PM',    label: 'Block 2 — Backend (Node.js)',     cat: 'fullstack', duration: '3h' },
+  { time: '04:00 – 04:30 PM',    label: 'Tea Break',                       cat: 'break' },
+  { time: '04:30 – 06:00 PM',    label: 'Block 3 — Data Analytics',        cat: 'analytics', duration: '1.5h' },
+  { time: '06:00 – 06:30 PM',    label: 'LinkedIn + Apply',                cat: 'jobs' },
+  { time: '06:30 – 09:00 PM',    label: 'Gym',                             cat: 'health',    duration: '2.5h' },
+  { time: '09:00 – 09:30 PM',    label: 'Travel + Shower',                 cat: 'break' },
+  { time: '09:30 – 10:00 PM',    label: 'Dinner',                          cat: 'break' },
+  { time: '10:00 – 11:00 PM',    label: 'Light Revision / Projects',       cat: 'project',   duration: '1h' },
+  { time: '11:00 PM – 12:00 AM', label: 'Wind Down',                       cat: 'sleep' },
+];
+
+export const EVENING_SATURDAY = [
+  { time: '09:30 AM – 12:30 PM', label: 'Revision + DSA', cat: 'fullstack', duration: '3h' },
+  { time: '01:30 – 04:30 PM',    label: 'Project Sprint', cat: 'project',   duration: '3h' },
+  { time: '05:00 – 06:30 PM',    label: 'DA Revision',    cat: 'analytics', duration: '1.5h' },
+  { time: '06:30 – 09:00 PM',    label: 'Gym',            cat: 'health',    duration: '2.5h' },
+  { time: '09:30 – 10:00 PM',    label: 'Dinner',         cat: 'break' },
+];
+
+export const EVENING_SUNDAY = [
+  { time: '08:30 – 09:30 AM',    label: 'Free Morning',            cat: 'break',   duration: '1h' },
+  { time: '09:30 AM – 12:30 PM', label: 'Weekly Review',           cat: 'project', duration: '3h' },
+  { time: '01:30 – 04:00 PM',    label: 'Portfolio / GitHub Work', cat: 'project', duration: '2.5h' },
+  { time: '04:30 – 05:30 PM',    label: 'Market Trip',             cat: 'blocked', duration: '1h' },
+  { time: '05:30 – 06:15 PM',    label: 'Plan Next Week',          cat: 'project' },
+  { time: '06:30 – 09:00 PM',    label: 'Gym',                     cat: 'health',  duration: '2.5h' },
+  { time: '09:30 – 10:00 PM',    label: 'Dinner',                  cat: 'break' },
+];
+
+// dayOfWeek: 0=Sun, 1=Mon … 6=Sat · mode: 'morning' | 'evening'
+export function getSchedule(dayOfWeek, mode = 'morning') {
+  if (mode === 'evening') {
+    if (dayOfWeek === 0) return EVENING_SUNDAY;
+    if (dayOfWeek === 6) return EVENING_SATURDAY;
+    return EVENING_WEEKDAY;
+  }
   if (dayOfWeek === 0) return SUNDAY;
   if (dayOfWeek === 6) return SATURDAY;
   return WEEKDAY;
@@ -758,6 +802,22 @@ export const DAILY_SCHEDULE = [
   { time: '09:30 – 10:00 PM',    label: 'LinkedIn',   desc: 'LinkedIn + job applications',           type: 'prep' },
 ];
 
+export const EVENING_DAILY_SCHEDULE = [
+  { time: '12:00 – 08:30 AM',    label: 'Sleep',      desc: '8.5 hours — non-negotiable',            type: 'off' },
+  { time: '08:30 – 09:00 AM',    label: 'Breakfast',  desc: 'Meal + freshen up',                     type: 'break' },
+  { time: '09:00 AM – 12:00 PM', label: 'Block 1',    desc: 'Full Stack Dev — React / JS',           type: 'study', duration: '3h' },
+  { time: '12:00 – 01:00 PM',    label: 'Lunch',      desc: 'Meal + rest',                           type: 'break' },
+  { time: '01:00 – 04:00 PM',    label: 'Block 2',    desc: 'Backend / Node.js',                     type: 'study', duration: '3h' },
+  { time: '04:00 – 04:30 PM',    label: 'Tea Break',  desc: 'Tea + walk',                            type: 'break' },
+  { time: '04:30 – 06:00 PM',    label: 'Block 3',    desc: 'Data Analytics — SQL / Power BI',       type: 'study', duration: '1.5h' },
+  { time: '06:00 – 06:30 PM',    label: 'LinkedIn',   desc: 'LinkedIn + job applications',           type: 'prep' },
+  { time: '06:30 – 09:00 PM',    label: 'Gym',        desc: 'Gym workout',                           type: 'break', duration: '2.5h' },
+  { time: '09:00 – 09:30 PM',    label: 'Travel',     desc: 'Travel back + rest + shower',           type: 'break' },
+  { time: '09:30 – 10:00 PM',    label: 'Dinner',     desc: 'Meal',                                  type: 'break' },
+  { time: '10:00 – 11:00 PM',    label: 'Revision',   desc: 'Light project work / revision',         type: 'study', duration: '1h' },
+  { time: '11:00 PM – 12:00 AM', label: 'Wind Down',  desc: 'Sleep prep',                            type: 'prep' },
+];
+
 export const MONTHLY_PLAN = [
   {
     month: 1, title: 'Foundation Rebuild', color: '#A3DC19',
@@ -832,6 +892,18 @@ export function getStoredPath() {
 }
 export function setStoredPath(path) {
   localStorage.setItem(PATH_STORAGE_KEY, path);
+}
+
+// localStorage key for persisting the active gym mode ('morning' | 'evening')
+export const GYM_MODE_STORAGE_KEY = 'hustler_gym_mode';
+// fired on window after the stored gym mode changes, so other open pages can re-sync
+export const GYM_MODE_CHANGE_EVENT = 'hustler-gym-mode-change';
+
+export function getStoredGymMode() {
+  return localStorage.getItem(GYM_MODE_STORAGE_KEY) === 'evening' ? 'evening' : 'morning';
+}
+export function setStoredGymMode(mode) {
+  localStorage.setItem(GYM_MODE_STORAGE_KEY, mode);
 }
 
 // ─── COMBINED EXPORT ───────────────────────────────────────────────────────────
