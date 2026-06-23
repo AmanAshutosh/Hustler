@@ -1,6 +1,7 @@
 // server/routes/dsa.js
 const express = require('express');
 const db = require('../db/database');
+const { logActivity } = require('../db/activity');
 const router = express.Router();
 function makeId() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
 
@@ -32,11 +33,14 @@ router.post('/', (req, res) => {
       total_hours: 0, session_count: 0, dsa_count: 1 }).write();
   }
 
+  logActivity(req.userId, 'dsa_solved', `Solved ${name} (${difficulty}) — ${category}`, time_mins ? time_mins * 60 : null);
   res.status(201).json(problem);
 });
 
 router.delete('/:id', (req, res) => {
+  const problem = db.get('dsa_problems').find({ id: req.params.id, user_id: req.userId }).value();
   db.get('dsa_problems').remove({ id: req.params.id, user_id: req.userId }).write();
+  if (problem) logActivity(req.userId, 'dsa_delete', `Removed DSA problem — ${problem.name}`);
   res.json({ ok: true });
 });
 

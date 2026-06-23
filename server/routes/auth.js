@@ -2,6 +2,7 @@ const express  = require('express');
 const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
 const db       = require('../db/database');
+const { logActivity } = require('../db/activity');
 const { JWT_SECRET, authenticate } = require('../middleware/auth');
 
 const router = express.Router();
@@ -38,6 +39,8 @@ router.post('/register', async (req, res) => {
       created_at: createdAt,
     }).write();
 
+    logActivity(id, 'register', `Account created — ${name}`);
+
     const token = jwt.sign({ userId: id }, JWT_SECRET, { expiresIn: '30d' });
     return res.status(201).json({
       token,
@@ -66,6 +69,8 @@ router.post('/login', async (req, res) => {
     if (!valid)
       return res.status(401).json({ error: 'Incorrect password. Please try again.' });
 
+    logActivity(user.id, 'login', `Logged in — ${user.name}`);
+
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '30d' });
     return res.json({
       token,
@@ -80,6 +85,13 @@ router.post('/login', async (req, res) => {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Login failed. Please try again.' });
   }
+});
+
+// POST /api/auth/logout — records the logout event in the activity log
+router.post('/logout', authenticate, (req, res) => {
+  const user = db.get('users').find({ id: req.userId }).value();
+  logActivity(req.userId, 'logout', `Logged out${user ? ' — ' + user.name : ''}`);
+  return res.json({ ok: true });
 });
 
 // GET /api/auth/me — validate token + return current user

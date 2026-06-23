@@ -2,6 +2,7 @@
 const express = require('express');
 const router  = express.Router();
 const db      = require('../db/database');
+const { logActivity } = require('../db/activity');
 
 // GET /api/roadmap/progress
 router.get('/progress', (req, res) => {
@@ -17,19 +18,24 @@ router.patch('/progress', (req, res) => {
   }
 
   const existing = db.get('roadmap_progress').find({ user_id: req.userId });
+  let milestones;
   if (existing.value()) {
-    const milestones = { ...existing.value().milestones, [key]: value };
+    milestones = { ...existing.value().milestones, [key]: value };
     existing.assign({ milestones, updated_at: new Date().toISOString() }).write();
-    res.json(milestones);
   } else {
-    const milestones = { [key]: value };
+    milestones = { [key]: value };
     db.get('roadmap_progress').push({
       user_id: req.userId,
       milestones,
       created_at: new Date().toISOString(),
     }).write();
-    res.json(milestones);
   }
+  logActivity(
+    req.userId,
+    value ? 'goal_complete' : 'goal_update',
+    `${value ? 'Completed' : 'Unchecked'} milestone — ${key}`,
+  );
+  res.json(milestones);
 });
 
 module.exports = router;

@@ -1,6 +1,7 @@
 // server/routes/sessions.js
 const express = require('express');
 const db = require('../db/database');
+const { logActivity } = require('../db/activity');
 const router = express.Router();
 function makeId() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
 
@@ -39,7 +40,13 @@ function finalizeSession(session, endedAt) {
     }).write();
   }
 
-  return db.get('sessions').find({ id: session.id }).value();
+  const finalized = db.get('sessions').find({ id: session.id }).value();
+  logActivity(
+    session.user_id, 'session_end',
+    `Studied ${session.subject} — ${session.topic || 'General'}`,
+    duration_secs,
+  );
+  return finalized;
 }
 
 // POST /api/sessions/start
@@ -61,6 +68,7 @@ router.post('/start', (req, res) => {
     ended_at: null, paused_secs: 0, paused_at: null, duration_secs: 0, is_active: true,
   };
   db.get('sessions').push(session).write();
+  logActivity(req.userId, 'session_start', `Started ${subject} — ${session.topic}`);
   res.status(201).json(session);
 });
 
@@ -71,6 +79,7 @@ router.patch('/:id/pause', (req, res) => {
   db.get('sessions').find({ id: req.params.id }).assign({
     paused_at: new Date().toISOString(),
   }).write();
+  logActivity(req.userId, 'session_pause', `Paused ${session.subject} — ${session.topic || 'General'}`);
   const updated = db.get('sessions').find({ id: req.params.id }).value();
   res.json(updated);
 });
@@ -87,6 +96,7 @@ router.patch('/:id/resume', (req, res) => {
     paused_secs: (session.paused_secs || 0) + addedPauseSecs,
     paused_at: null,
   }).write();
+  logActivity(req.userId, 'session_resume', `Resumed ${session.subject} — ${session.topic || 'General'}`);
   const updated = db.get('sessions').find({ id: req.params.id }).value();
   res.json(updated);
 });
@@ -127,7 +137,9 @@ router.delete('/all', (req, res) => {
 
 // DELETE /api/sessions/:id
 router.delete('/:id', (req, res) => {
+  const session = db.get('sessions').find({ id: req.params.id, user_id: req.userId }).value();
   db.get('sessions').remove({ id: req.params.id, user_id: req.userId }).write();
+  if (session) logActivity(req.userId, 'session_delete', `Deleted session — ${session.subject}`);
   res.json({ ok: true });
 });
 

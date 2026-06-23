@@ -1,7 +1,45 @@
 // src/pages/Heatmap/Heatmap.jsx
 import { useEffect, useRef, useState } from 'react';
+import {
+  History, LogIn, LogOut, UserPlus, Play, Pause, Clock, Trash2,
+  CheckCircle2, Zap, FolderKanban, TrendingUp, Trophy,
+} from 'lucide-react';
 import api from '../../lib/api.js';
 import './Heatmap.css';
+
+const ACTIVITY_META = {
+  register:         { icon: UserPlus,     label: 'Account created' },
+  login:             { icon: LogIn,        label: 'Logged in' },
+  logout:            { icon: LogOut,       label: 'Logged out' },
+  session_start:     { icon: Play,         label: 'Session started' },
+  session_pause:     { icon: Pause,        label: 'Session paused' },
+  session_resume:    { icon: Play,         label: 'Session resumed' },
+  session_end:       { icon: Clock,        label: 'Session completed' },
+  session_delete:    { icon: Trash2,       label: 'Session deleted' },
+  habit_update:      { icon: CheckCircle2, label: 'Daily habits updated' },
+  dsa_solved:        { icon: Zap,          label: 'DSA problem solved' },
+  dsa_delete:        { icon: Trash2,       label: 'DSA problem removed' },
+  project_create:    { icon: FolderKanban, label: 'Project started' },
+  project_update:    { icon: FolderKanban, label: 'Project updated' },
+  project_complete:  { icon: Trophy,       label: 'Project completed' },
+  project_delete:    { icon: Trash2,       label: 'Project deleted' },
+  subject_progress:  { icon: TrendingUp,   label: 'Subject progress' },
+  goal_complete:     { icon: Trophy,       label: 'Goal completed' },
+  goal_update:       { icon: Trophy,       label: 'Goal updated' },
+  profile_update:    { icon: UserPlus,     label: 'Profile updated' },
+};
+
+function fmtDuration(secs) {
+  if (!secs) return null;
+  const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60);
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+function fmtTimestamp(ts) {
+  return new Date(ts).toLocaleString(undefined, {
+    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+}
 
 function buildDays() {
   const days = [], today = new Date();
@@ -26,15 +64,39 @@ export default function Heatmap() {
   const [summary, setSummary] = useState(null);
   const [tooltip, setTooltip] = useState(null); // { text, x, y }
   const [loading, setLoading] = useState(true);
+  const [activity, setActivity] = useState([]);
+  const [activityLoading, setActivityLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const gridRef = useRef(null);
 
   useEffect(() => {
     Promise.all([api.get('/stats/heatmap'), api.get('/stats/summary')]).then(([hm, sum]) => {
       const map = {};
-      hm.data.forEach(d => { map[d.date] = { hours: d.hours, sessions: d.sessions, level: d.level }; });
+      hm.data.forEach(d => {
+        map[d.date] = { hours: d.hours, sessions: d.sessions, activities: d.activities, level: d.level };
+      });
       setDataMap(map); setSummary(sum.data);
     }).finally(() => setLoading(false));
+
+    api.get('/activity?limit=20').then(({ data }) => {
+      setActivity(data.entries);
+      setHasMore(data.hasMore);
+    }).catch(() => {}).finally(() => setActivityLoading(false));
   }, []);
+
+  function loadMoreActivity() {
+    if (!activity.length || loadingMore) return;
+    setLoadingMore(true);
+    const before = activity[activity.length - 1].timestamp;
+    api.get(`/activity?limit=20&before=${encodeURIComponent(before)}`)
+      .then(({ data }) => {
+        setActivity(prev => [...prev, ...data.entries]);
+        setHasMore(data.hasMore);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingMore(false));
+  }
 
   const days = buildDays();
   const today = new Date().toISOString().split('T')[0];
@@ -52,18 +114,21 @@ export default function Heatmap() {
       monthLabels.push({ wi, month: m, label: MONTHS[m] });
   });
 
-  const totalStudied = Object.values(dataMap).filter(d => d.sessions > 0).length;
+  const totalStudied = summary?.totalActiveDays ?? Object.values(dataMap).filter(d => d.activities > 0).length;
 
   function handleMouseEnter(e, day) {
     const info = dataMap[day];
     const sessions = info?.sessions || 0;
+    const activities = info?.activities || 0;
     const hours = info?.hours || 0;
 
     let text;
-    if (sessions === 0) {
-      text = `${formatDate(day)} · No study`;
+    if (activities === 0) {
+      text = `${formatDate(day)} · No activity`;
+    } else if (sessions > 0) {
+      text = `${formatDate(day)} · ${sessions} session${sessions !== 1 ? 's' : ''} · ${hours.toFixed(1)}h · ${activities} activit${activities !== 1 ? 'ies' : 'y'}`;
     } else {
-      text = `${formatDate(day)} · ${sessions} session${sessions !== 1 ? 's' : ''} · ${hours.toFixed(1)}h`;
+      text = `${formatDate(day)} · ${activities} activit${activities !== 1 ? 'ies' : 'y'} (no timer)`;
     }
 
     const rect = e.currentTarget.getBoundingClientRect();
@@ -95,11 +160,11 @@ export default function Heatmap() {
         </div>
         <div className="metric-card">
           <div className="metric-val" style={{ color: '#3b82f6' }}>{totalStudied}</div>
-          <div className="metric-lbl">Days studied</div>
+          <div className="metric-lbl">Active days</div>
         </div>
         <div className="metric-card">
-          <div className="metric-val" style={{ color: '#93c5fd' }}>{summary?.totalSessions || 0}</div>
-          <div className="metric-lbl">Sessions</div>
+          <div className="metric-val" style={{ color: '#93c5fd' }}>{summary?.longestStreak || 0} 🏆</div>
+          <div className="metric-lbl">Longest streak</div>
         </div>
       </div>
 
@@ -162,6 +227,47 @@ export default function Heatmap() {
             <span className="hm-legend-label">More</span>
           </div>
         </div>
+      </div>
+
+      {/* Activity Timeline */}
+      <div className="card">
+        <div className="sec-title"><History size={12} /> Activity Timeline</div>
+        {activityLoading
+          ? <p className="empty-msg">Loading…</p>
+          : activity.length === 0
+          ? <p className="empty-msg">No activity yet. Start a session or update your tracker.</p>
+          : (
+            <>
+              <div className="at-list">
+                {activity.map(entry => {
+                  const meta = ACTIVITY_META[entry.type] || { icon: History, label: entry.type };
+                  const Icon = meta.icon;
+                  const dur = fmtDuration(entry.duration_secs);
+                  return (
+                    <div className="at-row" key={entry.id}>
+                      <span className="at-icon"><Icon size={14} /></span>
+                      <div className="at-body">
+                        <div className="at-top">
+                          <span className="at-label">{meta.label}</span>
+                          <span className="at-time">{fmtTimestamp(entry.timestamp)}</span>
+                        </div>
+                        <div className="at-details">
+                          {entry.details}
+                          {dur && <span className="at-dur"> · {dur}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {hasMore && (
+                <button className="btn at-load-more" onClick={loadMoreActivity} disabled={loadingMore}>
+                  {loadingMore ? 'Loading…' : 'Load more'}
+                </button>
+              )}
+            </>
+          )
+        }
       </div>
     </div>
   );

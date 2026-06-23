@@ -1,6 +1,7 @@
 // server/routes/user.js
 const express = require('express');
 const db = require('../db/database');
+const { logActivity } = require('../db/activity');
 const router = express.Router();
 
 router.get('/me', (req, res) => {
@@ -23,6 +24,7 @@ router.patch('/me', (req, res) => {
     linkedin_url: linkedin_url ?? user.linkedin_url,
   }).write();
   const updated = db.get('users').find({ id: req.userId }).value();
+  logActivity(req.userId, 'profile_update', 'Profile updated');
   const { password_hash, ...safe } = updated;
   res.json(safe);
 });

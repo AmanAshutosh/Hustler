@@ -100,6 +100,26 @@
 .hm-legend { display: flex; align-items: center; gap: 3px; }
 .hm-sq { width: 11px; height: 11px; border-radius: 2px; cursor: default; }
 
+/* Activity Timeline */
+.at-list { display: flex; flex-direction: column; gap: 2px; }
+.at-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 4px; border-bottom: 1px solid var(--border);
+}
+.at-row:last-child { border-bottom: none; }
+.at-icon {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-3); color: var(--accent);
+}
+.at-body { flex: 1; min-width: 0; }
+.at-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.at-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.at-time { font-size: 11px; color: var(--text3); flex-shrink: 0; white-space: nowrap; }
+.at-details { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.at-dur { color: var(--text3); }
+.at-load-more { width: 100%; margin-top: 12px; justify-content: center; }
+
 @media (max-width: 768px) {
   .heatmap-page { padding: 18px; }
   .metric-grid  { grid-template-columns: repeat(2, 1fr); }

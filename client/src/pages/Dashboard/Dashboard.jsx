@@ -1,6 +1,6 @@
 // src/pages/Dashboard/Dashboard.jsx
 import { useEffect, useState } from 'react';
-import { Clock, Flame, Zap, FolderKanban, TrendingUp, Sparkles, Trophy } from 'lucide-react';
+import { Clock, Flame, Zap, FolderKanban, TrendingUp, Sparkles, Trophy, Target, Gauge, CalendarDays } from 'lucide-react';
 import api from '../../lib/api.js';
 import DigitalClock from '../../components/DigitalClock/DigitalClock.jsx';
 import {
@@ -129,6 +129,17 @@ export default function Dashboard() {
   ];
   const METRICS = path === 'fs' ? fsMetrics : daMetrics;
 
+  // Analytics — derived from server-side activity log, not local state
+  const analyticsMetrics = [
+    { key: 'productivity', label: 'Productivity Score', suffix: '',  val: summary?.productivityScore || 0, Icon: Gauge,        color: '#22C55E' },
+    { key: 'weeklyHours',  label: 'Weekly Hours',       suffix: 'h', val: summary?.weeklyHours || 0,        Icon: CalendarDays, color: 'var(--accent)' },
+    { key: 'monthlyHours', label: 'Monthly Hours',      suffix: 'h', val: summary?.monthlyHours || 0,       Icon: CalendarDays, color: 'var(--blue)' },
+    { key: 'longestStreak',label: 'Longest Streak',     suffix: ' 🏆', val: summary?.longestStreak || 0,    Icon: Trophy,       color: '#F59E0B' },
+    { key: 'activeDays',   label: 'Total Active Days',  suffix: '',  val: summary?.totalActiveDays || 0,    Icon: Target,       color: 'var(--purple)' },
+    { key: 'tasksDone',    label: 'Tasks Completed',    suffix: '',  val: summary?.tasksCompleted || 0,     Icon: FolderKanban, color: '#06B6D4' },
+    { key: 'goalsDone',    label: 'Goals Completed',    suffix: '',  val: summary?.goalsCompleted || 0,     Icon: Trophy,       color: '#EC4899' },
+  ];
+
   if (loading) return (
     <div className="dashboard">
       <div className="dash-skeleton">
@@ -180,6 +191,24 @@ export default function Dashboard() {
             <div className="metric-lbl">{label}</div>
           </div>
         ))}
+      </div>
+
+      {/* Analytics */}
+      <div className="card" style={{ marginBottom: 14 }}>
+        <div className="sec-title"><Gauge size={12} /> Analytics</div>
+        <div className="metric-grid" style={{ marginBottom: 0 }}>
+          {analyticsMetrics.map(({ key, label, suffix, val, Icon, color }) => (
+            <div className="metric-card" key={key}>
+              <div className="metric-icon" style={{ color }}>
+                <Icon size={16} />
+              </div>
+              <div className="metric-val" style={{ color, fontSize: 20 }}>
+                {val}{suffix}
+              </div>
+              <div className="metric-lbl">{label}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="dash-grid">

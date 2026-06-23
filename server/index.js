@@ -19,8 +19,13 @@ app.use("/api/subjects", authenticate, require("./routes/subjects"));
 app.use("/api/user",     authenticate, require("./routes/user"));
 app.use("/api/tracker",  authenticate, require("./routes/tracker"));
 app.use("/api/roadmap",  authenticate, require("./routes/roadmap"));
+app.use("/api/activity", authenticate, require("./routes/activity"));
 
-app.get("/api/health", (_, res) => res.json({ ok: true }));
+app.get("/api/health", (_, res) => res.json({
+  ok: true,
+  persistent: db.isPersistent(),
+  lastWriteError: db.lastWriteError(),
+}));
 
 // Serve frontend build
 const distPath = path.join(__dirname, "../client/dist");

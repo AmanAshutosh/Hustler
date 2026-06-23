@@ -52,6 +52,9 @@ export const useAuth = create((set) => ({
   },
 
   logout: () => {
+    // Fire-and-forget — don't block the UI logout on the network call,
+    // but still record the event for the activity timeline.
+    api.post('/auth/logout').catch(() => {});
     localStorage.removeItem('devtrack_token');
     localStorage.removeItem('devtrack_user');
     set({ user: null, token: null });

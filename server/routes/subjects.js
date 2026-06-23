@@ -1,6 +1,7 @@
 // server/routes/subjects.js
 const express = require('express');
 const db = require('../db/database');
+const { logActivity } = require('../db/activity');
 const router = express.Router();
 
 // GET /api/subjects/progress
@@ -22,6 +23,7 @@ router.put('/progress', (req, res) => {
     db.get('subject_progress').push({ user_id: req.userId, progress }).write();
   }
 
+  logActivity(req.userId, 'subject_progress', 'Subject progress updated');
   res.json({ ok: true });
 });
 
@@ -39,6 +41,7 @@ router.patch('/progress', (req, res) => {
     db.get('subject_progress').push({ user_id: req.userId, progress: { [key]: done } }).write();
   }
 
+  logActivity(req.userId, 'subject_progress', `${done ? 'Completed' : 'Unchecked'} topic — ${key}`);
   res.json({ ok: true });
 });
 

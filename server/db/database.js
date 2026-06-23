@@ -21,22 +21,36 @@ db.defaults({
   subject_progress: [],
   habit_logs:       [],
   roadmap_progress: [],
+  activity_log:     [],
 }).write();
 
 // ── MongoDB persistence ────────────────────────────────────────────────────────
 
 let _col = null; // MongoDB collection reference, null until connected
 
-// Intercept every .write() call and async-persist to MongoDB
+// Every .write() call is persisted to MongoDB. Writes are chained through
+// _writeChain so they always land in the order they were issued — without this,
+// two near-simultaneous writes can race on the network and the one issued FIRST
+// (but that happens to finish LAST) would silently overwrite newer data with a
+// stale snapshot ("lost update"). Chaining guarantees in-order completion.
+let _writeChain = Promise.resolve();
+let _lastWriteError = null;
+
 const _origWrite = db.write.bind(db);
 db.write = function () {
   _origWrite();
   if (_col) {
-    _col.replaceOne(
-      { _id: 'state' },
-      { _id: 'state', data: db.getState() },
-      { upsert: true }
-    ).catch(err => console.error('[db] MongoDB write error:', err.message));
+    const snapshot = db.getState();
+    _writeChain = _writeChain.then(() =>
+      _col.replaceOne(
+        { _id: 'state' },
+        { _id: 'state', data: snapshot },
+        { upsert: true },
+      ).then(() => { _lastWriteError = null; })
+    ).catch(err => {
+      _lastWriteError = err.message;
+      console.error('[db] MongoDB write error:', err.message);
+    });
   }
 };
 
@@ -70,3 +84,5 @@ const ready = (async () => {
 
 module.exports = db;
 module.exports.ready = ready;
+module.exports.isPersistent = () => !!_col;
+module.exports.lastWriteError = () => _lastWriteError;
