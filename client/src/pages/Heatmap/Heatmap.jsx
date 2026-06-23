@@ -41,11 +41,19 @@ function fmtTimestamp(ts) {
   });
 }
 
+// All heatmap dates are compared as UTC "YYYY-MM-DD" strings (matching the
+// server, which derives them from ISO timestamps). Anchoring on local midnight
+// and then reading back via toISOString() (as this used to do) silently shifts
+// the whole grid by a day in any timezone ahead of UTC — e.g. in IST (+5:30),
+// local midnight is 18:30 UTC the *previous* day, so "today" would render as
+// yesterday's date all day long, and today's real activity would never match
+// any cell. Building the grid directly off the UTC calendar avoids that.
 function buildDays() {
-  const days = [], today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const days = [];
+  const todayStr = new Date().toISOString().split('T')[0];
   for (let i = 363; i >= 0; i--) {
-    const d = new Date(today); d.setDate(d.getDate() - i);
+    const d = new Date(todayStr + 'T00:00:00.000Z');
+    d.setUTCDate(d.getUTCDate() - i);
     days.push(d.toISOString().split('T')[0]);
   }
   return days;
@@ -100,7 +108,10 @@ export default function Heatmap() {
 
   const days = buildDays();
   const today = new Date().toISOString().split('T')[0];
-  const startDow = new Date(days[0]).getDay();
+  // getDay()/getMonth() read the LOCAL calendar fields of a UTC-midnight instant,
+  // which drifts a day in non-UTC timezones — use the UTC getters so the grid
+  // alignment matches the UTC date strings it's built from.
+  const startDow = new Date(days[0] + 'T00:00:00.000Z').getUTCDay();
   const padded = [...Array(startDow).fill(null), ...days];
   const weeks = [];
   for (let i = 0; i < padded.length; i += 7) weeks.push(padded.slice(i, i + 7));
@@ -109,7 +120,7 @@ export default function Heatmap() {
   weeks.forEach((week, wi) => {
     const first = week.find(d => d !== null);
     if (!first) return;
-    const m = new Date(first).getMonth();
+    const m = new Date(first + 'T00:00:00.000Z').getUTCMonth();
     if (!monthLabels.length || monthLabels[monthLabels.length - 1].month !== m)
       monthLabels.push({ wi, month: m, label: MONTHS[m] });
   });
